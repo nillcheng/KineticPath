@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>峰頂探險 | 後台管理</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --stone: #3d3d3d;
+    --mist: #8a9a8a;
+    --snow: #f4f2ee;
+    --moss: #4a6741;
+    --peak: #2d5a27;
+    --gold: #c9a84c;
+    --cloud: #ffffff;
+    --danger: #a04040;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans TC', sans-serif; background: #f0f0ec; color: var(--ink); }
+
+  /* ===== LOGIN ===== */
+  #login-screen {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--ink), var(--peak));
+  }
+
+  .login-box {
+    background: var(--cloud);
+    padding: 3rem;
+    width: 380px;
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .login-logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--peak);
+    margin-bottom: 0.3rem;
+  }
+
+  .login-logo span { color: var(--gold); }
+
+  .login-sub { color: var(--mist); font-size: 0.85rem; margin-bottom: 2rem; }
+
+  .login-input {
+    width: 100%; padding: 0.9rem 1rem;
+    border: 1px solid rgba(74,103,65,0.3);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .login-input:focus { border-color: var(--peak); }
+
+  .login-btn {
+    width: 100%; padding: 1rem;
+    background: var(--peak);
+    color: var(--cloud);
+    border: none; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: background 0.3s;
+  }
+
+  .login-btn:hover { background: var(--moss); }
+
+  .login-err { color: var(--danger); font-size: 0.85rem; margin-top: 0.8rem; }
+
+  /* ===== ADMIN ===== */
+  #admin-screen { display: none; }
+
+  .admin-header {
+    background: var(--cloud);
+    padding: 1.2rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(74,103,65,0.15);
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .admin-logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--peak);
+  }
+
+  .admin-logo span { color: var(--gold); }
+
+  .admin-nav { display: flex; gap: 1rem; align-items: center; }
+
+  .admin-nav a {
+    text-decoration: none; color: var(--stone);
+    font-size: 0.85rem; transition: color 0.3s;
+  }
+
+  .admin-nav a:hover { color: var(--peak); }
+
+  .btn-logout {
+    padding: 0.5rem 1.2rem;
+    background: none;
+    border: 1px solid rgba(74,103,65,0.4);
+    color: var(--stone);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.3s;
+  }
+
+  .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+  .admin-main { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; gap: 0; margin-bottom: 2rem; border-bottom: 2px solid rgba(74,103,65,0.15); }
+
+  .tab {
+    padding: 0.8rem 1.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--mist);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.3s;
+  }
+
+  .tab.active { color: var(--peak); border-bottom-color: var(--peak); font-weight: 500; }
+  .tab:hover { color: var(--peak); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== TRIP FORM ===== */
+  .card {
+    background: var(--cloud);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(74,103,65,0.1);
+  }
+
+  .card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(74,103,65,0.1);
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .form-group { margin-bottom: 1rem; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--stone);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .form-group .required { color: var(--danger); }
+
+  .form-control {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(74,103,65,0.3);
+    background: var(--snow);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .form-control:focus { border-color: var(--peak); background: var(--cloud); }
+
+  textarea.form-control { resize: vertical; min-height: 100px; }
+
+  .btn-submit {
+    padding: 0.85rem 2.5rem;
+    background: var(--peak);
+    color: var(--cloud);
+    border: none; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    transition: background 0.3s;
+  }
+
+  .btn-submit:hover { background: var(--moss); }
+
+  .btn-cancel {
+    padding: 0.85rem 2rem;
+    background: none;
+    color: var(--stone);
+    border: 1px solid rgba(74,103,65,0.3);
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    margin-right: 1rem;
+    transition: all 0.3s;
+  }
+
+  .btn-cancel:hover { border-color: var(--danger); color: var(--danger); }
+
+  .form-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+
+  .msg { font-size: 0.85rem; padding: 0.5rem 0; }
+  .msg.success { color: var(--peak); }
+  .msg.error { color: var(--danger); }
+
+  /* ===== TRIPS LIST ===== */
+  .btn-add {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    background: var(--peak);
+    color: var(--cloud);
+    border: none; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    transition: background 0.3s;
+  }
+
+  .btn-add:hover { background: var(--moss); }
+
+  .trips-table { width: 100%; border-collapse: collapse; }
+
+  .trips-table th {
+    text-align: left;
+    padding: 0.8rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--mist);
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(74,103,65,0.15);
+    background: var(--snow);
+  }
+
+  .trips-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(74,103,65,0.08);
+    font-size: 0.9rem;
+    vertical-align: middle;
+  }
+
+  .trips-table tr:hover td { background: rgba(74,103,65,0.03); }
+
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.72rem;
+    border: 1px solid currentColor;
+  }
+
+  .badge-easy { color: var(--moss); }
+  .badge-medium { color: var(--gold); }
+  .badge-hard { color: var(--danger); }
+
+  .btn-edit, .btn-delete {
+    padding: 0.35rem 0.9rem;
+    border: none; cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    transition: all 0.3s;
+  }
+
+  .btn-edit { background: rgba(74,103,65,0.1); color: var(--peak); }
+  .btn-edit:hover { background: var(--peak); color: var(--cloud); }
+  .btn-delete { background: rgba(160,64,64,0.1); color: var(--danger); }
+  .btn-delete:hover { background: var(--danger); color: var(--cloud); }
+
+  .empty-row td { text-align: center; padding: 3rem; color: var(--mist); }
+
+  /* ===== REGISTRATIONS ===== */
+  .reg-table { width: 100%; border-collapse: collapse; }
+
+  .reg-table th {
+    text-align: left; padding: 0.8rem 1rem;
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    color: var(--mist); text-transform: uppercase;
+    border-bottom: 2px solid rgba(74,103,65,0.15);
+    background: var(--snow);
+  }
+
+  .reg-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(74,103,65,0.08);
+    font-size: 0.85rem;
+  }
+
+  /* ===== STATS ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+
+  .stat-card {
+    background: var(--cloud);
+    padding: 1.5rem;
+    border: 1px solid rgba(74,103,65,0.1);
+    border-left: 4px solid var(--peak);
+  }
+
+  .stat-number {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--peak);
+  }
+
+  .stat-label { font-size: 0.85rem; color: var(--mist); margin-top: 0.3rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+    .admin-main { padding: 0 1rem; }
+    .trips-table { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">峰<span>頂</span>探險</div>
+    <p class="login-sub">後台管理系統</p>
+    <input class="login-input" type="password" id="pwd" placeholder="請輸入管理密碼" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">登入系統</button>
+    <p class="login-err" id="login-err"></p>
+    <p style="font-size:0.75rem; color:var(--mist); margin-top:1.5rem;">預設密碼：mountain2025</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <div class="admin-logo">峰<span>頂</span>探險 <span style="font-size:0.8rem;font-weight:300;color:var(--mist);margin-left:0.5rem;">後台管理</span></div>
+    <div class="admin-nav">
+      <a href="index.html" target="_blank">🔗 前台預覽</a>
+      <button class="btn-logout" onclick="logout()">登出</button>
+    </div>
+  </div>
+
+  <div class="admin-main">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('trips')">行程管理</div>
+      <div class="tab" onclick="switchTab('regs')">報名紀錄</div>
+    </div>
+
+    <!-- TRIPS TAB -->
+    <div class="tab-content active" id="tab-trips">
+      <button class="btn-add" onclick="showAddForm()">＋ 新增行程</button>
+
+      <!-- FORM (hidden by default) -->
+      <div class="card" id="trip-form-card" style="display:none;">
+        <div class="card-title" id="form-card-title">新增行程</div>
+        <input type="hidden" id="edit-id">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>行程名稱 <span class="required">*</span></label>
+            <input class="form-control" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜">
+          </div>
+          <div class="form-group">
+            <label>地區</label>
+            <input class="form-control" id="f-area" type="text" placeholder="例：南投、花蓮">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>出發日期 <span class="required">*</span></label>
+            <input class="form-control" id="f-date" type="date">
+          </div>
+          <div class="form-group">
+            <label>天數</label>
+            <input class="form-control" id="f-days" type="number" min="1" placeholder="天數">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>費用（NT$）<span class="required">*</span></label>
+            <input class="form-control" id="f-price" type="number" min="0" placeholder="費用">
+          </div>
+          <div class="form-group">
+            <label>名額</label>
+            <input class="form-control" id="f-slots" type="number" min="1" placeholder="最大人數">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>難度</label>
+            <select class="form-control" id="f-difficulty">
+              <option value="easy">輕鬆</option>
+              <option value="medium" selected>中級</option>
+              <option value="hard">進階</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>集合地點</label>
+            <input class="form-control" id="f-meeting" type="text" placeholder="例：台北車站北三門">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>封面圖片網址（選填）</label>
+          <input class="form-control" id="f-image" type="url" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+          <label>行程介紹</label>
+          <textarea class="form-control" id="f-desc" placeholder="詳細介紹、注意事項、包含費用說明等…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="cancelForm()">取消</button>
+          <button class="btn-submit" onclick="saveTrip()">儲存行程</button>
+          <span class="msg" id="form-msg"></span>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <div class="card" style="padding:0;">
+        <table class="trips-table">
+          <thead>
+            <tr>
+              <th>行程名稱</th>
+              <th>地區</th>
+              <th>日期</th>
+              <th>難度</th>
+              <th>費用</th>
+              <th>名額</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="trips-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- REGS TAB -->
+    <div class="tab-content" id="tab-regs">
+      <div class="card" style="padding:0;">
+        <table class="reg-table">
+          <thead>
+            <tr>
+              <th>行程</th>
+              <th>姓名</th>
+              <th>電話</th>
+              <th>Email</th>
+              <th>人數</th>
+              <th>報名時間</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody id="regs-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const ADMIN_PWD = 'mountain2025';
+
+// ===== AUTH =====
+function login() {
+  const pwd = document.getElementById('pwd').value;
+  if (pwd === ADMIN_PWD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    renderAll();
+  } else {
+    document.getElementById('login-err').textContent = '密碼錯誤，請再試一次。';
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('pwd').value = '';
+}
+
+// ===== DATA =====
+function getTrips() {
+  try { return JSON.parse(localStorage.getItem('mountain_trips') || '[]'); } catch { return []; }
+}
+function saveTrips(arr) { localStorage.setItem('mountain_trips', JSON.stringify(arr)); }
+function getRegs() {
+  try { return JSON.parse(localStorage.getItem('mountain_registrations') || '[]'); } catch { return []; }
+}
+function nextId(arr) { return arr.length ? Math.max(...arr.map(x => x.id)) + 1 : 1; }
+
+// ===== TABS =====
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'regs') renderRegs();
+}
+
+// ===== STATS =====
+function renderStats() {
+  const trips = getTrips();
+  const regs = getRegs();
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-number">${trips.length}</div><div class="stat-label">行程總數</div></div>
+    <div class="stat-card"><div class="stat-number">${regs.length}</div><div class="stat-label">報名總數</div></div>
+    <div class="stat-card"><div class="stat-number">${regs.reduce((s,r)=>s+Number(r.count||1),0)}</div><div class="stat-label">報名人次</div></div>
+  `;
+}
+
+// ===== TRIPS LIST =====
+function renderTripsTable() {
+  const trips = getTrips();
+  const diffMap = { easy: '<span class="badge badge-easy">輕鬆</span>', medium: '<span class="badge badge-medium">中級</span>', hard: '<span class="badge badge-hard">進階</span>' };
+  const tbody = document.getElementById('trips-tbody');
+
+  if (!trips.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">尚無行程，請新增第一筆。</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = trips.map(t => `
+    <tr>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.area || '-'}</td>
+      <td>${t.date || '-'}</td>
+      <td>${diffMap[t.difficulty] || '-'}</td>
+      <td>NT$ ${Number(t.price || 0).toLocaleString()}</td>
+      <td>${t.slots || '-'} 人</td>
+      <td>
+        <button class="btn-edit" onclick="editTrip(${t.id})">編輯</button>
+        <button class="btn-delete" onclick="deleteTrip(${t.id})">刪除</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ===== FORM =====
+function showAddForm() {
+  document.getElementById('form-card-title').textContent = '新增行程';
+  document.getElementById('edit-id').value = '';
+  clearForm();
+  document.getElementById('trip-form-card').style.display = 'block';
+  document.getElementById('trip-form-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function editTrip(id) {
+  const trip = getTrips().find(t => t.id === id);
+  if (!trip) return;
+  document.getElementById('form-card-title').textContent = '編輯行程';
+  document.getElementById('edit-id').value = id;
+  document.getElementById('f-name').value = trip.name || '';
+  document.getElementById('f-area').value = trip.area || '';
+  document.getElementById('f-date').value = trip.date || '';
+  document.getElementById('f-days').value = trip.days || '';
+  document.getElementById('f-price').value = trip.price || '';
+  document.getElementById('f-slots').value = trip.slots || '';
+  document.getElementById('f-difficulty').value = trip.difficulty || 'medium';
+  document.getElementById('f-meeting').value = trip.meetingPoint || '';
+  document.getElementById('f-image').value = trip.imageUrl || '';
+  document.getElementById('f-desc').value = trip.description || '';
+  document.getElementById('trip-form-card').style.display = 'block';
+  document.getElementById('trip-form-card').scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelForm() {
+  document.getElementById('trip-form-card').style.display = 'none';
+  clearForm();
+}
+
+function clearForm() {
+  ['f-name','f-area','f-date','f-days','f-price','f-slots','f-meeting','f-image','f-desc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-difficulty').value = 'medium';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('form-msg').textContent = '';
+}
+
+function saveTrip() {
+  const name = document.getElementById('f-name').value.trim();
+  const date = document.getElementById('f-date').value;
+  const price = document.getElementById('f-price').value;
+
+  if (!name) { showMsg('請填寫行程名稱。', 'error'); return; }
+  if (!date) { showMsg('請選擇出發日期。', 'error'); return; }
+  if (!price) { showMsg('請填寫費用。', 'error'); return; }
+
+  const trips = getTrips();
+  const editId = document.getElementById('edit-id').value;
+
+  const trip = {
+    id: editId ? Number(editId) : nextId(trips),
+    name,
+    area: document.getElementById('f-area').value.trim(),
+    date,
+    days: document.getElementById('f-days').value,
+    price: Number(price),
+    slots: document.getElementById('f-slots').value,
+    difficulty: document.getElementById('f-difficulty').value,
+    meetingPoint: document.getElementById('f-meeting').value.trim(),
+    imageUrl: document.getElementById('f-image').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    createdAt: editId ? trips.find(t=>t.id===Number(editId))?.createdAt : new Date().toISOString(),
+  };
+
+  if (editId) {
+    const idx = trips.findIndex(t => t.id === Number(editId));
+    if (idx !== -1) trips[idx] = trip;
+  } else {
+    trips.push(trip);
+  }
+
+  saveTrips(trips);
+  renderAll();
+  cancelForm();
+  showMsg('✅ 儲存成功！', 'success');
+  setTimeout(() => document.getElementById('form-msg').textContent = '', 3000);
+}
+
+function deleteTrip(id) {
+  if (!confirm('確定要刪除這個行程嗎？')) return;
+  saveTrips(getTrips().filter(t => t.id !== id));
+  renderAll();
+}
+
+function showMsg(text, type) {
+  const el = document.getElementById('form-msg');
+  el.textContent = text;
+  el.className = 'msg ' + type;
+}
+
+// ===== REGS =====
+function renderRegs() {
+  const regs = getRegs();
+  const trips = getTrips();
+  const tbody = document.getElementById('regs-tbody');
+
+  if (!regs.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem;color:var(--mist);">尚無報名紀錄。</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = [...regs].reverse().map(r => {
+    const trip = trips.find(t => t.id === r.tripId);
+    const time = r.time ? new Date(r.time).toLocaleString('zh-TW') : '-';
+    return `<tr>
+      <td><strong>${trip ? trip.name : '已刪除行程'}</strong></td>
+      <td>${r.name}</td>
+      <td>${r.phone}</td>
+      <td>${r.email}</td>
+      <td>${r.count || 1} 人</td>
+      <td style="font-size:0.78rem;color:var(--mist);">${time}</td>
+      <td style="font-size:0.8rem;">${r.note || '-'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== ALL =====
+function renderAll() {
+  renderStats();
+  renderTripsTable();
+}
+
+// ===== ENTER KEY =====
+document.getElementById('pwd').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+</script>
+</body>
+</html>
