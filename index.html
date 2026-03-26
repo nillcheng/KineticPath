@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -235,9 +234,9 @@
 <nav>
   <div class="logo">KineticPath</div>
   <ul>
-    <li><a href="#trips">Trips</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="admin.html">Admin</a></li>
+    <li><a href="#trips">行程</a></li>
+    <li><a href="#about">關於</a></li>
+    <li><a href="admin.html">後台</a></li>
   </ul>
 </nav>
 
@@ -246,12 +245,12 @@
   <div class="hero-frame tl"></div>
   <div class="hero-frame br"></div>
   <div class="hero-content">
-    <p class="hero-tag">Taiwan Mountain Expeditions · Since 2025</p>
-    <h1 class="hero-title">Back to<br><span class="grad-line">The Mountain</span></h1>
-    <p class="hero-sub">Certified guides · Professional gear · Unforgettable trails<br>Explore the most breathtaking peaks in Taiwan.</p>
+    <p class="hero-tag">台灣登山探險 · Since 2025</p>
+    <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
+    <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
     <div class="hero-cta">
-      <a href="#trips" class="btn-neon">Explore Trips</a>
-      <a href="#about" class="btn-neon pink">Our Story</a>
+      <a href="#trips" class="btn-neon">探索行程</a>
+      <a href="#about" class="btn-neon pink">關於我們</a>
     </div>
   </div>
   <div class="scroll-line">scroll</div>
@@ -260,27 +259,27 @@
 <section id="trips" class="trips-section">
   <div class="section-header">
     <div>
-      <div class="section-eyebrow">Featured Routes</div>
-      <h2 class="section-title">Upcoming Expeditions</h2>
-      <p class="section-sub">Every route is planned by our senior guides to ensure a safe and immersive mountain experience.</p>
+      <div class="section-eyebrow">精選路線</div>
+      <h2 class="section-title">近期登山行程</h2>
+      <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
     </div>
   </div>
   <div id="trips-grid">
-    <div class="empty-state"><div class="icon">▲</div><p>// NO TRIPS AVAILABLE — CHECK BACK SOON</p></div>
+    <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
   </div>
 </section>
 
 <section id="about" class="about-section">
   <div class="about-grid">
     <div>
-      <div class="section-eyebrow">About Us</div>
-      <h2 class="section-title">Every Peak<br>Has a Story</h2>
-      <p class="section-sub" style="margin-top:1rem;">KineticPath is dedicated to safe, immersive mountain trekking experiences. Our certified guides lead you through the most breathtaking trails in Taiwan.</p>
+      <div class="section-eyebrow">關於我們</div>
+      <h2 class="section-title">每座山<br>都是一個故事</h2>
+      <p class="section-sub" style="margin-top:1rem;">KineticPath 致力於提供安全、深度的登山體驗。我們的領隊皆持有合格登山嚮導證照，帶您探索台灣最美的山林秘境。</p>
       <div class="about-stats">
-        <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Routes</div></div>
-        <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Trekkers</div></div>
-        <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">Years Exp.</div></div>
-        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Safety Record</div></div>
+        <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">條路線</div></div>
+        <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">位旅客</div></div>
+        <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">年經驗</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">安全紀錄</div></div>
       </div>
     </div>
     <div class="about-img-wrap">
@@ -292,11 +291,11 @@
 
 <footer>
   <div class="footer-logo">KineticPath</div>
-  <div class="footer-info">info@kineticpath.com · +886 2 1234 5678<br>Mon–Fri 09:00–18:00</div>
+  <div class="footer-info">info@kineticpath.com · 02-1234-5678<br>週一至週五 09:00–18:00</div>
   <div class="footer-copy">© 2025 KINETICPATH</div>
 </footer>
 
-<a href="admin.html" class="admin-link">▲ Admin</a>
+<a href="admin.html" class="admin-link">▲ 後台</a>
 
 <div class="modal-overlay" id="tripModal">
   <div class="modal">
@@ -312,7 +311,7 @@ function renderTrips(){
   const grid=document.getElementById('trips-grid');
   const trips=getTrips();
   if(!trips.length){grid.innerHTML='<div class="empty-state"><div class="icon">▲</div><p>// NO TRIPS AVAILABLE — CHECK BACK SOON</p></div>';return;}
-  const dMap={easy:{l:'Easy',c:'tag-easy',b:'easy'},medium:{l:'Moderate',c:'tag-medium',b:'medium'},hard:{l:'Advanced',c:'tag-hard',b:'hard'}};
+  const dMap={easy:{l:'輕鬆',c:'tag-easy',b:'easy'},medium:{l:'中級',c:'tag-medium',b:'medium'},hard:{l:'進階',c:'tag-hard',b:'hard'}};
   grid.innerHTML=trips.map((t,i)=>{
     const d=dMap[t.difficulty]||dMap.medium;
     const img=t.imageUrl?`<div class="trip-img-wrap"><img class="trip-img" src="${t.imageUrl}" alt="${t.name}"></div>`:'<div class="trip-img-placeholder">▲</div>';
@@ -326,10 +325,10 @@ function renderTrips(){
         <h3 class="trip-name">${t.name}</h3>
         <p class="trip-desc">${t.description||''}</p>
         <div class="trip-footer">
-          <div class="trip-price">NT$ ${Number(t.price||0).toLocaleString()}<small> / person</small></div>
-          <div class="trip-meta">📅 ${t.date||'TBD'}<br>🧗 ${t.days||'-'} days</div>
+          <div class="trip-price">NT$ ${Number(t.price||0).toLocaleString()}<small> / 人</small></div>
+          <div class="trip-meta">📅 ${t.date||'待定'}<br>🧗 ${t.days||'-'} 天</div>
         </div>
-        <button class="btn-card">View Details & Register →</button>
+        <button class="btn-card">查看詳情 & 報名 →</button>
       </div>
     </div>`;
   }).join('');
@@ -337,35 +336,35 @@ function renderTrips(){
 
 function openModal(id){
   const t=getTrips().find(x=>x.id===id);if(!t)return;
-  const dL={easy:'Easy',medium:'Moderate',hard:'Advanced'};
+  const dL={easy:'輕鬆',medium:'中級',hard:'進階'};
   const img=t.imageUrl?`<div class="modal-img-wrap"><img src="${t.imageUrl}" alt="${t.name}"></div>`:'<div class="modal-img-placeholder">▲</div>';
   document.getElementById('modal-content').innerHTML=`
     ${img}
     <div class="modal-body">
-      <p class="modal-eyebrow">// EXPEDITION DETAILS</p>
+      <p class="modal-eyebrow">// 行程詳情</p>
       <h2 class="modal-title">${t.name}</h2>
       <div class="modal-grid">
-        <div class="modal-item"><label>Departure</label><strong>${t.date||'TBD'}</strong></div>
-        <div class="modal-item"><label>Duration</label><strong>${t.days||'-'} Days</strong></div>
-        <div class="modal-item"><label>Difficulty</label><strong>${dL[t.difficulty]||'-'}</strong></div>
-        <div class="modal-item"><label>Slots</label><strong>${t.slots||'-'} Persons</strong></div>
-        <div class="modal-item"><label>Meeting Point</label><strong>${t.meetingPoint||'-'}</strong></div>
-        <div class="modal-item"><label>Fee</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">NT$ ${Number(t.price||0).toLocaleString()}</strong></div>
+        <div class="modal-item"><label>出發日期</label><strong>${t.date||'待定'}</strong></div>
+        <div class="modal-item"><label>天數</label><strong>${t.days||'-'} 天</strong></div>
+        <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
+        <div class="modal-item"><label>名額</label><strong>${t.slots||'-'} 人</strong></div>
+        <div class="modal-item"><label>集合地點</label><strong>${t.meetingPoint||'-'}</strong></div>
+        <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">NT$ ${Number(t.price||0).toLocaleString()}</strong></div>
       </div>
       ${t.description?`<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>`:''}
       <div class="reg-block">
-        <h3>// Register Now</h3>
+        <h3>// 立即報名</h3>
         <div id="reg-msg"></div>
         <div class="f-row2">
-          <div class="f-group"><label>Name</label><input class="f-ctrl" id="reg-name" type="text" placeholder="Your name"></div>
-          <div class="f-group"><label>Phone</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="Contact number"></div>
+          <div class="f-group"><label>姓名</label><input class="f-ctrl" id="reg-name" type="text" placeholder="您的姓名"></div>
+          <div class="f-group"><label>電話</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話"></div>
         </div>
         <div class="f-row2">
-          <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email" type="email" placeholder="Email address"></div>
-          <div class="f-group"><label>Persons</label><select class="f-ctrl" id="reg-count">${[1,2,3,4,5].map(n=>`<option value="${n}">${n}</option>`).join('')}</select></div>
+          <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email" type="email" placeholder="電子郵件"></div>
+          <div class="f-group"><label>人數</label><select class="f-ctrl" id="reg-count">${[1,2,3,4,5].map(n=>`<option value="${n}">${n} 人</option>`).join('')}</select></div>
         </div>
-        <div class="f-group"><label>Notes</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="Special requests"></textarea></div>
-        <button class="btn-submit" onclick="submitReg(${t.id})">Confirm Registration</button>
+        <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求或備註"></textarea></div>
+        <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>
       </div>
     </div>`;
   document.getElementById('tripModal').classList.add('open');
@@ -380,11 +379,11 @@ function submitReg(tripId){
   const phone=document.getElementById('reg-phone').value.trim();
   const email=document.getElementById('reg-email').value.trim();
   const msg=document.getElementById('reg-msg');
-  if(!name||!phone||!email){msg.className='reg-msg err';msg.textContent='// ERROR: Please fill in name, phone and email.';return;}
+  if(!name||!phone||!email){msg.className='reg-msg err';msg.textContent='// 請填寫姓名、電話及 Email';return;}
   const regs=JSON.parse(localStorage.getItem('mountain_registrations')||'[]');
   regs.push({tripId,name,phone,email,count:document.getElementById('reg-count').value,note:document.getElementById('reg-note').value,time:new Date().toISOString()});
   localStorage.setItem('mountain_registrations',JSON.stringify(regs));
-  msg.className='reg-msg ok';msg.textContent='// SUCCESS: Registration confirmed. We will contact you soon.';
+  msg.className='reg-msg ok';msg.textContent='// 報名成功！我們將盡快與您聯繫';
   document.querySelector('.btn-submit').disabled=true;
 }
 
