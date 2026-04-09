@@ -104,19 +104,22 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .footer-copy{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em}
 .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:2rem}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp 0.3s ease both}
-.modal-img-wrap{height:220px;overflow:hidden}
+.modal{background:var(--bg2);border:1px solid var(--border);max-width:860px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp 0.3s ease both}
+.modal-img-wrap{height:280px;overflow:hidden}
 .modal-img-wrap img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65)}
 .modal-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--muted)}
 .modal-close{position:absolute;top:1rem;right:1rem;background:rgba(11,14,20,0.8);border:1px solid var(--border);color:var(--dim);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.3s;z-index:10}
 .modal-close:hover{border-color:var(--neon2);color:var(--neon2)}
-.modal-body{padding:2rem}
+.modal-body{padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+.modal-left{grid-column:1}
+.modal-right{grid-column:2}
+@media(max-width:700px){.modal-body{grid-template-columns:1fr}.modal-right{grid-column:1}}
 .modal-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--neon1);margin-bottom:0.5rem}
 .modal-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:1.5rem;line-height:1.2}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);margin-bottom:1.5rem}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--border);margin-bottom:1.5rem}
 .modal-item{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
-.modal-item:nth-child(even){border-right:none}
-.modal-item:nth-last-child(-n+2){border-bottom:none}
+.modal-item:nth-child(3n){border-right:none}
+.modal-item:nth-last-child(-n+3){border-bottom:none}
 .modal-item label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
 .modal-item strong{font-size:0.92rem;color:var(--text);font-weight:400}
 .modal-desc{font-size:0.85rem;color:var(--dim);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem}
@@ -701,18 +704,22 @@ async function openModal(id) {
   document.getElementById('modal-content').innerHTML=`
     ${img}
     <div class="modal-body">
-      <p class="modal-eyebrow">// 行程詳情</p>
-      <h2 class="modal-title">${t.name}</h2>
-      <div class="modal-grid">
-        <div class="modal-item"><label>出發日期</label><strong>${dateStr}</strong></div>
-        <div class="modal-item"><label>天數</label><strong>${t.days?t.days+' 天':'待定'}</strong></div>
-        <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
-        <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
-        <div class="modal-item"><label>集合地點</label><strong>${t.meeting_point||'-'}</strong></div>
-        <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
+      <div class="modal-left">
+        <p class="modal-eyebrow">// 行程詳情</p>
+        <h2 class="modal-title">${t.name}</h2>
+        <div class="modal-grid">
+          <div class="modal-item"><label>出發日期</label><strong>${dateStr}</strong></div>
+          <div class="modal-item"><label>天數</label><strong>${t.days?t.days+' 天':'待定'}</strong></div>
+          <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
+          <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
+          <div class="modal-item"><label>集合地點</label><strong>${t.meeting_point||'-'}</strong></div>
+          <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
+        </div>
+        ${t.description?`<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>`:''}
       </div>
-      ${t.description?`<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>`:''}
-      <div class="reg-block">${regContent}</div>
+      <div class="modal-right">
+        <div class="reg-block" style="border-top:none;padding-top:0">${regContent}</div>
+      </div>
     </div>`;
   document.getElementById('tripModal').classList.add('open');
   document.body.style.overflow='hidden';
