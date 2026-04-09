@@ -144,18 +144,66 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg2);border:1px solid var(--neon3);color:var(--neon3);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em;padding:0.9rem 2rem;z-index:999;opacity:0;transition:all 0.4s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== 手機版 RWD ===== */
+/* 漢堡選單按鈕（手機才顯示） */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:0.3rem;background:none;border:none}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all 0.3s}
+/* 手機選單覆蓋層 */
+.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.97);flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text);cursor:pointer;text-decoration:none;transition:color 0.3s}
+.mobile-menu a:hover{color:var(--neon1)}
+.mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--dim);font-size:1.5rem;cursor:pointer}
+
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}nav ul{gap:1rem}
-  .hero{padding:7rem 1.5rem 4rem}
-  .trips-section{padding:5rem 1.5rem}
-  .inner-page{padding:2rem 1.5rem}
-  .modal-grid{grid-template-columns:1fr}
-  .modal-item{border-right:none}
-  .modal-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
-  .modal-item:last-child{border-bottom:none}
+  /* 導覽列 */
+  nav{padding:1rem 1.5rem}
+  nav ul{display:none} /* 桌機選單隱藏 */
+  .hamburger{display:flex} /* 漢堡按鈕顯示 */
+
+  /* Hero */
+  .hero{padding:6rem 1.5rem 3rem;min-height:60vh}
+  .hero-title{font-size:clamp(2.5rem,12vw,4rem)}
+
+  /* 行程 */
+  .trips-section{padding:4rem 1rem}
+  #trips-grid{grid-template-columns:1fr}
+  .filter-bar{gap:0.4rem}
+  .filter-btn{padding:0.35rem 0.8rem;font-size:0.72rem}
+
+  /* Modal */
+  .modal{max-width:100%;max-height:95vh;margin:0.5rem}
+  .modal-body{grid-template-columns:1fr;gap:1rem}
+  .modal-left,.modal-right{grid-column:1}
+  .modal-grid{grid-template-columns:1fr 1fr}
+  .modal-item:nth-child(3n){border-right:1px solid var(--border)}
+  .modal-item:nth-child(even){border-right:none}
+  .modal-img-wrap{height:200px}
+
+  /* 表單 */
   .f-row2,.form-row2{grid-template-columns:1fr}
-  footer{flex-direction:column;text-align:center}
-  .my-trip-card{flex-direction:column;align-items:flex-start}
+  .modal-overlay{padding:0.5rem}
+
+  /* 內頁 */
+  .inner-page{padding:1.5rem 1rem}
+  .page-title{font-size:1.8rem}
+
+  /* 我的行程 */
+  .my-trip-card{flex-direction:column;align-items:flex-start;gap:0.8rem}
+  .btn-cancel-reg{width:100%;text-align:center}
+
+  /* 個人資料 */
+  .profile-card{padding:1.2rem}
+
+  /* Footer */
+  footer{flex-direction:column;text-align:center;padding:2rem 1.5rem}
+
+  /* Toast */
+  .toast{width:85%;text-align:center;font-size:0.78rem}
+
+  /* Auth modal */
+  .auth-modal{padding:1.5rem}
 }
 </style>
 </head>
@@ -167,7 +215,17 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     <li><a onclick="showPage('trips')">行程</a></li>
     <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
   </ul>
+  <!-- 手機版漢堡選單按鈕 -->
+  <button class="hamburger" onclick="openMobileMenu()" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- 手機版覆蓋選單 -->
+<div class="mobile-menu" id="mobile-menu">
+  <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+  <div id="mobile-nav-links"></div>
+</div>
 
 <div class="page active" id="page-home">
   <div class="hero">
@@ -363,15 +421,13 @@ async function init() {
   });
 }
 
-// 更新導覽列（根據登入狀態和管理員權限顯示不同選單）
+// 更新導覽列（同時更新桌機和手機選單）
 async function updateNav(loggedIn) {
-  const menu = document.getElementById('nav-menu');
+  const menu       = document.getElementById('nav-menu');
+  const mobileNav  = document.getElementById('mobile-nav-links');
   if (loggedIn) {
-    // 查詢是否為管理員，並把角色存到 sessionStorage
     const { data: adminData } = await sb.from('admins').select('role').eq('email', currentUser.email).single();
     const isAdmin = !!adminData;
-
-    // 把管理員角色存起來，點後台時直接帶過去，不需要再輸入
     if (isAdmin) {
       sessionStorage.setItem('adminRole', adminData.role);
       sessionStorage.setItem('adminEmail', currentUser.email);
@@ -379,7 +435,7 @@ async function updateNav(loggedIn) {
       sessionStorage.removeItem('adminRole');
       sessionStorage.removeItem('adminEmail');
     }
-
+    // 桌機選單
     menu.innerHTML = `
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="showPage('my-trips')">我的行程</a></li>
@@ -387,18 +443,54 @@ async function updateNav(loggedIn) {
       ${isAdmin ? `<li><a onclick="goAdmin()">後台</a></li>` : ''}
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
+    // 手機選單
+    mobileNav.innerHTML = `
+      <a onclick="mobileNav('trips')">行程</a>
+      <a onclick="mobileNav('my-trips')">我的行程</a>
+      <a onclick="mobileNav('profile')">我的資料維護</a>
+      ${isAdmin ? `<a onclick="mobileNav('admin')">後台</a>` : ''}
+      <a onclick="mobileNav('logout')" style="color:var(--neon2)">登出</a>
+    `;
   } else {
-    // 登出時清除管理員資訊
     sessionStorage.removeItem('adminRole');
     sessionStorage.removeItem('adminEmail');
+    // 桌機選單
     menu.innerHTML = `
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
     `;
+    // 手機選單
+    mobileNav.innerHTML = `
+      <a onclick="mobileNav('trips')">行程</a>
+      <a onclick="mobileNav('login')">登入</a>
+    `;
   }
 }
 
-// 前往後台（不需要再輸入任何資訊）
+// 開啟手機選單
+function openMobileMenu() {
+  document.getElementById('mobile-menu').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// 關閉手機選單
+function closeMobileMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// 手機選單點擊後關閉
+function mobileNav(action) {
+  closeMobileMenu();
+  if (action === 'trips') showPage('trips');
+  else if (action === 'my-trips') showPage('my-trips');
+  else if (action === 'profile') showPage('profile');
+  else if (action === 'admin') goAdmin();
+  else if (action === 'login') openAuthModal('login');
+  else if (action === 'logout') doLogout();
+}
+
+// 前往後台
 function goAdmin() {
   window.location.href = 'admin.html';
 }
