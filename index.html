@@ -470,15 +470,33 @@ async function changePassword() {
   const newPwd     = document.getElementById('pf-new-pwd').value;
   const confirmPwd = document.getElementById('pf-confirm-pwd').value;
   const st         = document.getElementById('pwd-status');
+
   if (!newPwd) { st.className='save-status err'; st.textContent='// 請輸入新密碼'; return; }
   if (newPwd.length < 6) { st.className='save-status err'; st.textContent='// 密碼至少需要 6 個字元'; return; }
   if (newPwd !== confirmPwd) { st.className='save-status err'; st.textContent='// 兩次密碼不一致'; return; }
+
   st.className='save-status'; st.textContent='// 更新中...';
+
+  // 先確認 session 是否有效
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    st.className='save-status err';
+    st.textContent='// Session 已過期，請重新登入';
+    return;
+  }
+
   const { error } = await sb.auth.updateUser({ password: newPwd });
-  if (error) { showToast('// 密碼修改失敗：'+error.message, true); return; }
-  showToast('✓ 密碼修改成功！');
+  if (error) {
+    st.className='save-status err';
+    st.textContent='// 修改失敗：' + error.message;
+    return;
+  }
+
+  st.className='save-status ok'; st.textContent='// ✓ 密碼修改成功！';
   document.getElementById('pf-new-pwd').value='';
   document.getElementById('pf-confirm-pwd').value='';
+  setTimeout(()=>{ st.textContent=''; }, 4000);
+}
 }
 
 // ===== PROFILE =====
