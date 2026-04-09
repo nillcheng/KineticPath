@@ -345,10 +345,18 @@ async function init() {
   const { data: { session } } = await sb.auth.getSession();
   if (session) { currentUser = session.user; await updateNav(true); }
   loadTrips();
-  // 監聽登入狀態變化
+  // 監聽登入狀態變化（只在真正登入/登出時更新，不在密碼修改時觸發）
   sb.auth.onAuthStateChange(async (event, session) => {
-    currentUser = session?.user || null;
-    await updateNav(!!currentUser);
+    if (event === 'SIGNED_IN' && !currentUser) {
+      // 第一次登入
+      currentUser = session.user;
+      await updateNav(true);
+    } else if (event === 'SIGNED_OUT') {
+      // 登出
+      currentUser = null;
+      await updateNav(false);
+    }
+    // TOKEN_REFRESHED 和 USER_UPDATED 不做任何動作，避免干擾 UI
   });
 }
 
