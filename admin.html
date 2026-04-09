@@ -124,7 +124,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <input class="login-input" type="password" id="pwd" placeholder="● ● ● ● ● ● ● ●" onkeydown="if(event.key==='Enter')login()">
     <button class="login-btn" onclick="login()">進入後台</button>
     <p class="login-err" id="login-err"></p>
-    <p class="login-hint">預設密碼：mountain2025</p>
+    <p class="login-hint">預設密碼：admin</p>
   </div>
 </div>
 
@@ -306,7 +306,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 
 <script>
-const PWD = 'mountain2025';
+const PWD = 'admin';
 let currentTripId = null;
 
 function login() {
@@ -361,9 +361,10 @@ function renderTripsTable() {
       <td>${price}</td>
       <td>${t.slots || '—'}</td>
       <td>
-        <span style="cursor:pointer;color:var(--accent);font-weight:700" onclick="viewTripRegs(${t.id})">
-          ${regCount} 人 ${regCount > 0 ? '→' : ''}
-        </span>
+        ${regCount > 0
+          ? `<span style="cursor:pointer;color:var(--accent);font-weight:700" onclick="viewTripRegs(${t.id})">${regCount} 人 →</span>`
+          : `<span style="color:var(--muted)">0 人</span>`
+        }
       </td>
       <td>
         <button class="btn-sm btn-view" onclick="viewTripRegs(${t.id})">查看報名</button>
