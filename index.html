@@ -6,30 +6,24 @@
 <title>KineticPath</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0b0e14; --bg2:#0f1319; --bg3:#151a22;
-  --border:rgba(255,255,255,0.07);
-  --text:#c8d0dc; --dim:#5a6475; --muted:#2e3440;
-  --neon1:#f0a050; --neon2:#e05878; --neon3:#f0c840;
-  --grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));
-  --grad2:linear-gradient(90deg,var(--neon1),var(--neon2));
-  --white:#ffffff;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+:root{--bg:#0b0e14;--bg2:#0f1319;--bg3:#151a22;--border:rgba(255,255,255,0.07);--text:#c8d0dc;--dim:#5a6475;--muted:#2e3440;--neon1:#f0a050;--neon2:#e05878;--neon3:#f0c840;--grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));--grad2:linear-gradient(90deg,var(--neon1),var(--neon2));--white:#fff}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(240,160,80,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,160,80,0.025) 1px,transparent 1px);background-size:60px 60px}
 
 /* NAV */
 nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.4rem 3rem;background:rgba(11,14,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.logo{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
 nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
 nav ul a{text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);transition:color 0.3s;position:relative;cursor:pointer}
 nav ul a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--grad2);transition:width 0.3s}
-nav ul a:hover{color:var(--neon1)}
-nav ul a:hover::after{width:100%}
-.nav-login-btn{border:1px solid var(--neon1);color:var(--neon1)!important;padding:0.4rem 1rem}
-.nav-login-btn:hover{background:var(--neon1);color:var(--bg)!important}
+nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
+.nav-login-btn{border:1px solid var(--neon1)!important;color:var(--neon1)!important;padding:0.4rem 1rem!important}
+.nav-login-btn:hover{background:var(--neon1)!important;color:var(--bg)!important}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:6rem}
+.page.active{display:block}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
@@ -46,25 +40,21 @@ nav ul a:hover::after{width:100%}
 .hero-cta{display:flex;gap:1.2rem;animation:fadeUp 0.8s 0.65s both}
 .btn-neon{display:inline-block;padding:0.9rem 2.2rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;cursor:pointer;position:relative;overflow:hidden;transition:color 0.3s}
 .btn-neon::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
-.btn-neon:hover{color:var(--bg)}
-.btn-neon:hover::before{transform:translateX(0)}
+.btn-neon:hover{color:var(--bg)}.btn-neon:hover::before{transform:translateX(0)}
 .scroll-line{position:absolute;bottom:0;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--dim);padding-bottom:2rem}
 .scroll-line::after{content:'';width:1px;height:50px;background:linear-gradient(to bottom,var(--neon1),transparent);animation:pulse 1.5s ease-in-out infinite}
 
-/* TRIPS */
+/* TRIPS SECTION */
 .trips-section{padding:8rem 3rem}
 .section-header{max-width:1200px;margin:0 auto 3rem}
 .section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
 .section-eyebrow::before{content:'//';opacity:0.5}
 .section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white)}
 .section-sub{font-size:0.85rem;color:var(--dim);line-height:1.9;font-weight:300;margin-top:0.5rem}
-
 #trips-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
 .trip-card{background:var(--bg2);overflow:hidden;cursor:pointer;position:relative;transition:background 0.3s}
 .trip-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--grad2);transition:height 0.4s;z-index:2}
-.trip-card:hover{background:var(--bg3)}
-.trip-card:hover::before{height:100%}
-.trip-card:hover .trip-img{transform:scale(1.05)}
+.trip-card:hover{background:var(--bg3)}.trip-card:hover::before{height:100%}.trip-card:hover .trip-img{transform:scale(1.05)}
 .trip-img-wrap{height:220px;overflow:hidden}
 .trip-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s;filter:brightness(0.7) saturate(0.8)}
 .trip-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--muted)}
@@ -87,6 +77,36 @@ nav ul a:hover::after{width:100%}
 .btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
 .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
 .empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
+
+/* INNER PAGE */
+.inner-page{max-width:900px;margin:0 auto;padding:3rem}
+.page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
+.page-eyebrow::before{content:'//';opacity:0.5}
+.page-title{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);margin-bottom:2rem}
+
+/* MY TRIPS */
+.my-trip-card{background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.my-trip-info{}
+.my-trip-name{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:0.4rem}
+.my-trip-meta{font-size:0.8rem;color:var(--dim);line-height:1.7}
+.my-trip-status{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--neon3);letter-spacing:0.1em;margin-top:0.4rem}
+.btn-cancel-reg{padding:0.5rem 1.2rem;background:none;border:1px solid var(--neon2);color:var(--neon2);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.05em;transition:all 0.3s;white-space:nowrap}
+.btn-cancel-reg:hover{background:var(--neon2);color:var(--bg)}
+.empty-inner{text-align:center;padding:4rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem}
+
+/* PROFILE FORM */
+.profile-card{background:var(--bg2);border:1px solid var(--border);padding:2rem;margin-bottom:1.5rem}
+.profile-section-title{font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;color:var(--neon1);text-transform:uppercase;margin-bottom:1.2rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border)}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.f-group{margin-bottom:1rem}
+.f-group label{display:block;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.4rem}
+.f-ctrl{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
+.f-ctrl:focus{border-color:var(--neon1)}
+.f-ctrl option{background:var(--bg3)}
+.btn-save-profile{padding:0.9rem 2.5rem;background:var(--neon1);color:var(--bg);border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;transition:background 0.3s}
+.btn-save-profile:hover{background:var(--white)}
+.save-status{font-family:'Share Tech Mono',monospace;font-size:0.78rem;margin-left:1rem}
+.save-status.ok{color:var(--neon3)}.save-status.err{color:var(--neon2)}
 
 /* FOOTER */
 footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
@@ -115,20 +135,14 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .modal-desc{font-size:0.85rem;color:var(--dim);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem}
 .reg-block{border-top:1px solid var(--border);padding-top:1.5rem}
 .reg-block h3{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon1);margin-bottom:1.2rem}
-.f-group{margin-bottom:0.9rem}
-.f-group label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
-.f-ctrl{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
-.f-ctrl:focus{border-color:var(--neon1)}
-.f-ctrl option{background:var(--bg3)}
 .f-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
 .btn-submit{width:100%;padding:1rem;margin-top:0.5rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;position:relative;overflow:hidden;transition:color 0.3s}
 .btn-submit::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
-.btn-submit:hover{color:var(--bg)}
-.btn-submit:hover::before{transform:translateX(0)}
+.btn-submit:hover{color:var(--bg)}.btn-submit:hover::before{transform:translateX(0)}
 .reg-msg{font-family:'Share Tech Mono',monospace;font-size:0.78rem;text-align:center;padding:0.7rem 0;letter-spacing:0.1em}
 .reg-msg.ok{color:var(--neon3)}.reg-msg.err{color:var(--neon2)}
 
-/* LOGIN MODAL */
+/* AUTH MODAL */
 .auth-modal{background:var(--bg2);border:1px solid var(--border);max-width:420px;width:100%;position:relative;animation:fadeUp 0.3s ease both;padding:2.5rem}
 .auth-title{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:0.5rem}
 .auth-sub{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--dim);letter-spacing:0.1em;margin-bottom:2rem}
@@ -137,66 +151,128 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .auth-tab.active{color:var(--neon1);border-bottom-color:var(--neon1)}
 .auth-msg{font-family:'Share Tech Mono',monospace;font-size:0.75rem;text-align:center;padding:0.5rem 0;letter-spacing:0.05em}
 .auth-msg.ok{color:var(--neon3)}.auth-msg.err{color:var(--neon2)}
-.auth-footer{font-size:0.78rem;color:var(--dim);text-align:center;margin-top:1rem}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
-
 @media(max-width:768px){
   nav{padding:1rem 1.5rem}nav ul{gap:1rem}
   .hero{padding:7rem 1.5rem 4rem}
   .trips-section{padding:5rem 1.5rem}
-  .section-header{flex-direction:column;align-items:flex-start;gap:1rem}
+  .inner-page{padding:2rem 1.5rem}
   .modal-grid{grid-template-columns:1fr}
   .modal-item{border-right:none}
   .modal-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
   .modal-item:last-child{border-bottom:none}
-  .f-row2{grid-template-columns:1fr}
+  .f-row2,.form-row2{grid-template-columns:1fr}
   footer{flex-direction:column;text-align:center}
+  .my-trip-card{flex-direction:column;align-items:flex-start}
 }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">KineticPath</div>
+  <div class="logo" onclick="showPage('home')">KineticPath</div>
   <ul id="nav-menu">
-    <li><a href="#trips">行程</a></li>
+    <li><a onclick="showPage('trips')">行程</a></li>
     <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
   </ul>
 </nav>
 
-<div class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-frame tl"></div>
-  <div class="hero-frame br"></div>
-  <div class="hero-content">
-    <p class="hero-tag">台灣登山探險 · Since 2025</p>
-    <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
-    <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
-    <div class="hero-cta">
-      <a href="#trips" class="btn-neon">探索行程</a>
+<!-- 首頁 PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-frame tl"></div>
+    <div class="hero-frame br"></div>
+    <div class="hero-content">
+      <p class="hero-tag">台灣登山探險 · Since 2025</p>
+      <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
+      <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
+      <div class="hero-cta">
+        <a onclick="showPage('trips')" class="btn-neon" style="cursor:pointer">探索行程</a>
+      </div>
     </div>
+    <div class="scroll-line">scroll</div>
   </div>
-  <div class="scroll-line">scroll</div>
+  <footer>
+    <div class="footer-logo">KineticPath</div>
+    <div class="footer-info">info@kineticpath.com · 02-1234-5678<br>週一至週五 09:00–18:00</div>
+    <div class="footer-copy">© 2025 KINETICPATH</div>
+  </footer>
 </div>
 
-<section id="trips" class="trips-section">
-  <div class="section-header">
-    <div class="section-eyebrow">精選路線</div>
-    <h2 class="section-title">近期登山行程</h2>
-    <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
-  </div>
-  <div id="trips-grid">
-    <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
-  </div>
-</section>
+<!-- 行程 PAGE -->
+<div class="page" id="page-trips">
+  <section class="trips-section">
+    <div class="section-header">
+      <div class="section-eyebrow">精選路線</div>
+      <h2 class="section-title">近期登山行程</h2>
+      <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
+    </div>
+    <div id="trips-grid">
+      <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
+    </div>
+  </section>
+</div>
 
-<footer>
-  <div class="footer-logo">KineticPath</div>
-  <div class="footer-info">info@kineticpath.com · 02-1234-5678<br>週一至週五 09:00–18:00</div>
-  <div class="footer-copy">© 2025 KINETICPATH</div>
-</footer>
+<!-- 我的行程 PAGE -->
+<div class="page" id="page-my-trips">
+  <div class="inner-page">
+    <div class="page-eyebrow">My Trips</div>
+    <h2 class="page-title">我的行程</h2>
+    <div id="my-trips-list">
+      <div class="empty-inner">// 尚無報名紀錄</div>
+    </div>
+  </div>
+</div>
+
+<!-- 我的資料維護 PAGE -->
+<div class="page" id="page-profile">
+  <div class="inner-page">
+    <div class="page-eyebrow">Profile</div>
+    <h2 class="page-title">我的資料維護</h2>
+    <p style="font-size:0.85rem;color:var(--dim);margin-bottom:2rem;font-family:'Share Tech Mono',monospace;font-size:0.75rem;">// 填寫後報名時將自動帶入，無需重複填寫</p>
+    <div class="profile-card">
+      <div class="profile-section-title">基本資料</div>
+      <div class="form-row2">
+        <div class="f-group"><label>姓名</label><input class="f-ctrl" id="pf-name" type="text" placeholder="真實姓名"></div>
+        <div class="f-group"><label>性別</label>
+          <select class="f-ctrl" id="pf-gender">
+            <option value="">請選擇</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row2">
+        <div class="f-group"><label>出生日期（西元）</label><input class="f-ctrl" id="pf-birthday" type="date"></div>
+        <div class="f-group"><label>國家</label><input class="f-ctrl" id="pf-country" type="text" placeholder="例：台灣"></div>
+      </div>
+      <div class="form-row2">
+        <div class="f-group"><label>身分證字號 / 護照號碼</label><input class="f-ctrl" id="pf-id" type="text" placeholder="身分證字號或護照號碼"></div>
+        <div class="f-group"><label>電話</label><input class="f-ctrl" id="pf-phone" type="tel" placeholder="連絡電話"></div>
+      </div>
+      <div class="form-row2">
+        <div class="f-group"><label>電子郵件</label><input class="f-ctrl" id="pf-email" type="email" placeholder="Email"></div>
+        <div class="f-group"><label>地址</label><input class="f-ctrl" id="pf-address" type="text" placeholder="通訊地址"></div>
+      </div>
+    </div>
+    <div class="profile-card">
+      <div class="profile-section-title">緊急聯絡資訊</div>
+      <div class="form-row2">
+        <div class="f-group"><label>緊急聯絡人</label><input class="f-ctrl" id="pf-emergency" type="text" placeholder="緊急聯絡人姓名"></div>
+        <div class="f-group"><label>緊急聯絡電話</label><input class="f-ctrl" id="pf-emergency-phone" type="tel" placeholder="緊急聯絡電話"></div>
+      </div>
+      <div class="f-group"><label>備註 / 特殊需求</label><input class="f-ctrl" id="pf-note" type="text" placeholder="飲食限制、健康狀況等"></div>
+    </div>
+    <div style="display:flex;align-items:center">
+      <button class="btn-save-profile" onclick="saveProfile()">儲存資料</button>
+      <span class="save-status" id="profile-status"></span>
+    </div>
+  </div>
+</div>
 
 <!-- 行程詳情 Modal -->
 <div class="modal-overlay" id="tripModal">
@@ -216,16 +292,12 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
       <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登入</div>
       <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">註冊</div>
     </div>
-
-    <!-- 登入表單 -->
     <div id="form-login">
       <div class="f-group"><label>Email</label><input class="f-ctrl" id="login-email" type="email" placeholder="輸入 Email"></div>
       <div class="f-group"><label>密碼</label><input class="f-ctrl" id="login-pwd" type="password" placeholder="輸入密碼"></div>
       <div class="auth-msg" id="login-msg"></div>
       <button class="btn-submit" onclick="doLogin()">登入</button>
     </div>
-
-    <!-- 註冊表單 -->
     <div id="form-register" style="display:none">
       <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email2" type="email" placeholder="輸入 Email"></div>
       <div class="f-group"><label>密碼（至少6位）</label><input class="f-ctrl" id="reg-pwd2" type="password" placeholder="設定密碼"></div>
@@ -237,49 +309,50 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase 設定
 const SUPABASE_URL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 目前登入用戶
 let currentUser = null;
 
-// 初始化：檢查登入狀態
+// ===== PAGES =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo(0,0);
+  if (name === 'my-trips') renderMyTrips();
+  if (name === 'profile') loadProfile();
+  if (name === 'trips') renderTrips();
+}
+
+// ===== AUTH =====
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    currentUser = session.user;
-    updateNav(true);
-  }
+  if (session) { currentUser = session.user; updateNav(true); }
   renderTrips();
-
   sb.auth.onAuthStateChange((event, session) => {
     currentUser = session?.user || null;
     updateNav(!!currentUser);
   });
 }
 
-// 更新導覽列
 function updateNav(loggedIn) {
   const menu = document.getElementById('nav-menu');
   if (loggedIn) {
     menu.innerHTML = `
-      <li><a href="#trips">行程</a></li>
-      <li><a href="#my-trips">我的行程</a></li>
-      <li><a onclick="openProfile()">我的資料維護</a></li>
+      <li><a onclick="showPage('trips')">行程</a></li>
+      <li><a onclick="showPage('my-trips')">我的行程</a></li>
+      <li><a onclick="showPage('profile')">我的資料維護</a></li>
       <li><a href="admin.html" target="_blank">後台</a></li>
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
   } else {
     menu.innerHTML = `
-      <li><a href="#trips">行程</a></li>
+      <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
     `;
   }
 }
 
-// 登入
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pwd   = document.getElementById('login-pwd').value;
@@ -292,7 +365,6 @@ async function doLogin() {
   setTimeout(closeAuthModal, 800);
 }
 
-// 註冊
 async function doRegister() {
   const email = document.getElementById('reg-email2').value.trim();
   const pwd   = document.getElementById('reg-pwd2').value;
@@ -305,14 +377,13 @@ async function doRegister() {
   msg.className='auth-msg ok'; msg.textContent='// 註冊成功！請查收驗證信';
 }
 
-// 登出
 async function doLogout() {
   await sb.auth.signOut();
   currentUser = null;
   updateNav(false);
+  showPage('home');
 }
 
-// Auth Modal
 function openAuthModal(tab) {
   document.getElementById('authModal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -331,15 +402,97 @@ function switchAuthTab(tab) {
   document.getElementById('tab-register').className = 'auth-tab' + (tab === 'register' ? ' active' : '');
 }
 
-function openProfile() {
-  alert('我的資料維護功能開發中！');
+// ===== PROFILE =====
+function getProfile() {
+  if (!currentUser) return {};
+  try { return JSON.parse(localStorage.getItem('kp_profile_' + currentUser.id) || '{}'); } catch { return {}; }
 }
 
-// 行程資料
-function getTrips() {
-  try { return JSON.parse(localStorage.getItem('mountain_trips') || '[]'); } catch { return []; }
+function saveProfile() {
+  if (!currentUser) return;
+  const profile = {
+    name:          document.getElementById('pf-name').value.trim(),
+    gender:        document.getElementById('pf-gender').value,
+    birthday:      document.getElementById('pf-birthday').value,
+    country:       document.getElementById('pf-country').value.trim(),
+    idNumber:      document.getElementById('pf-id').value.trim(),
+    phone:         document.getElementById('pf-phone').value.trim(),
+    email:         document.getElementById('pf-email').value.trim(),
+    address:       document.getElementById('pf-address').value.trim(),
+    emergency:     document.getElementById('pf-emergency').value.trim(),
+    emergencyPhone:document.getElementById('pf-emergency-phone').value.trim(),
+    note:          document.getElementById('pf-note').value.trim(),
+  };
+  localStorage.setItem('kp_profile_' + currentUser.id, JSON.stringify(profile));
+  const st = document.getElementById('profile-status');
+  st.className = 'save-status ok'; st.textContent = '// 儲存成功！';
+  setTimeout(() => { st.textContent = ''; }, 3000);
 }
 
+function loadProfile() {
+  const p = getProfile();
+  document.getElementById('pf-name').value           = p.name || '';
+  document.getElementById('pf-gender').value         = p.gender || '';
+  document.getElementById('pf-birthday').value       = p.birthday || '';
+  document.getElementById('pf-country').value        = p.country || '';
+  document.getElementById('pf-id').value             = p.idNumber || '';
+  document.getElementById('pf-phone').value          = p.phone || '';
+  document.getElementById('pf-email').value          = p.email || currentUser?.email || '';
+  document.getElementById('pf-address').value        = p.address || '';
+  document.getElementById('pf-emergency').value      = p.emergency || '';
+  document.getElementById('pf-emergency-phone').value= p.emergencyPhone || '';
+  document.getElementById('pf-note').value           = p.note || '';
+}
+
+// ===== MY TRIPS =====
+function getRegs() { try { return JSON.parse(localStorage.getItem('mountain_registrations') || '[]'); } catch { return []; } }
+function getTrips() { try { return JSON.parse(localStorage.getItem('mountain_trips') || '[]'); } catch { return []; } }
+
+function renderMyTrips() {
+  if (!currentUser) return;
+  const regs  = getRegs().filter(r => r.userId === currentUser.id);
+  const trips = getTrips();
+  const list  = document.getElementById('my-trips-list');
+
+  if (!regs.length) {
+    list.innerHTML = '<div class="empty-inner">// 尚無報名紀錄<br><br><a onclick="showPage(\'trips\')" style="color:var(--neon1);cursor:pointer;font-size:0.85rem">→ 前往探索行程</a></div>';
+    return;
+  }
+
+  list.innerHTML = regs.map((r, idx) => {
+    const trip = trips.find(t => t.id === r.tripId);
+    if (!trip) return '';
+    const price = trip.price ? `NT$ ${Number(trip.price).toLocaleString()} / 人` : '價格洽詢';
+    return `<div class="my-trip-card">
+      <div class="my-trip-info">
+        <div class="my-trip-name">${trip.name}</div>
+        <div class="my-trip-meta">
+          ${trip.date ? '📅 ' + trip.date : ''}
+          ${trip.days ? ' · 🧗 ' + trip.days + ' 天' : ''}
+          ${trip.area ? ' · 📍 ' + trip.area : ''}
+          <br>${price}
+        </div>
+        <div class="my-trip-status">✓ 已報名 · ${new Date(r.time).toLocaleDateString('zh-TW')}</div>
+      </div>
+      <button class="btn-cancel-reg" onclick="cancelReg(${idx})">取消報名</button>
+    </div>`;
+  }).join('');
+}
+
+function cancelReg(idx) {
+  if (!confirm('確定要取消這筆報名嗎？')) return;
+  const regs = getRegs();
+  const userRegs = regs.filter(r => r.userId === currentUser.id);
+  const target = userRegs[idx];
+  const globalIdx = regs.findIndex(r => r === target || (r.tripId === target.tripId && r.time === target.time));
+  if (globalIdx !== -1) {
+    regs.splice(globalIdx, 1);
+    localStorage.setItem('mountain_registrations', JSON.stringify(regs));
+  }
+  renderMyTrips();
+}
+
+// ===== TRIPS =====
 function renderTrips() {
   const grid  = document.getElementById('trips-grid');
   const trips = getTrips();
@@ -356,14 +509,14 @@ function renderTrips() {
       ${img}<div class="diff-bar ${d.b}"></div>
       <div class="trip-body">
         <div class="trip-top">
-          <div class="trip-tags"><span class="tag ${d.c}">${d.l}</span>${t.area ? `<span class="tag tag-area">${t.area}</span>` : ''}</div>
+          <div class="trip-tags"><span class="tag ${d.c}">${d.l}</span>${t.area?`<span class="tag tag-area">${t.area}</span>`:''}</div>
           <span class="trip-num">#${String(i+1).padStart(2,'0')}</span>
         </div>
         <h3 class="trip-name">${t.name}</h3>
-        <p class="trip-desc">${t.description || ''}</p>
+        <p class="trip-desc">${t.description||''}</p>
         <div class="trip-footer">
           <div class="trip-price">${price}</div>
-          <div class="trip-meta">${t.date ? '📅 ' + t.date : ''}${t.days ? '<br>🧗 ' + t.days + ' 天' : ''}</div>
+          <div class="trip-meta">${t.date?'📅 '+t.date:''}${t.days?'<br>🧗 '+t.days+' 天':''}</div>
         </div>
         <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">查看詳情 & 報名 →</button>
       </div>
@@ -377,61 +530,68 @@ function openModal(id) {
   const dL  = { easy:'輕鬆', medium:'中級', hard:'進階' };
   const img = t.imageUrl ? `<div class="modal-img-wrap"><img src="${t.imageUrl}" alt="${t.name}"></div>` : '<div class="modal-img-placeholder">▲</div>';
   const price = t.price ? `NT$ ${Number(t.price).toLocaleString()}` : '價格洽詢';
+
+  // 帶入 profile 資料
+  const p = getProfile();
+
+  let regContent = '';
+  if (currentUser) {
+    regContent = `
+      <h3>// 立即報名</h3>
+      <div id="reg-msg"></div>
+      <div class="f-row2">
+        <div class="f-group"><label>姓名 *</label><input class="f-ctrl" id="reg-name" type="text" placeholder="真實姓名" value="${p.name||''}"></div>
+        <div class="f-group"><label>性別 *</label>
+          <select class="f-ctrl" id="reg-gender">
+            <option value="">請選擇</option>
+            <option value="男" ${p.gender==='男'?'selected':''}>男</option>
+            <option value="女" ${p.gender==='女'?'selected':''}>女</option>
+            <option value="其他" ${p.gender==='其他'?'selected':''}>其他</option>
+          </select>
+        </div>
+      </div>
+      <div class="f-row2">
+        <div class="f-group"><label>出生日期（西元）*</label><input class="f-ctrl" id="reg-birthday" type="date" value="${p.birthday||''}"></div>
+        <div class="f-group"><label>國家 *</label><input class="f-ctrl" id="reg-country" type="text" placeholder="例：台灣" value="${p.country||'台灣'}"></div>
+      </div>
+      <div class="f-row2">
+        <div class="f-group"><label>身分證字號 / 護照號碼 *</label><input class="f-ctrl" id="reg-id" type="text" placeholder="身分證字號或護照號碼" value="${p.idNumber||''}"></div>
+        <div class="f-group"><label>電話 *</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話" value="${p.phone||''}"></div>
+      </div>
+      <div class="f-row2">
+        <div class="f-group"><label>電子郵件 *</label><input class="f-ctrl" id="reg-email" type="email" placeholder="Email" value="${p.email||currentUser?.email||''}"></div>
+        <div class="f-group"><label>地址</label><input class="f-ctrl" id="reg-address" type="text" placeholder="通訊地址" value="${p.address||''}"></div>
+      </div>
+      <div class="f-row2">
+        <div class="f-group"><label>緊急聯絡人 *</label><input class="f-ctrl" id="reg-emergency" type="text" placeholder="緊急聯絡人姓名" value="${p.emergency||''}"></div>
+        <div class="f-group"><label>緊急聯絡電話 *</label><input class="f-ctrl" id="reg-emergency-phone" type="tel" placeholder="緊急聯絡電話" value="${p.emergencyPhone||''}"></div>
+      </div>
+      <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求、飲食限制等">${p.note||''}</textarea></div>
+      <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>`;
+  } else {
+    regContent = `<div style="text-align:center;padding:2rem 0">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
+      <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
+    </div>`;
+  }
+
   document.getElementById('modal-content').innerHTML = `
     ${img}
     <div class="modal-body">
       <p class="modal-eyebrow">// 行程詳情</p>
       <h2 class="modal-title">${t.name}</h2>
       <div class="modal-grid">
-        <div class="modal-item"><label>出發日期</label><strong>${t.date || '待定'}</strong></div>
-        <div class="modal-item"><label>天數</label><strong>${t.days ? t.days + ' 天' : '待定'}</strong></div>
-        <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty] || '-'}</strong></div>
-        <div class="modal-item"><label>名額</label><strong>${t.slots ? t.slots + ' 人' : '-'}</strong></div>
-        <div class="modal-item"><label>集合地點</label><strong>${t.meetingPoint || '-'}</strong></div>
+        <div class="modal-item"><label>出發日期</label><strong>${t.date||'待定'}</strong></div>
+        <div class="modal-item"><label>天數</label><strong>${t.days?t.days+' 天':'待定'}</strong></div>
+        <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
+        <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
+        <div class="modal-item"><label>集合地點</label><strong>${t.meetingPoint||'-'}</strong></div>
         <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
       </div>
-      ${t.description ? `<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>` : ''}
-      <div class="reg-block">
-        ${currentUser ? `
-        <h3>// 立即報名</h3>
-        <div id="reg-msg"></div>
-        <div class="f-row2">
-          <div class="f-group"><label>姓名 *</label><input class="f-ctrl" id="reg-name" type="text" placeholder="真實姓名"></div>
-          <div class="f-group"><label>性別 *</label>
-            <select class="f-ctrl" id="reg-gender">
-              <option value="">請選擇</option>
-              <option value="男">男</option>
-              <option value="女">女</option>
-              <option value="其他">其他</option>
-            </select>
-          </div>
-        </div>
-        <div class="f-row2">
-          <div class="f-group"><label>出生日期（西元）*</label><input class="f-ctrl" id="reg-birthday" type="date"></div>
-          <div class="f-group"><label>國家 *</label><input class="f-ctrl" id="reg-country" type="text" placeholder="例：台灣" value="台灣"></div>
-        </div>
-        <div class="f-row2">
-          <div class="f-group"><label>身分證字號 / 護照號碼 *</label><input class="f-ctrl" id="reg-id" type="text" placeholder="身分證字號或護照號碼"></div>
-          <div class="f-group"><label>電話 *</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話"></div>
-        </div>
-        <div class="f-row2">
-          <div class="f-group"><label>電子郵件 *</label><input class="f-ctrl" id="reg-email" type="email" placeholder="Email" value="${currentUser?.email || ''}"></div>
-          <div class="f-group"><label>地址</label><input class="f-ctrl" id="reg-address" type="text" placeholder="通訊地址"></div>
-        </div>
-        <div class="f-row2">
-          <div class="f-group"><label>緊急聯絡人 *</label><input class="f-ctrl" id="reg-emergency" type="text" placeholder="緊急聯絡人姓名"></div>
-          <div class="f-group"><label>緊急聯絡電話 *</label><input class="f-ctrl" id="reg-emergency-phone" type="tel" placeholder="緊急聯絡電話"></div>
-        </div>
-        <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求、飲食限制等"></textarea></div>
-        <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>
-        ` : `
-        <div style="text-align:center;padding:2rem 0">
-          <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
-          <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
-        </div>
-        `}
-      </div>
+      ${t.description?`<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>`:''}
+      <div class="reg-block">${regContent}</div>
     </div>`;
+
   document.getElementById('tripModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -441,8 +601,8 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('tripModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuthModal(); });
+document.getElementById('tripModal').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+document.getElementById('authModal').addEventListener('click', function(e) { if(e.target===this) closeAuthModal(); });
 
 function submitReg(tripId) {
   const name          = document.getElementById('reg-name').value.trim();
@@ -458,22 +618,17 @@ function submitReg(tripId) {
   const note          = document.getElementById('reg-note').value.trim();
   const msg           = document.getElementById('reg-msg');
 
-  if (!name || !gender || !birthday || !country || !idNumber || !phone || !email || !emergency || !emergencyPhone) {
+  if (!name||!gender||!birthday||!country||!idNumber||!phone||!email||!emergency||!emergencyPhone) {
     msg.className='reg-msg err'; msg.textContent='// 請填寫所有必填欄位（標示 * 的項目）'; return;
   }
 
-  const regs = JSON.parse(localStorage.getItem('mountain_registrations') || '[]');
-  regs.push({ tripId, name, gender, birthday, country, idNumber, phone, email, address, emergency, emergencyPhone, note, time: new Date().toISOString() });
+  const regs = getRegs();
+  regs.push({ tripId, userId: currentUser.id, name, gender, birthday, country, idNumber, phone, email, address, emergency, emergencyPhone, note, time: new Date().toISOString() });
   localStorage.setItem('mountain_registrations', JSON.stringify(regs));
-  msg.className = 'reg-msg ok';
-  msg.textContent = '// 報名成功！我們將盡快與您聯繫';
+  msg.className='reg-msg ok'; msg.textContent='// 報名成功！我們將盡快與您聯繫';
   document.querySelector('.btn-submit').disabled = true;
   setTimeout(() => closeModal(), 2000);
 }
-
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => { e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior:'smooth' }); });
-});
 
 init();
 </script>
