@@ -41,6 +41,11 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .section-eyebrow::before{content:'//';opacity:0.5}
 .section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white)}
 .section-sub{font-size:0.85rem;color:var(--dim);line-height:1.9;font-weight:300;margin-top:0.5rem}
+/* 難度篩選按鈕列 */
+.filter-bar{display:flex;gap:0.6rem;margin-top:1.5rem;flex-wrap:wrap}
+.filter-btn{padding:0.4rem 1.2rem;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.3s}
+.filter-btn:hover{border-color:var(--neon1);color:var(--neon1)}
+.filter-btn.active{border-color:var(--neon1);color:var(--neon1);background:rgba(240,160,80,0.1)}
 #trips-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
 .trip-card{background:var(--bg2);overflow:hidden;cursor:pointer;position:relative;transition:background 0.3s}
 .trip-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--grad2);transition:height 0.4s;z-index:2}
@@ -67,6 +72,9 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
 .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
 .empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
+/* 已結束行程樣式 */
+.expired-card{opacity:0.55;filter:grayscale(0.4)}
+.expired-banner{position:absolute;top:0;left:0;right:0;background:rgba(46,52,64,0.85);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-align:center;padding:0.4rem;z-index:3}
 .inner-page{max-width:900px;margin:0 auto;padding:3rem}
 .page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
 .page-eyebrow::before{content:'//';opacity:0.5}
@@ -182,6 +190,13 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
       <div class="section-eyebrow">精選路線</div>
       <h2 class="section-title">近期登山行程</h2>
       <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
+      <!-- 難度篩選按鈕 -->
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="filterTrips('all',this)">全部</button>
+        <button class="filter-btn" onclick="filterTrips('easy',this)">輕鬆</button>
+        <button class="filter-btn" onclick="filterTrips('medium',this)">中級</button>
+        <button class="filter-btn" onclick="filterTrips('hard',this)">進階</button>
+      </div>
     </div>
     <div id="trips-grid"><div class="loading">// 載入中...</div></div>
   </section>
@@ -439,6 +454,7 @@ async function saveProfile() {
 }
 
 // ===== TRIPS =====
+// 載入所有行程，未過期排前面（近到遠），已過期排後面
 async function loadTrips() {
   const grid = document.getElementById('trips-grid');
   grid.innerHTML = '<div class="loading">// 載入中...</div>';
@@ -447,18 +463,50 @@ async function loadTrips() {
     grid.innerHTML='<div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>';
     return;
   }
-  cachedTrips = trips;
+  // 未過期的在前，已過期的在後
+  const today = new Date().toISOString().split('T')[0];
+  const active  = trips.filter(t => !t.date || t.date >= today);
+  const expired = trips.filter(t => t.date && t.date < today);
+  cachedTrips = [...active, ...expired];
+  renderTripCards('all');
+}
+
+// 篩選按鈕點擊（all / easy / medium / hard）
+function filterTrips(diff, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTripCards(diff);
+}
+
+// 渲染行程卡片（含過期標示）
+function renderTripCards(diffFilter) {
+  const grid = document.getElementById('trips-grid');
+  const today = new Date().toISOString().split('T')[0];
+  // 依難度篩選
+  const trips = diffFilter === 'all' ? cachedTrips : cachedTrips.filter(t => t.difficulty === diffFilter);
+  if (!trips.length) {
+    grid.innerHTML='<div class="empty-state"><div class="icon">▲</div><p>// 此難度目前尚無行程</p></div>';
+    return;
+  }
   const dMap={easy:{l:'輕鬆',c:'tag-easy',b:'easy'},medium:{l:'中級',c:'tag-medium',b:'medium'},hard:{l:'進階',c:'tag-hard',b:'hard'}};
   grid.innerHTML = trips.map((t,i)=>{
     const d=dMap[t.difficulty]||dMap.medium;
     const img=t.image_url?`<div class="trip-img-wrap"><img class="trip-img" src="${t.image_url}" alt="${t.name}"></div>`:'<div class="trip-img-placeholder">▲</div>';
     const price=t.price?`NT$ ${Number(t.price).toLocaleString()}<small> / 人</small>`:'<small style="-webkit-text-fill-color:var(--dim)">價格洽詢</small>';
     const dateStr = t.date?(t.date_end?`📅 ${t.date} – ${t.date_end}`:`📅 ${t.date}`):'';
-    return `<div class="trip-card" onclick="openModal(${t.id})">
-      ${img}<div class="diff-bar ${d.b}"></div>
+    // 判斷是否已過期
+    const isExpired = t.date && t.date < today;
+    return `<div class="trip-card${isExpired?' expired-card':''}" onclick="openModal(${t.id})">
+      ${img}
+      ${isExpired?'<div class="expired-banner">// 已結束</div>':''}
+      <div class="diff-bar ${d.b}"></div>
       <div class="trip-body">
         <div class="trip-top">
-          <div class="trip-tags"><span class="tag ${d.c}">${d.l}</span>${t.area?`<span class="tag tag-area">${t.area}</span>`:''}</div>
+          <div class="trip-tags">
+            <span class="tag ${d.c}">${d.l}</span>
+            ${t.area?`<span class="tag tag-area">${t.area}</span>`:''}
+            ${isExpired?'<span class="tag" style="color:var(--muted);border-color:var(--muted)">已結束</span>':''}
+          </div>
           <span class="trip-num">#${String(i+1).padStart(2,'0')}</span>
         </div>
         <h3 class="trip-name">${t.name}</h3>
@@ -467,7 +515,7 @@ async function loadTrips() {
           <div class="trip-price">${price}</div>
           <div class="trip-meta">${dateStr}${t.days?'<br>🧗 '+t.days+' 天':''}</div>
         </div>
-        <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">查看詳情 & 報名 →</button>
+        <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">${isExpired?'查看詳情':'查看詳情 & 報名 →'}</button>
       </div>
     </div>`;
   }).join('');
