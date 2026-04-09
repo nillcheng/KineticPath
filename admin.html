@@ -327,11 +327,13 @@ async function loadTripsTable() {
     return;
   }
 
+  const today = new Date().toISOString().split('T')[0];
   tbody.innerHTML = trips.map(t=>{
     const count = regCounts?regCounts.filter(r=>r.trip_id===t.id).length:0;
     const price = t.price?`NT$ ${Number(t.price).toLocaleString()}`:'洽詢';
-    return `<tr>
-      <td><strong>${t.name}</strong></td>
+    const isExpired = t.date && t.date < today;
+    return `<tr style="${isExpired?'opacity:0.6':''}">
+      <td><strong>${t.name}</strong>${isExpired?' <span style="font-size:0.68rem;color:var(--muted);letter-spacing:0.1em">已結束</span>':''}</td>
       <td>${t.area||'—'}</td>
       <td>${t.date||'—'}</td>
       <td>${t.date_end||'—'}</td>
