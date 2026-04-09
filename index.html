@@ -534,8 +534,21 @@ function openModal(id) {
   // 帶入 profile 資料
   const p = getProfile();
 
+  // 檢查是否已報名
+  const alreadyReg = currentUser && getRegs().find(r => r.tripId === t.id && r.userId === currentUser.id);
+
   let regContent = '';
-  if (currentUser) {
+  if (!currentUser) {
+    regContent = `<div style="text-align:center;padding:2rem 0">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
+      <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
+    </div>`;
+  } else if (alreadyReg) {
+    regContent = `<div style="text-align:center;padding:2rem 0">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.9rem;color:var(--neon3);">✓ 您已報名此行程</p>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);margin-top:0.8rem;">如需取消，請至「我的行程」頁面操作</p>
+    </div>`;
+  } else {
     regContent = `
       <h3>// 立即報名</h3>
       <div id="reg-msg"></div>
@@ -568,11 +581,6 @@ function openModal(id) {
       </div>
       <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求、飲食限制等">${p.note||''}</textarea></div>
       <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>`;
-  } else {
-    regContent = `<div style="text-align:center;padding:2rem 0">
-      <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
-      <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
-    </div>`;
   }
 
   document.getElementById('modal-content').innerHTML = `
@@ -624,6 +632,13 @@ function submitReg(tripId) {
   }
 
   const regs = getRegs();
+
+  // 檢查是否已報名同一行程
+  const alreadyReg = regs.find(r => r.tripId === tripId && r.userId === currentUser.id);
+  if (alreadyReg) {
+    msg.className='reg-msg err'; msg.textContent='// 您已報名此行程，請勿重複報名'; return;
+  }
+
   regs.push({ tripId, userId: currentUser.id, name, gender, birthday, country, idNumber, phone, email, address, emergency, emergencyPhone, note, time: new Date().toISOString() });
   localStorage.setItem('mountain_registrations', JSON.stringify(regs));
   msg.className='reg-msg ok'; msg.textContent='// 報名成功！我們將盡快與您聯繫';
