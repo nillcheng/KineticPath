@@ -3,274 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X-Bound | 跨越界限的探險</title>
+<title>X-Bound</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-    --bg: #0b0e14;
-    --bg2: #0f1319;
-    --bg3: #151a22;
-    --border: rgba(255,255,255,0.15); /* 加深邊框色 */
-    --text: #ffffff; /* 主文字設為純白 */
-    --dim: #e0e6ed;  /* 副標題與標籤改為淺灰白 */
-    --muted: #a0aec0; /* 提示文字改為中灰 */
-    --neon1: #f0a050;
-    --neon2: #e05878;
-    --neon3: #f0c840;
-    --grad: linear-gradient(135deg, var(--neon1), var(--neon2), var(--neon3));
-    --grad2: linear-gradient(90deg, var(--neon1), var(--neon2));
-    --white: #fff;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
-
-/* 網格背景背景 */
-body::before {
-    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background-image: linear-gradient(rgba(240,160,80,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(240,160,80,0.025) 1px, transparent 1px);
-    background-size: 60px 60px;
-}
-
-/* 導覽列 */
-nav { position: fixed; top: 0; width: 100%; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.4rem 3rem; background: rgba(11, 14, 20, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-.logo { font-family: 'Rajdhani', sans-serif; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; cursor: pointer; }
-nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
-nav ul a { text-decoration: none; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); transition: color 0.3s; position: relative; cursor: pointer; }
-nav ul a:hover { color: var(--neon1); }
-.nav-login-btn { border: 1px solid var(--neon1)!important; color: var(--neon1)!important; padding: 0.4rem 1.2rem!important; border-radius: 2px; }
-.nav-login-btn:hover { background: var(--neon1)!important; color: var(--bg)!important; }
-
-/* 頁面切換 */
-.page { display: none; min-height: 100vh; padding-top: 6rem; position: relative; z-index: 1; }
-.page.active { display: block; }
-
-/* Hero Section */
-.hero { min-height: 80vh; display: flex; align-items: center; padding: 0 3rem; position: relative; }
-.hero-bg { position: absolute; inset: 0; background: linear-gradient(to right, rgba(11,14,20,1) 30%, rgba(11,14,20,0.4) 100%), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat; z-index: -1; }
-.hero-content { max-width: 800px; }
-.hero-tag { font-family: 'Share Tech Mono', monospace; color: var(--neon1); margin-bottom: 1rem; letter-spacing: 0.3em; text-transform: uppercase; }
-.hero-title { font-family: 'Rajdhani', sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 700; line-height: 1.1; margin-bottom: 2rem; color: var(--white); }
-.hero-title span { display: block; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero-sub { font-size: 1.1rem; color: var(--dim); line-height: 1.8; margin-bottom: 3rem; font-weight: 300; }
-
-/* 按鈕樣式 */
-.btn-neon { display: inline-block; padding: 1rem 2.5rem; border: 1px solid var(--neon1); color: var(--neon1); font-family: 'Rajdhani', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; text-decoration: none; cursor: pointer; transition: 0.3s; }
-.btn-neon:hover { background: var(--neon1); color: var(--bg); box-shadow: 0 0 20px rgba(240, 160, 80, 0.4); }
-
-/* 內頁容器 */
-.inner-page { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem; }
-.page-eyebrow { font-family: 'Share Tech Mono', monospace; color: var(--neon1); letter-spacing: 0.4em; margin-bottom: 1rem; }
-.page-title { font-family: 'Rajdhani', sans-serif; font-size: 3.5rem; font-weight: 700; color: var(--white); margin-bottom: 3rem; letter-spacing: 0.1em; text-transform: uppercase; }
-
-/* 個人資料卡片與表單 - 優化白色文字 */
-.profile-card { background: var(--bg2); border: 1px solid var(--border); padding: 2.5rem; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-.profile-section-title { font-family: 'Share Tech Mono', monospace; color: var(--neon1); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
-
-.form-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.f-group { margin-bottom: 1.5rem; }
-.f-group label { display: block; font-size: 0.85rem; color: var(--text); /* 標籤純白 */ font-weight: 500; letter-spacing: 0.1em; margin-bottom: 0.6rem; }
-
-.f-ctrl { 
-    width: 100%; padding: 0.9rem 1.2rem; 
-    background: var(--bg3); 
-    border: 1px solid var(--border); 
-    color: var(--white); /* 輸入內容純白 */
-    font-family: 'Noto Sans TC', sans-serif; 
-    font-size: 1rem; 
-    outline: none; transition: 0.3s; 
-}
-.f-ctrl::placeholder { color: var(--muted); opacity: 0.7; }
-.f-ctrl:focus { border-color: var(--neon1); box-shadow: 0 0 10px rgba(240, 160, 80, 0.2); }
-
-/* 下拉選單圖示修正 */
-select.f-ctrl { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; }
-
-.btn-save-profile { background: var(--neon1); color: var(--bg); border: none; padding: 1rem 3rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
-.btn-save-profile:hover { background: var(--white); transform: translateY(-2px); }
-
-/* 行程 Grid */
-#trips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; margin-top: 3rem; }
-.loading { font-family: 'Share Tech Mono', monospace; color: var(--neon1); text-align: center; padding: 3rem; }
-
-/* RWD */
-@media (max-width: 768px) {
-    nav { padding: 1rem 1.5rem; }
-    nav ul { display: none; }
-    .inner-page { padding: 2rem 1rem; }
-    .form-row2 { grid-template-columns: 1fr; }
-    .page-title { font-size: 2.5rem; }
-}
-</style>
-</head>
-<body>
-
-<nav>
-    <div class="logo" onclick="showPage('home')">X-Bound</div>
-    <ul id="nav-menu">
-        <li><a onclick="showPage('trips')">行程</a></li>
-        <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
-    </ul>
-</nav>
-
-<div class="page active" id="page-home">
-    <div class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <p class="hero-tag">// 台灣山岳探險系列</p>
-            <h1 class="hero-title">CROSS EVERY<br><span>BOUNDARY</span></h1>
-            <p class="hero-sub">我們不只是登山，更是為了帶領你跨越自我極限。<br>專業領隊協作、頂級裝備租借，為您量身打造極致的百岳體驗。</p>
-            <a onclick="showPage('trips')" class="btn-neon">探索所有行程</a>
-        </div>
-    </div>
-</div>
-
-<div class="page" id="page-trips">
-    <div class="inner-page">
-        <div class="page-eyebrow">// Select Your Path</div>
-        <h2 class="page-title">探索行程</h2>
-        <div id="trips-grid"><div class="loading">// 接入 Supabase 資料庫中...</div></div>
-    </div>
-</div>
-
-<div class="page" id="page-profile">
-    <div class="inner-page">
-        <div class="page-eyebrow">// Profile Maintenance</div>
-        <h2 class="page-title">我的資料維護</h2>
-        <p style="color: var(--neon3); font-family: 'Share Tech Mono', monospace; margin-bottom: 2rem; font-size: 0.85rem;">// 填寫後報名時將自動帶入資訊，簡化您的報名流程</p>
-        
-        <div class="profile-card">
-            <div class="profile-section-title">基本資訊 / Basic Info</div>
-            <div class="form-row2">
-                <div class="f-group">
-                    <label>姓名</label>
-                    <input class="f-ctrl" id="pf-name" type="text" placeholder="真實姓名">
-                </div>
-                <div class="f-group">
-                    <label>性別</label>
-                    <select class="f-ctrl" id="pf-gender">
-                        <option value="">請選擇</option>
-                        <option value="男">男</option>
-                        <option value="女">女</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row2">
-                <div class="f-group">
-                    <label>出生日期</label>
-                    <input class="f-ctrl" id="pf-birthday" type="date">
-                </div>
-                <div class="f-group">
-                    <label>國家 / 地區</label>
-                    <input class="f-ctrl" id="pf-country" type="text" placeholder="例如：台灣">
-                </div>
-            </div>
-            <div class="form-row2">
-                <div class="f-group">
-                    <label>身分證字號 / 護照號碼</label>
-                    <input class="f-ctrl" id="pf-id" type="text" placeholder="保險辦理使用">
-                </div>
-                <div class="f-group">
-                    <label>聯絡電話</label>
-                    <input class="f-ctrl" id="pf-phone" type="tel" placeholder="0912-345-678">
-                </div>
-            </div>
-            <div class="form-row2">
-                <div class="f-group">
-                    <label>電子郵件</label>
-                    <input class="f-ctrl" id="pf-email" type="email" placeholder="email@example.com">
-                </div>
-                <div class="f-group">
-                    <label>通訊地址</label>
-                    <input class="f-ctrl" id="pf-address" type="text" placeholder="輸入常用聯繫地址">
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-card">
-            <div class="profile-section-title">緊急聯絡 / Emergency Contact</div>
-            <div class="form-row2">
-                <div class="f-group">
-                    <label>緊急聯絡人姓名</label>
-                    <input class="f-ctrl" id="pf-emergency" type="text">
-                </div>
-                <div class="f-group">
-                    <label>緊急聯絡人電話</label>
-                    <input class="f-ctrl" id="pf-emergency-phone" type="tel">
-                </div>
-            </div>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 2rem;">
-            <button class="btn-save-profile" onclick="saveProfile()">儲存個人資料</button>
-            <span id="profile-status" style="font-family: 'Share Tech Mono', monospace; font-size: 0.9rem;"></span>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// Supabase 配置
-const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
-const SKEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
-const sb = supabase.createClient(SURL, SKEY);
-
-let currentUser = null;
-
-// 頁面切換邏輯
-function showPage(name) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + name).classList.add('active');
-    window.scrollTo(0, 0);
-    if (name === 'profile') loadProfile();
-    if (name === 'trips') loadTrips();
-}
-
-// 模擬登入後讀取資料 (範例)
-async function loadProfile() {
-    // 這裡之後串接 currentUser.id 從 profiles table 抓資料
-    console.log("Loading profile...");
-}
-
-async function saveProfile() {
-    const status = document.getElementById('profile-status');
-    status.style.color = 'var(--neon3)';
-    status.textContent = '// SAVING TO DATABASE...';
-    
-    // 實作 Supabase Upsert 邏輯...
-    setTimeout(() => {
-        status.textContent = '// DATA SECURED.';
-        setTimeout(() => status.textContent = '', 3000);
-    }, 1000);
-}
-
-async function loadTrips() {
-    const grid = document.getElementById('trips-grid');
-    // 從 Supabase trips table 抓取行程資料...
-}
-
-// 初始化
-async function init() {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-        currentUser = session.user;
-        updateNav(true);
-    }
-}
-
-function updateNav(isLoggedIn) {
-    const menu = document.getElementById('nav-menu');
-    if (isLoggedIn) {
-        menu.innerHTML = `
-            <li><a onclick="showPage('trips')">行程</a></li>
-            <li><a onclick="showPage('profile')">我的資料維護</a></li>
-            <li><a onclick="doLogout()" style="color: var(--neon2)">登出</a></li>
-        `;
-    }
-}
-
-window.onload = init;
-</script>
-</body>
-</html>
+:root{--bg:#0b0e14;--bg2:#0f1319;--bg3:#151a22;--border:rgba(255,255,255,0.07);--text:#c8d0dc;--dim:#5a6475;--muted:#2e3440;--neon1:#f0a050;--neon2:#e05878;--neon3:#f0c840;--grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));--grad2:linear-gradient(90deg,var(--neon1),var(--neon2));--white:#fff}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(240,160,80,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,160,80,0.025) 1px,transparent 1px);background-size:60px 60px}
+nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.4rem 3rem;background:rgba(11,14,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
+nav ul a{text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);transition:color 0.3s;position:relative;cursor:pointer}
+nav ul a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--grad2);transition:width 0.3s}
+nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
+.nav-login-btn{border:1px solid var(--neon1)!important;color:var(--neon1)!important;padding:0.4rem 1rem!important}
+.nav-login-btn:hover{background:var(--neon1)!important;color:var(--bg)!important}
+.page{display:none;min-height:100vh;padding-top:6rem}
+.page.active{display:block}
+.hero{min-height:70vh;display:flex;align-items:center;padding:7rem 3rem 4rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,14,20,1) 40%,rgba(11,14,20,0.4) 100%),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat}
+.hero-frame{position:absolute;width:100px;height:100px;pointer-events:none}
+.hero-frame.tl{top:6rem;left:3rem;border-top:1px solid rgba(240,160,80,0.4);border-left:1px solid rgba(240,160,80,0.4)}
+.hero-frame.br{bottom:3rem;right:3rem;border-bottom:1px solid rgba(224,88,120,0.4);border-right:1px solid rgba(224,88,120,0.4)}
+.hero-content{position:relative;max-width:680px}
+.hero-tag{display:inline-flex;align-items:center;gap:0.8rem;font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;color:var(--neon1);margin-bottom:2rem;animation:fadeUp 0.8s 0.2s both}
+.hero-tag::before{content:'▲';font-size:0.6rem;opacity:0.7}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(3.5rem,9vw,7rem);font-weight:700;line-height:1;letter-spacing:0.05em;text-transform:uppercase;color:var(--white);margin-bottom:1.5rem;animation:fadeUp 0.8s 0.35s both}
+.hero-title .grad-line{display:block;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:0.95rem;color:var(--dim);line-height:1.9;font-weight:300;margin-bottom:3rem;animation:fadeUp 0.8s 0.5s both}
+.hero-cta{display:flex;gap:1.2rem;animation:fadeUp 0.8s 0.65s both}
+.btn-neon{display:inline-block;padding:0.9rem 2.2rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;cursor:pointer;position:relative;overflow:hidden;transition:color 0.3s}
+.btn-neon::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
+.btn-neon:hover{color:var(--bg)}.btn-neon:hover::before{transform:translateX(0)}
+.trips-section{padding:8rem 3rem}
+.section-header{max-width:1200px;margin:0 auto 3rem}
+.section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
+.section-eyebrow::before{content:'//';opacity:0.5}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white)}
+.section-sub{font-size:0.85rem;color:var(--dim);line-height:1.9;font-weight:300;margin-top:0.5rem}
+/* 難度篩選按鈕列 */
+.filter-bar{display:flex;gap:0.6rem;margin-top:1.5rem;flex-wrap:wrap}
+.filter-btn{padding:0.4rem 1.2rem;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.3s}
+.filter-btn:hover{border-color:var(--neon1);color:var(--neon1)}
+.filter-btn.active{border-color:var(--neon1);color:var(--neon1);background:rgba(240,160,80,0.1)}
+#trips-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.trip-card{background:var(--bg2);overflow:hidden;cursor:pointer;position:relative;transition:background 0.3s}
+.trip-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--grad2);transition:height 0.4s;z-index:2}
+.trip-card:hover{background:var(--bg3)}.trip-card:hover::before{height:100%}.trip-card:hover .trip-img{transform:scale(1.05)}
+.trip-img-wrap{height:220px;overflow:hidden}
+.trip-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s;filter:brightness(0.7) saturate(0.8)}
+.trip-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--muted)}
+.diff-bar{height:2px;background:var(--muted);position:relative}
+.diff-bar::after{content:'';position:absolute;top:0;left:0;height:100%;background:var(--grad2)}
+.diff-bar.easy::after{width:33%}.diff-bar.medium::after{width:66%}.diff-bar.hard::after{width:100%}
+.trip-body{padding:1.5rem}
+.trip-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem}
+.trip-tags{display:flex;gap:0.4rem;flex-wrap:wrap}
+.tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:0.2rem 0.5rem;letter-spacing:0.1em;text-transform:uppercase;border:1px solid currentColor}
+.tag-easy{color:#5a9a52}.tag-medium{color:var(--neon1)}.tag-hard{color:var(--neon2)}.tag-area{color:var(--dim);border-color:var(--muted)}
+.trip-num{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)}
+.trip-name{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:0.5rem;line-height:1.3}
+.trip-desc{font-size:0.82rem;color:var(--dim);line-height:1.8;margin-bottom:1.2rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.trip-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border)}
+.trip-price{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.trip-price small{font-family:'Noto Sans TC',sans-serif;font-size:0.7rem;font-weight:300;color:var(--dim);-webkit-text-fill-color:var(--dim)}
+.trip-meta{text-align:right;font-size:0.75rem;color:var(--dim);line-height:1.7}
+.btn-card{display:block;width:100%;margin-top:1rem;padding:0.7rem;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s}
+.btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
+.empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
+.empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
+/* 已結束行程樣式 */
+.expired-card{opacity:0.55;filter:grayscale(0.4)}
+.expired-banner{position:absolute;top:0;left:0;right:0;background:rgba(46,52,64,0.85);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-align:center;padding:0.4rem;z-index:3}
+.inner-page{max-width:900px;margin:0 auto;padding:3rem}
+.page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
+.page-eyebrow::before{content:'//';opacity:0.5}
+.page-title{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white);margin-bottom:2rem}
+.my-trip-card{background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+.my-trip-name{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:0.4rem}
+.my-trip-meta{font-size:0.8rem;color:var(--dim);line-height:1.7}
+.my-trip-status{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--neon3);letter-spacing:0.1em;margin-top:0.4rem}
+.btn-cancel-reg{padding:0.5rem 1.2rem;background:none;border:1px solid var(--neon2);color
