@@ -26,7 +26,7 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .page.active{display:block}
 
 /* HERO */
-.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
+.hero{min-height:70vh;display:flex;align-items:center;padding:7rem 3rem 4rem;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,14,20,1) 40%,rgba(11,14,20,0.4) 100%),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat}
 .hero-frame{position:absolute;width:100px;height:100px;pointer-events:none}
 .hero-frame.tl{top:6rem;left:3rem;border-top:1px solid rgba(240,160,80,0.4);border-left:1px solid rgba(240,160,80,0.4)}
@@ -187,13 +187,13 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     <div class="hero-frame br"></div>
     <div class="hero-content">
       <p class="hero-tag">台灣登山探險 · Since 2025</p>
-      <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
+      <h1 class="hero-title">Cross Every<br><span class="grad-line">Boundary</span></h1>
       <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
       <div class="hero-cta">
         <a onclick="showPage('trips')" class="btn-neon" style="cursor:pointer">探索行程</a>
       </div>
     </div>
-    <div class="scroll-line">scroll</div>
+
   </div>
   <footer>
     <div class="footer-logo">X-Bound</div>
@@ -342,7 +342,7 @@ function updateNav(loggedIn) {
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="showPage('my-trips')">我的行程</a></li>
       <li><a onclick="showPage('profile')">我的資料維護</a></li>
-      <li><a href="admin.html" target="_blank">後台</a></li>
+      <li><a onclick="window.location.href='admin.html'">後台</a></li>
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
   } else {
