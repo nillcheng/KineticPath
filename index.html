@@ -268,6 +268,7 @@ function updateNav(loggedIn) {
       <li><a href="#trips">行程</a></li>
       <li><a href="#my-trips">我的行程</a></li>
       <li><a onclick="openProfile()">我的資料維護</a></li>
+      <li><a href="admin.html" target="_blank">後台</a></li>
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
   } else {
@@ -391,6 +392,7 @@ function openModal(id) {
       </div>
       ${t.description ? `<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>` : ''}
       <div class="reg-block">
+        ${currentUser ? `
         <h3>// 立即報名</h3>
         <div id="reg-msg"></div>
         <div class="f-row2">
@@ -405,7 +407,7 @@ function openModal(id) {
           </div>
         </div>
         <div class="f-row2">
-          <div class="f-group"><label>出生日期（西元）*</label><input class="f-ctrl" id="reg-birthday" type="date" placeholder="YYYY-MM-DD"></div>
+          <div class="f-group"><label>出生日期（西元）*</label><input class="f-ctrl" id="reg-birthday" type="date"></div>
           <div class="f-group"><label>國家 *</label><input class="f-ctrl" id="reg-country" type="text" placeholder="例：台灣" value="台灣"></div>
         </div>
         <div class="f-row2">
@@ -422,6 +424,12 @@ function openModal(id) {
         </div>
         <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求、飲食限制等"></textarea></div>
         <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>
+        ` : `
+        <div style="text-align:center;padding:2rem 0">
+          <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
+          <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
+        </div>
+        `}
       </div>
     </div>`;
   document.getElementById('tripModal').classList.add('open');
@@ -460,6 +468,7 @@ function submitReg(tripId) {
   msg.className = 'reg-msg ok';
   msg.textContent = '// 報名成功！我們將盡快與您聯繫';
   document.querySelector('.btn-submit').disabled = true;
+  setTimeout(() => closeModal(), 2000);
 }
 
 document.querySelectorAll('a[href^="#"]').forEach(a => {
