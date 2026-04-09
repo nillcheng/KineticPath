@@ -255,6 +255,10 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     <div class="profile-card">
       <div class="profile-section-title">修改密碼</div>
       <div class="form-row2">
+        <div class="f-group"><label>目前密碼</label><input class="f-ctrl" id="pf-old-pwd" type="password" placeholder="輸入目前密碼"></div>
+        <div class="f-group"></div>
+      </div>
+      <div class="form-row2">
         <div class="f-group"><label>新密碼（至少6位）</label><input class="f-ctrl" id="pf-new-pwd" type="password" placeholder="輸入新密碼"></div>
         <div class="f-group"><label>確認新密碼</label><input class="f-ctrl" id="pf-confirm-pwd" type="password" placeholder="再輸入一次新密碼"></div>
       </div>
@@ -467,32 +471,38 @@ function showToast(msg, isErr=false) {
 
 // ===== 修改密碼 =====
 async function changePassword() {
+  const oldPwd     = document.getElementById('pf-old-pwd').value;
   const newPwd     = document.getElementById('pf-new-pwd').value;
   const confirmPwd = document.getElementById('pf-confirm-pwd').value;
   const st         = document.getElementById('pwd-status');
 
+  // 基本驗證
+  if (!oldPwd) { st.className='save-status err'; st.textContent='// 請輸入目前密碼'; return; }
   if (!newPwd) { st.className='save-status err'; st.textContent='// 請輸入新密碼'; return; }
-  if (newPwd.length < 6) { st.className='save-status err'; st.textContent='// 密碼至少需要 6 個字元'; return; }
+  if (newPwd.length < 6) { st.className='save-status err'; st.textContent='// 新密碼至少需要 6 個字元'; return; }
   if (newPwd !== confirmPwd) { st.className='save-status err'; st.textContent='// 兩次密碼不一致'; return; }
 
-  st.className='save-status'; st.textContent='// 更新中...';
+  st.className='save-status'; st.textContent='// 驗證中...';
 
-  // 先確認 session 是否有效
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    st.className='save-status err';
-    st.textContent='// Session 已過期，請重新登入';
-    return;
+  // 先用舊密碼重新登入驗證身份
+  const { error: signInErr } = await sb.auth.signInWithPassword({
+    email: currentUser.email,
+    password: oldPwd
+  });
+  if (signInErr) {
+    st.className='save-status err'; st.textContent='// 目前密碼錯誤'; return;
   }
 
+  // 驗證成功，更新新密碼
+  st.textContent='// 更新中...';
   const { error } = await sb.auth.updateUser({ password: newPwd });
   if (error) {
-    st.className='save-status err';
-    st.textContent='// 修改失敗：' + error.message;
-    return;
+    st.className='save-status err'; st.textContent='// 修改失敗：' + error.message; return;
   }
 
+  // 成功
   st.className='save-status ok'; st.textContent='// ✓ 密碼修改成功！';
+  document.getElementById('pf-old-pwd').value='';
   document.getElementById('pf-new-pwd').value='';
   document.getElementById('pf-confirm-pwd').value='';
   setTimeout(()=>{ st.textContent=''; }, 4000);
