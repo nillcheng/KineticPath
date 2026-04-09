@@ -291,24 +291,31 @@ function showPage(name) {
 }
 
 // ===== AUTH =====
+// 初始化：檢查登入狀態
 async function init() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) { currentUser = session.user; updateNav(true); }
+  if (session) { currentUser = session.user; await updateNav(true); }
   loadTrips();
-  sb.auth.onAuthStateChange((event, session) => {
+  // 監聽登入狀態變化
+  sb.auth.onAuthStateChange(async (event, session) => {
     currentUser = session?.user || null;
-    updateNav(!!currentUser);
+    await updateNav(!!currentUser);
   });
 }
 
-function updateNav(loggedIn) {
+// 更新導覽列（根據登入狀態和管理員權限顯示不同選單）
+async function updateNav(loggedIn) {
   const menu = document.getElementById('nav-menu');
   if (loggedIn) {
+    // 檢查是否為管理員
+    const { data: adminData } = await sb.from('admins').select('role').eq('email', currentUser.email).single();
+    const isAdmin = !!adminData;
+
     menu.innerHTML = `
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="showPage('my-trips')">我的行程</a></li>
       <li><a onclick="showPage('profile')">我的資料維護</a></li>
-      <li><a onclick="window.location.href='admin.html'">後台</a></li>
+      ${isAdmin ? `<li><a onclick="window.location.href='admin.html'">後台</a></li>` : ''}
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
   } else {
