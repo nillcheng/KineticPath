@@ -74,6 +74,10 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .detail-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:900;color:var(--white)}
 .detail-sub{font-size:0.82rem;color:var(--muted);margin-top:0.3rem;margin-bottom:1.5rem}
 .loading-td{text-align:center;padding:3rem!important;color:var(--muted);font-size:0.85rem}
+/* 後台篩選按鈕 */
+.admin-filter-btn{padding:0.4rem 1rem;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;letter-spacing:0.1em;transition:all 0.3s}
+.admin-filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+.admin-filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,0.1)}
 .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:2rem}
 .modal-overlay.open{display:flex}
 .modal-box{background:var(--bg2);border:1px solid var(--border);max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:2rem;position:relative;animation:fadeUp 0.3s ease both}
@@ -116,7 +120,17 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <!-- 行程管理 -->
     <div class="tab-panel active" id="tab-trips">
       <div id="trips-list-view">
-        <button class="btn-add" onclick="showForm()">＋ 新增行程</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+          <button class="btn-add" style="margin-bottom:0" onclick="showForm()">＋ 新增行程</button>
+          <!-- 難度篩選按鈕 -->
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button class="admin-filter-btn active" onclick="filterAdminTrips('all',this)">全部</button>
+            <button class="admin-filter-btn" onclick="filterAdminTrips('easy',this)">輕鬆</button>
+            <button class="admin-filter-btn" onclick="filterAdminTrips('medium',this)">中級</button>
+            <button class="admin-filter-btn" onclick="filterAdminTrips('hard',this)">進階</button>
+            <button class="admin-filter-btn" onclick="filterAdminTrips('expired',this)">已結束</button>
+          </div>
+        </div>
 
         <div class="card" id="form-card" style="display:none;">
           <div class="card-header"><span class="card-title" id="form-title">新增行程</span></div>
@@ -313,23 +327,58 @@ function switchTab(name, el) {
 }
 
 // ===== TRIPS =====
+let cachedAdminTrips = {}; // 儲存後台行程資料供篩選使用
+
+// 載入行程列表（未結束的在前，已結束的在後）
 async function loadTripsTable() {
   const tbody = document.getElementById('trips-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
   const {data:trips} = await sb.from('trips').select('*').order('date',{ascending:true});
   const {data:regCounts} = await sb.from('registrations').select('trip_id');
 
-  const diffMap={easy:'badge-easy',medium:'badge-medium',hard:'badge-hard'};
-  const diffLabel={easy:'輕鬆',medium:'中級',hard:'進階'};
-
   if (!trips||!trips.length) {
     tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無行程，點上方「新增行程」開始吧。</td></tr>';
     return;
   }
 
+  // 未結束的排前面，已結束的排後面
   const today = new Date().toISOString().split('T')[0];
+  const active  = trips.filter(t => !t.date || t.date >= today);
+  const expired = trips.filter(t => t.date && t.date < today);
+  cachedAdminTrips = { all: [...active,...expired], regCounts: regCounts||[] };
+  renderAdminTrips('all');
+}
+
+// 篩選按鈕點擊
+function filterAdminTrips(filter, btn) {
+  document.querySelectorAll('.admin-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAdminTrips(filter);
+}
+
+// 渲染後台行程表格
+function renderAdminTrips(filter) {
+  const tbody = document.getElementById('trips-tbody');
+  const today = new Date().toISOString().split('T')[0];
+  const regCounts = cachedAdminTrips.regCounts || [];
+  const diffMap={easy:'badge-easy',medium:'badge-medium',hard:'badge-hard'};
+  const diffLabel={easy:'輕鬆',medium:'中級',hard:'進階'};
+
+  // 依篩選條件過濾
+  let trips = cachedAdminTrips.all || [];
+  if (filter === 'expired') {
+    trips = trips.filter(t => t.date && t.date < today);
+  } else if (filter !== 'all') {
+    trips = trips.filter(t => t.difficulty === filter);
+  }
+
+  if (!trips.length) {
+    tbody.innerHTML='<tr><td class="empty-td" colspan="9">此條件下沒有行程。</td></tr>';
+    return;
+  }
+
   tbody.innerHTML = trips.map(t=>{
-    const count = regCounts?regCounts.filter(r=>r.trip_id===t.id).length:0;
+    const count = regCounts.filter(r=>r.trip_id===t.id).length;
     const price = t.price?`NT$ ${Number(t.price).toLocaleString()}`:'洽詢';
     const isExpired = t.date && t.date < today;
     return `<tr style="${isExpired?'opacity:0.6':''}">
