@@ -110,6 +110,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="tabs">
       <div class="tab active" onclick="switchTab('trips',this)">行程管理</div>
       <div class="tab" onclick="switchTab('regs',this)">所有報名紀錄</div>
+      <div class="tab" id="tab-admins-btn" style="display:none" onclick="switchTab('admins',this)">管理員設定</div>
     </div>
 
     <!-- 行程管理 -->
@@ -200,6 +201,22 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
         </table>
       </div>
     </div>
+
+    <!-- 管理員設定（只有超級管理員可見） -->
+    <div class="tab-panel" id="tab-admins">
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;font-family:'Noto Sans TC',sans-serif;">只有超級管理員可以管理其他管理員帳號。</p>
+      <div style="margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <input class="form-ctrl" id="new-admin-email" type="email" placeholder="輸入 Email 新增管理員" style="max-width:350px">
+        <button class="btn-add" style="margin-bottom:0" onclick="addAdmin()">＋ 新增管理員</button>
+        <span class="save-msg" id="admin-msg"></span>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table>
+          <thead><tr><th>Email</th><th>權限</th><th>新增時間</th><th>操作</th></tr></thead>
+          <tbody id="admins-tbody"><tr><td class="loading-td" colspan="4">// 載入中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -237,21 +254,38 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// 後台密碼（只是第一道門，真正的管理員驗證靠 Supabase）
 const PWD = 'zZ0973150449@';
 const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
 const SKEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
 const sb = supabase.createClient(SURL, SKEY);
 let currentTripId = null;
 let currentRegs = [];
+let currentAdminRole = null; // 'super' 或 'admin'
 
-function login() {
-  if (document.getElementById('pwd').value === PWD) {
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('admin-screen').style.display='block';
-    loadTripsTable();
-  } else {
+// 登入後台
+async function login() {
+  if (document.getElementById('pwd').value !== PWD) {
     document.getElementById('login-err').textContent='密碼錯誤，請再試一次。';
+    return;
   }
+  // 檢查管理員身份（用 email 對照）
+  // 這裡用一個簡單的提示請管理員輸入自己的 email 確認身份
+  const email = prompt('請輸入您的管理員 Email 確認身份：');
+  if (!email) return;
+  const { data: adminData } = await sb.from('admins').select('role').eq('email', email.trim().toLowerCase()).single();
+  if (!adminData) {
+    document.getElementById('login-err').textContent='此 Email 無管理員權限。';
+    return;
+  }
+  currentAdminRole = adminData.role;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('admin-screen').style.display='block';
+  // 超級管理員才顯示管理員設定 tab
+  if (currentAdminRole === 'super') {
+    document.getElementById('tab-admins-btn').style.display='block';
+  }
+  loadTripsTable();
 }
 
 function logout() {
@@ -260,12 +294,14 @@ function logout() {
   document.getElementById('pwd').value='';
 }
 
+// 切換 Tab
 function switchTab(name, el) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
   if (name==='regs') loadAllRegs();
+  if (name==='admins') loadAdmins();
 }
 
 // ===== TRIPS =====
@@ -518,6 +554,45 @@ function downloadCSV(filename,headers,rows){
 }
 
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+
+// ===== 管理員管理（只有超級管理員可用）=====
+
+// 載入管理員列表
+async function loadAdmins() {
+  const tbody = document.getElementById('admins-tbody');
+  tbody.innerHTML='<tr><td class="loading-td" colspan="4">// 載入中...</td></tr>';
+  const { data: admins } = await sb.from('admins').select('*').order('created_at', { ascending: true });
+  if (!admins || !admins.length) {
+    tbody.innerHTML='<tr><td class="empty-td" colspan="4">尚無管理員資料。</td></tr>';
+    return;
+  }
+  tbody.innerHTML = admins.map(a => `<tr>
+    <td>${a.email}</td>
+    <td><span style="color:${a.role==='super'?'var(--accent)':'var(--success)'}">${a.role==='super'?'超級管理員':'一般管理員'}</span></td>
+    <td style="font-size:0.78rem;color:var(--muted)">${a.created_at?new Date(a.created_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td>${a.role==='super'?'<span style="color:var(--muted);font-size:0.78rem">無法刪除</span>':`<button class="btn-sm btn-del" onclick="removeAdmin(${a.id},'${a.email}')">移除</button>`}</td>
+  </tr>`).join('');
+}
+
+// 新增管理員
+async function addAdmin() {
+  const email = document.getElementById('new-admin-email').value.trim().toLowerCase();
+  const msg = document.getElementById('admin-msg');
+  if (!email) { msg.className='save-msg err'; msg.textContent='請填寫 Email'; return; }
+  const { error } = await sb.from('admins').insert({ email, role: 'admin' });
+  if (error) { msg.className='save-msg err'; msg.textContent='新增失敗（可能 Email 已存在）'; return; }
+  msg.className='save-msg ok'; msg.textContent='✓ 新增成功';
+  document.getElementById('new-admin-email').value='';
+  setTimeout(() => { msg.textContent=''; }, 3000);
+  loadAdmins();
+}
+
+// 移除管理員
+async function removeAdmin(id, email) {
+  if (!confirm(`確定要移除管理員 ${email} 嗎？`)) return;
+  await sb.from('admins').delete().eq('id', id);
+  loadAdmins();
+}
 </script>
 </body>
 </html>
