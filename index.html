@@ -529,8 +529,17 @@ async function openModal(id) {
   const price=t.price?`NT$ ${Number(t.price).toLocaleString()}`:'價格洽詢';
   const dateStr=t.date_end?`${t.date} – ${t.date_end}`:(t.date||'待定');
 
+  // 判斷是否已過期
+  const today = new Date().toISOString().split('T')[0];
+  const isExpired = t.date && t.date < today;
+
   let regContent='';
-  if (!currentUser) {
+  if (isExpired) {
+    // 已結束的行程不開放報名
+    regContent=`<div style="text-align:center;padding:2rem 0">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.9rem;color:var(--muted);">// 此行程已結束，不開放報名</p>
+    </div>`;
+  } else if (!currentUser) {
     regContent=`<div style="text-align:center;padding:2rem 0">
       <p style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);margin-bottom:1.2rem;">// 請先登入才能報名</p>
       <button class="btn-submit" onclick="closeModal();openAuthModal('login')">前往登入</button>
@@ -645,14 +654,16 @@ async function loadMyTrips() {
     list.innerHTML='<div class="empty-inner">// 尚無報名紀錄<br><br><a onclick="showPage(\'trips\')" style="color:var(--neon1);cursor:pointer;font-size:0.85rem">→ 前往探索行程</a></div>';
     return;
   }
+  const today2 = new Date().toISOString().split('T')[0];
   list.innerHTML=regs.map(r=>{
     const t=r.trips;
     if(!t) return '';
     const price=t.price?`NT$ ${Number(t.price).toLocaleString()} / 人`:'價格洽詢';
     const dateStr=t.date_end?`${t.date} – ${t.date_end}`:(t.date||'');
-    return `<div class="my-trip-card">
+    const isExpired = t.date && t.date < today2;
+    return `<div class="my-trip-card${isExpired?' expired-card':''}">
       <div>
-        <div class="my-trip-name">${t.name}</div>
+        <div class="my-trip-name">${t.name}${isExpired?' <span style="font-size:0.7rem;color:var(--muted);font-family:\'Share Tech Mono\',monospace;letter-spacing:0.1em">// 已結束</span>':''}</div>
         <div class="my-trip-meta">${dateStr?'📅 '+dateStr:''} ${t.days?'· 🧗 '+t.days+' 天':''} ${t.area?'· 📍 '+t.area:''}<br>${price}</div>
         <div class="my-trip-status">✓ 已報名 · ${new Date(r.created_at).toLocaleDateString('zh-TW')}</div>
       </div>
