@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -5,919 +6,437 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KineticPath</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --bg:#0b0e14; --bg2:#0f1319; --bg3:#151a22;
-    --border:rgba(255,255,255,0.07);
-    --text:#c8d0dc; --dim:#5a6475; --muted:#2e3440;
-    --neon1:#f0a050; --neon2:#e05878; --neon3:#f0c840;
-    --grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));
-    --grad2:linear-gradient(90deg,var(--neon1),var(--neon2));
-    --white:#ffffff;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-  body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-    background-image:linear-gradient(rgba(240,160,80,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,160,80,0.025) 1px,transparent 1px);
-    background-size:60px 60px}
+:root {
+  --bg:#0b0e14; --bg2:#0f1319; --bg3:#151a22;
+  --border:rgba(255,255,255,0.07);
+  --text:#c8d0dc; --dim:#5a6475; --muted:#2e3440;
+  --neon1:#f0a050; --neon2:#e05878; --neon3:#f0c840;
+  --grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));
+  --grad2:linear-gradient(90deg,var(--neon1),var(--neon2));
+  --white:#ffffff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(240,160,80,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,160,80,0.025) 1px,transparent 1px);background-size:60px 60px}
 
-  /* NAV */
-  nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;
-    padding:1.4rem 3rem;background:rgba(11,14,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-  .logo{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;
-    background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
-  nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
-  nav ul a{text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;
-    letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);transition:color 0.3s;position:relative;cursor:pointer}
-  nav ul a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--grad2);transition:width 0.3s}
-  nav ul a:hover{color:var(--neon1)}
-  nav ul a:hover::after{width:100%}
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.4rem 3rem;background:rgba(11,14,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.logo{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav ul{list-style:none;display:flex;gap:2rem;align-items:center}
+nav ul a{text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--dim);transition:color 0.3s;position:relative;cursor:pointer}
+nav ul a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--grad2);transition:width 0.3s}
+nav ul a:hover{color:var(--neon1)}
+nav ul a:hover::after{width:100%}
+.nav-login-btn{border:1px solid var(--neon1);color:var(--neon1)!important;padding:0.4rem 1rem}
+.nav-login-btn:hover{background:var(--neon1);color:var(--bg)!important}
 
-  /* LOGIN SCREEN */
-  .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
-  .login-bg{position:absolute;inset:0;
-    background:linear-gradient(to right,rgba(11,14,20,0.92) 40%,rgba(11,14,20,0.7) 100%),
-    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat}
-  .login-box{position:relative;max-width:420px;width:100%;background:var(--bg2);border:1px solid var(--border);padding:3rem;animation:fadeUp 0.6s ease both}
-  .login-logo{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;
-    background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:0.5rem}
-  .login-subtitle{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--dim);text-align:center;margin-bottom:2.5rem;text-transform:uppercase}
-  .auth-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem}
-  .auth-tab{flex:1;padding:0.8rem;text-align:center;cursor:pointer;font-family:'Rajdhani',sans-serif;
-    font-size:0.85rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;
-    color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s}
-  .auth-tab.active{color:var(--neon1);border-bottom-color:var(--neon1)}
-  .auth-form{display:none}.auth-form.active{display:block}
-  .form-group{margin-bottom:1.2rem}
-  .form-group label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.65rem;
-    letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
-  .form-input{width:100%;padding:0.9rem 1.2rem;background:var(--bg3);border:1px solid var(--border);
-    color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.3s}
-  .form-input:focus{border-color:var(--neon1)}
-  .btn-primary{width:100%;padding:1rem;background:transparent;border:1px solid var(--neon1);
-    color:var(--neon1);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
-    letter-spacing:0.25em;text-transform:uppercase;position:relative;overflow:hidden;transition:color 0.3s;margin-top:0.5rem}
-  .btn-primary::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
-  .btn-primary:hover{color:var(--bg)}.btn-primary:hover::before{transform:translateX(0)}
-  .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
-  .divider{display:flex;align-items:center;gap:1rem;margin:1.5rem 0;color:var(--muted);font-size:0.75rem}
-  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
-  .btn-google{width:100%;padding:0.9rem;background:var(--bg3);border:1px solid var(--border);
-    color:var(--text);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;
-    letter-spacing:0.1em;display:flex;align-items:center;justify-content:center;gap:0.8rem;transition:all 0.3s}
-  .btn-google:hover{border-color:var(--neon1);background:var(--bg2)}
-  .btn-google svg{width:18px;height:18px}
-  .auth-message{font-family:'Share Tech Mono',monospace;font-size:0.75rem;text-align:center;padding:0.8rem 0;letter-spacing:0.05em;margin-top:0.5rem}
-  .auth-message.success{color:var(--neon3)}.auth-message.error{color:var(--neon2)}
-  .auth-link{text-align:center;margin-top:1.5rem;font-size:0.8rem;color:var(--dim)}
-  .auth-link a{color:var(--neon1);cursor:pointer;text-decoration:none}
-  .auth-link a:hover{text-decoration:underline}
-  .loading{display:none;text-align:center;padding:0.5rem;color:var(--neon1)}
-  .loading.show{display:block}
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,14,20,1) 40%,rgba(11,14,20,0.4) 100%),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat}
+.hero-frame{position:absolute;width:100px;height:100px;pointer-events:none}
+.hero-frame.tl{top:6rem;left:3rem;border-top:1px solid rgba(240,160,80,0.4);border-left:1px solid rgba(240,160,80,0.4)}
+.hero-frame.br{bottom:3rem;right:3rem;border-bottom:1px solid rgba(224,88,120,0.4);border-right:1px solid rgba(224,88,120,0.4)}
+.hero-content{position:relative;max-width:680px}
+.hero-tag{display:inline-flex;align-items:center;gap:0.8rem;font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;color:var(--neon1);margin-bottom:2rem;animation:fadeUp 0.8s 0.2s both}
+.hero-tag::before{content:'▲';font-size:0.6rem;opacity:0.7}
+.hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(3.5rem,9vw,7rem);font-weight:700;line-height:1;letter-spacing:0.05em;text-transform:uppercase;color:var(--white);margin-bottom:1.5rem;animation:fadeUp 0.8s 0.35s both}
+.hero-title .grad-line{display:block;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:0.95rem;color:var(--dim);line-height:1.9;font-weight:300;margin-bottom:3rem;animation:fadeUp 0.8s 0.5s both}
+.hero-cta{display:flex;gap:1.2rem;animation:fadeUp 0.8s 0.65s both}
+.btn-neon{display:inline-block;padding:0.9rem 2.2rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;cursor:pointer;position:relative;overflow:hidden;transition:color 0.3s}
+.btn-neon::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
+.btn-neon:hover{color:var(--bg)}
+.btn-neon:hover::before{transform:translateX(0)}
+.scroll-line{position:absolute;bottom:0;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--dim);padding-bottom:2rem}
+.scroll-line::after{content:'';width:1px;height:50px;background:linear-gradient(to bottom,var(--neon1),transparent);animation:pulse 1.5s ease-in-out infinite}
 
-  /* HERO */
-  .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 5rem;position:relative;overflow:hidden}
-  .hero-bg{position:absolute;inset:0;
-    background:linear-gradient(to right,rgba(11,14,20,1) 40%,rgba(11,14,20,0.4) 100%),
-    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1800&q=80') center/cover no-repeat}
-  .hero-frame{position:absolute;width:100px;height:100px;pointer-events:none}
-  .hero-frame.tl{top:6rem;left:3rem;border-top:1px solid rgba(240,160,80,0.4);border-left:1px solid rgba(240,160,80,0.4)}
-  .hero-frame.br{bottom:3rem;right:3rem;border-bottom:1px solid rgba(224,88,120,0.4);border-right:1px solid rgba(224,88,120,0.4)}
-  .hero-content{position:relative;max-width:680px}
-  .hero-tag{display:inline-flex;align-items:center;gap:0.8rem;font-family:'Share Tech Mono',monospace;
-    font-size:0.72rem;letter-spacing:0.2em;color:var(--neon1);margin-bottom:2rem;animation:fadeUp 0.8s 0.2s both}
-  .hero-tag::before{content:'▲';font-size:0.6rem;opacity:0.7}
-  .hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(3.5rem,9vw,7rem);font-weight:700;
-    line-height:1;letter-spacing:0.05em;text-transform:uppercase;color:var(--white);
-    margin-bottom:1.5rem;animation:fadeUp 0.8s 0.35s both}
-  .hero-title .grad-line{display:block;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .hero-sub{font-size:0.95rem;color:var(--dim);line-height:1.9;font-weight:300;margin-bottom:3rem;animation:fadeUp 0.8s 0.5s both}
-  .hero-cta{display:flex;gap:1.2rem;animation:fadeUp 0.8s 0.65s both}
-  .btn-neon{display:inline-block;padding:0.9rem 2.2rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);
-    font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;
-    text-decoration:none;cursor:pointer;position:relative;overflow:hidden;transition:color 0.3s}
-  .btn-neon::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
-  .btn-neon:hover{color:var(--bg)}
-  .btn-neon:hover::before{transform:translateX(0)}
-  .btn-neon.pink{border-color:var(--neon2);color:var(--neon2)}
-  .btn-neon.pink::before{background:var(--neon2)}
-  .scroll-line{position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-    display:flex;flex-direction:column;align-items:center;gap:0.5rem;
-    font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--dim);padding-bottom:2rem}
-  .scroll-line::after{content:'';width:1px;height:50px;background:linear-gradient(to bottom,var(--neon1),transparent);animation:pulse 1.5s ease-in-out infinite}
+/* TRIPS */
+.trips-section{padding:8rem 3rem}
+.section-header{max-width:1200px;margin:0 auto 3rem}
+.section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
+.section-eyebrow::before{content:'//';opacity:0.5}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--white)}
+.section-sub{font-size:0.85rem;color:var(--dim);line-height:1.9;font-weight:300;margin-top:0.5rem}
 
-  /* SECTIONS */
-  .section-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);
-    margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
-  .section-eyebrow::before{content:'//';opacity:0.5}
-  .section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;
-    letter-spacing:0.1em;text-transform:uppercase;color:var(--white)}
-  .section-sub{font-size:0.85rem;color:var(--dim);line-height:1.9;font-weight:300;max-width:400px}
+#trips-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1px;background:var(--border);border:1px solid var(--border)}
+.trip-card{background:var(--bg2);overflow:hidden;cursor:pointer;position:relative;transition:background 0.3s}
+.trip-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--grad2);transition:height 0.4s;z-index:2}
+.trip-card:hover{background:var(--bg3)}
+.trip-card:hover::before{height:100%}
+.trip-card:hover .trip-img{transform:scale(1.05)}
+.trip-img-wrap{height:220px;overflow:hidden}
+.trip-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s;filter:brightness(0.7) saturate(0.8)}
+.trip-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--muted)}
+.diff-bar{height:2px;background:var(--muted);position:relative}
+.diff-bar::after{content:'';position:absolute;top:0;left:0;height:100%;background:var(--grad2)}
+.diff-bar.easy::after{width:33%}.diff-bar.medium::after{width:66%}.diff-bar.hard::after{width:100%}
+.trip-body{padding:1.5rem}
+.trip-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem}
+.trip-tags{display:flex;gap:0.4rem;flex-wrap:wrap}
+.tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:0.2rem 0.5rem;letter-spacing:0.1em;text-transform:uppercase;border:1px solid currentColor}
+.tag-easy{color:#5a9a52}.tag-medium{color:var(--neon1)}.tag-hard{color:var(--neon2)}.tag-area{color:var(--dim);border-color:var(--muted)}
+.trip-num{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)}
+.trip-name{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:0.5rem;line-height:1.3}
+.trip-desc{font-size:0.82rem;color:var(--dim);line-height:1.8;margin-bottom:1.2rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.trip-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border)}
+.trip-price{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.trip-price small{font-family:'Noto Sans TC',sans-serif;font-size:0.7rem;font-weight:300;color:var(--dim);-webkit-text-fill-color:var(--dim)}
+.trip-meta{text-align:right;font-size:0.75rem;color:var(--dim);line-height:1.7}
+.btn-card{display:block;width:100%;margin-top:1rem;padding:0.7rem;background:transparent;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s}
+.btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
+.empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
+.empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
 
-  /* TRIPS */
-  .trips-section{padding:8rem 3rem}
-  .section-header{max-width:1200px;margin:0 auto 3rem;display:flex;justify-content:space-between;align-items:flex-end}
-  #trips-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
-    gap:1px;background:var(--border);border:1px solid var(--border)}
-  .trip-card{background:var(--bg2);overflow:hidden;cursor:pointer;position:relative;transition:background 0.3s}
-  .trip-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--grad2);transition:height 0.4s;z-index:2}
-  .trip-card:hover{background:var(--bg3)}
-  .trip-card:hover::before{height:100%}
-  .trip-card:hover .trip-img{transform:scale(1.05)}
-  .trip-img-wrap{height:220px;overflow:hidden}
-  .trip-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s;filter:brightness(0.7) saturate(0.8)}
-  .trip-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:2.5rem;color:var(--muted)}
-  .diff-bar{height:2px;background:var(--muted);position:relative}
-  .diff-bar::after{content:'';position:absolute;top:0;left:0;height:100%;background:var(--grad2)}
-  .diff-bar.easy::after{width:33%}.diff-bar.medium::after{width:66%}.diff-bar.hard::after{width:100%}
-  .trip-body{padding:1.5rem}
-  .trip-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem}
-  .trip-tags{display:flex;gap:0.4rem;flex-wrap:wrap}
-  .tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;padding:0.2rem 0.5rem;letter-spacing:0.1em;text-transform:uppercase;border:1px solid currentColor}
-  .tag-easy{color:#5a9a52}.tag-medium{color:var(--neon1)}.tag-hard{color:var(--neon2)}.tag-area{color:var(--dim);border-color:var(--muted)}
-  .trip-num{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)}
-  .trip-name{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:0.08em;
-    text-transform:uppercase;color:var(--white);margin-bottom:0.5rem;line-height:1.3}
-  .trip-desc{font-size:0.82rem;color:var(--dim);line-height:1.8;margin-bottom:1.2rem;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .trip-footer{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid var(--border)}
-  .trip-price{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .trip-price small{font-family:'Noto Sans TC',sans-serif;font-size:0.7rem;font-weight:300;color:var(--dim);-webkit-text-fill-color:var(--dim)}
-  .trip-meta{text-align:right;font-size:0.75rem;color:var(--dim);line-height:1.7}
-  .btn-card{display:block;width:100%;margin-top:1rem;padding:0.7rem;background:transparent;border:1px solid var(--border);
-    color:var(--dim);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;
-    letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s}
-  .btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
-  .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--muted);
-    font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
-  .empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
+/* FOOTER */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer-info{font-size:0.78rem;color:var(--dim);line-height:1.8;text-align:center}
+.footer-copy{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em}
 
-  /* ABOUT */
-  .about-section{padding:8rem 3rem;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .about-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
-  .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:3rem;border:1px solid var(--border)}
-  .stat-item{padding:1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
-  .stat-item:nth-child(even){border-right:none}.stat-item:nth-last-child(-n+2){border-bottom:none}
-  .stat-num{font-family:'Rajdhani',sans-serif;font-size:2.5rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
-  .stat-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);letter-spacing:0.15em;text-transform:uppercase;margin-top:0.4rem}
-  .about-img-wrap{position:relative;height:500px;border:1px solid var(--border)}
-  .about-img-wrap img{width:100%;height:100%;object-fit:cover;filter:brightness(0.6) saturate(0.7)}
-  .about-img-tag{position:absolute;bottom:1.5rem;left:1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
-    letter-spacing:0.2em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;z-index:2}
-  .about-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(11,14,20,0.7) 0%,transparent 60%)}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:2rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp 0.3s ease both}
+.modal-img-wrap{height:220px;overflow:hidden}
+.modal-img-wrap img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65)}
+.modal-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--muted)}
+.modal-close{position:absolute;top:1rem;right:1rem;background:rgba(11,14,20,0.8);border:1px solid var(--border);color:var(--dim);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:all 0.3s;z-index:10}
+.modal-close:hover{border-color:var(--neon2);color:var(--neon2)}
+.modal-body{padding:2rem}
+.modal-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--neon1);margin-bottom:0.5rem}
+.modal-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--white);margin-bottom:1.5rem;line-height:1.2}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);margin-bottom:1.5rem}
+.modal-item{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.modal-item:nth-child(even){border-right:none}
+.modal-item:nth-last-child(-n+2){border-bottom:none}
+.modal-item label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
+.modal-item strong{font-size:0.92rem;color:var(--text);font-weight:400}
+.modal-desc{font-size:0.85rem;color:var(--dim);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem}
+.reg-block{border-top:1px solid var(--border);padding-top:1.5rem}
+.reg-block h3{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon1);margin-bottom:1.2rem}
+.f-group{margin-bottom:0.9rem}
+.f-group label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+.f-ctrl{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
+.f-ctrl:focus{border-color:var(--neon1)}
+.f-ctrl option{background:var(--bg3)}
+.f-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.btn-submit{width:100%;padding:1rem;margin-top:0.5rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;position:relative;overflow:hidden;transition:color 0.3s}
+.btn-submit::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
+.btn-submit:hover{color:var(--bg)}
+.btn-submit:hover::before{transform:translateX(0)}
+.reg-msg{font-family:'Share Tech Mono',monospace;font-size:0.78rem;text-align:center;padding:0.7rem 0;letter-spacing:0.1em}
+.reg-msg.ok{color:var(--neon3)}.reg-msg.err{color:var(--neon2)}
 
-  /* MY TRIPS PAGE */
-  .page-section{padding:8rem 3rem 4rem;max-width:1000px;margin:0 auto;display:none}
-  .page-section.active{display:block}
-  .my-trip-item{background:var(--bg2);border:1px solid var(--border);padding:1.5rem;margin-bottom:1px;
-    display:flex;justify-content:space-between;align-items:center}
-  .my-trip-name{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:var(--white);letter-spacing:0.05em}
-  .my-trip-date{font-size:0.8rem;color:var(--dim);margin-top:0.3rem}
+/* LOGIN MODAL */
+.auth-modal{background:var(--bg2);border:1px solid var(--border);max-width:420px;width:100%;position:relative;animation:fadeUp 0.3s ease both;padding:2.5rem}
+.auth-title{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:0.5rem}
+.auth-sub{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--dim);letter-spacing:0.1em;margin-bottom:2rem}
+.auth-tabs{display:flex;gap:0;margin-bottom:2rem;border-bottom:1px solid var(--border)}
+.auth-tab{padding:0.6rem 1.5rem;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s}
+.auth-tab.active{color:var(--neon1);border-bottom-color:var(--neon1)}
+.auth-msg{font-family:'Share Tech Mono',monospace;font-size:0.75rem;text-align:center;padding:0.5rem 0;letter-spacing:0.05em}
+.auth-msg.ok{color:var(--neon3)}.auth-msg.err{color:var(--neon2)}
+.auth-footer{font-size:0.78rem;color:var(--dim);text-align:center;margin-top:1rem}
 
-  /* PROFILE PAGE */
-  .profile-card{background:var(--bg2);border:1px solid var(--border);padding:2rem;max-width:500px}
-  .profile-field{margin-bottom:1rem}
-  .profile-field label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.65rem;
-    letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
-  .profile-input{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);
-    color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
-  .profile-input:focus{border-color:var(--neon1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
 
-  /* FOOTER */
-  footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;
-    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-  .footer-logo{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.25em;
-    text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .footer-info{font-size:0.78rem;color:var(--dim);line-height:1.8;text-align:center}
-  .footer-copy{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.1em}
-
-  /* TRIP MODAL */
-  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.88);
-    backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:2rem}
-  .modal-overlay.open{display:flex}
-  .trip-modal{background:var(--bg2);border:1px solid var(--border);max-width:640px;width:100%;
-    max-height:90vh;overflow-y:auto;position:relative;animation:fadeUp 0.3s ease both}
-  .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--border);
-    color:var(--dim);width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-    font-size:0.9rem;transition:all 0.3s;z-index:10}
-  .modal-close:hover{border-color:var(--neon2);color:var(--neon2)}
-  .modal-img-wrap{height:220px;overflow:hidden}
-  .modal-img-wrap img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65)}
-  .modal-img-placeholder{height:220px;background:linear-gradient(135deg,#0f1319,#1a2030);display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--muted)}
-  .trip-modal-body{padding:2rem}
-  .modal-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--neon1);margin-bottom:1.5rem}
-  .modal-title{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;letter-spacing:0.08em;
-    text-transform:uppercase;color:var(--white);margin-bottom:1.5rem;line-height:1.2}
-  .modal-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);margin-bottom:1.5rem}
-  .modal-item{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
-  .modal-item:nth-child(even){border-right:none}.modal-item:nth-last-child(-n+2){border-bottom:none}
-  .modal-item label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem}
-  .modal-item strong{font-size:0.92rem;color:var(--text);font-weight:400}
-  .modal-desc{font-size:0.85rem;color:var(--dim);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem}
-  .reg-block{border-top:1px solid var(--border);padding-top:1.5rem}
-  .reg-block h3{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon1);margin-bottom:1.2rem}
-  .f-group{margin-bottom:1rem}
-  .f-group label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
-  .f-ctrl{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);
-    color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
-  .f-ctrl:focus{border-color:var(--neon1)}
-  .f-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
-  .reg-msg{font-family:'Share Tech Mono',monospace;font-size:0.78rem;text-align:center;padding:0.7rem 0;letter-spacing:0.1em}
-  .reg-msg.ok{color:var(--neon3)}.reg-msg.err{color:var(--neon2)}
-  .login-required{text-align:center;padding:2rem 0;color:var(--dim);font-size:0.85rem}
-  .login-required a{color:var(--neon1);cursor:pointer;text-decoration:underline}
-  .btn-submit{width:100%;padding:1rem;margin-top:0.5rem;background:transparent;border:1px solid var(--neon1);
-    color:var(--neon1);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
-    letter-spacing:0.25em;text-transform:uppercase;position:relative;overflow:hidden;transition:color 0.3s}
-  .btn-submit::before{content:'';position:absolute;inset:0;background:var(--neon1);transform:translateX(-101%);transition:transform 0.3s;z-index:-1}
-  .btn-submit:hover{color:var(--bg)}.btn-submit:hover::before{transform:translateX(0)}
-
-  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pulse{0%,100%{opacity:0.3}50%{opacity:1}}
-
-  @media(max-width:900px){.about-grid{grid-template-columns:1fr}.about-img-wrap{height:300px}}
-  @media(max-width:768px){
-    nav{padding:1rem 1.5rem}nav ul{gap:1rem}
-    .hero,.login-screen{padding:7rem 1.5rem 4rem}
-    .trips-section,.about-section{padding:5rem 1.5rem}
-    .section-header{flex-direction:column;align-items:flex-start;gap:1rem}
-    .modal-grid{grid-template-columns:1fr}
-    .modal-item{border-right:none}
-    .f-row2{grid-template-columns:1fr}
-    footer{flex-direction:column;text-align:center}
-    .login-box{padding:2rem}
-  }
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}nav ul{gap:1rem}
+  .hero{padding:7rem 1.5rem 4rem}
+  .trips-section{padding:5rem 1.5rem}
+  .section-header{flex-direction:column;align-items:flex-start;gap:1rem}
+  .modal-grid{grid-template-columns:1fr}
+  .modal-item{border-right:none}
+  .modal-item:nth-last-child(-n+2){border-bottom:1px solid var(--border)}
+  .modal-item:last-child{border-bottom:none}
+  .f-row2{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="logo" onclick="showPage('home')">KineticPath</div>
+  <div class="logo">KineticPath</div>
   <ul id="nav-menu">
-    <!-- 登入前顯示 -->
-    <li id="nav-home"><a onclick="showPage('home')">首頁</a></li>
-    
-    <!-- 登入後顯示 -->
-    <li id="nav-trips" style="display:none"><a onclick="showPage('trips')">行程</a></li>
-    <li id="nav-my-trips" style="display:none"><a onclick="showPage('my-trips')">我的行程</a></li>
-    <li id="nav-profile" style="display:none"><a onclick="showPage('profile')">我的資料</a></li>
-    <li id="nav-logout" style="display:none"><a onclick="logout()">登出</a></li>
+    <li><a href="#trips">行程</a></li>
+    <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
   </ul>
 </nav>
 
-<!-- LOGIN SCREEN -->
-<div id="login-screen">
-  <div class="login-screen">
-    <div class="login-bg"></div>
-    <div class="login-box">
-      <h1 class="login-logo">KineticPath</h1>
-      <p class="login-subtitle">台灣登山探險平台</p>
-      
-      <div class="auth-tabs">
-        <div class="auth-tab active" onclick="switchAuthTab('login')">登入</div>
-        <div class="auth-tab" onclick="switchAuthTab('register')">註冊</div>
-      </div>
-
-      <!-- 登入表單 -->
-      <div class="auth-form active" id="form-login">
-        <div class="form-group">
-          <label>Email</label>
-          <input class="form-input" id="login-email" type="email" placeholder="your@email.com">
-        </div>
-        <div class="form-group">
-          <label>密碼</label>
-          <input class="form-input" id="login-password" type="password" placeholder="請輸入密碼">
-        </div>
-        <div class="loading" id="login-loading">登入中...</div>
-        <button class="btn-primary" onclick="doLogin()" id="login-btn">登入</button>
-        <div class="auth-message" id="login-msg"></div>
-        
-        <div class="divider">或</div>
-        
-        <button class="btn-google" onclick="loginWithGoogle()">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          使用 Google 登入
-        </button>
-        
-        <div class="auth-link">
-          <a onclick="resetPassword()">忘記密碼？</a>
-        </div>
-      </div>
-
-      <!-- 註冊表單 -->
-      <div class="auth-form" id="form-register">
-        <div class="form-group">
-          <label>Email</label>
-          <input class="form-input" id="reg-email" type="email" placeholder="your@email.com">
-        </div>
-        <div class="form-group">
-          <label>密碼（至少6位）</label>
-          <input class="form-input" id="reg-password" type="password" placeholder="請設定密碼">
-        </div>
-        <div class="form-group">
-          <label>確認密碼</label>
-          <input class="form-input" id="reg-password2" type="password" placeholder="再輸入一次密碼">
-        </div>
-        <div class="loading" id="register-loading">註冊中...</div>
-        <button class="btn-primary" onclick="doRegister()" id="register-btn">建立帳號</button>
-        <div class="auth-message" id="register-msg"></div>
-        
-        <div class="divider">或</div>
-        
-        <button class="btn-google" onclick="loginWithGoogle()">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          使用 Google 註冊
-        </button>
-      </div>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-frame tl"></div>
+  <div class="hero-frame br"></div>
+  <div class="hero-content">
+    <p class="hero-tag">台灣登山探險 · Since 2025</p>
+    <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
+    <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
+    <div class="hero-cta">
+      <a href="#trips" class="btn-neon">探索行程</a>
     </div>
   </div>
+  <div class="scroll-line">scroll</div>
 </div>
 
-<!-- HOME PAGE (登入後顯示) -->
-<div id="page-home" style="display:none">
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-frame tl"></div>
-    <div class="hero-frame br"></div>
-    <div class="hero-content">
-      <p class="hero-tag">台灣登山探險 · Since 2025</p>
-      <h1 class="hero-title">回到<br><span class="grad-line">山的懷抱</span></h1>
-      <p class="hero-sub">專業領隊帶路・頂級裝備・難忘體驗<br>探索台灣最壯麗的山岳秘境</p>
-      <div class="hero-cta">
-        <a href="#trips-section" class="btn-neon">探索行程</a>
-        <a href="#about" class="btn-neon pink">關於我們</a>
-      </div>
-    </div>
-    <div class="scroll-line">scroll</div>
+<section id="trips" class="trips-section">
+  <div class="section-header">
+    <div class="section-eyebrow">精選路線</div>
+    <h2 class="section-title">近期登山行程</h2>
+    <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
   </div>
-
-  <!-- TRIPS PREVIEW -->
-  <section class="trips-section" id="trips-section">
-    <div class="section-header">
-      <div>
-        <div class="section-eyebrow">精選路線</div>
-        <h2 class="section-title">近期登山行程</h2>
-        <p class="section-sub">每條路線皆由資深領隊規劃，確保您安全享受山林之美。</p>
-      </div>
-    </div>
-    <div id="trips-grid">
-      <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="about-section">
-    <div class="about-grid">
-      <div>
-        <div class="section-eyebrow">關於我們</div>
-        <h2 class="section-title">每座山<br>都是一個故事</h2>
-        <p class="section-sub" style="margin-top:1rem;">KineticPath 致力於提供安全、深度的登山體驗。我們的領隊皆持有合格登山嚮導證照，帶您探索台灣最美的山林秘境。</p>
-        <div class="about-stats">
-          <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">條路線</div></div>
-          <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">位旅客</div></div>
-          <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">年經驗</div></div>
-          <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">安全紀錄</div></div>
-        </div>
-      </div>
-      <div class="about-img-wrap">
-        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80" alt="Mountain">
-        <div class="about-img-tag">▲ KINETICPATH</div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- TRIPS PAGE -->
-<div id="page-trips" style="display:none">
-  <section class="trips-section" style="padding-top:8rem">
-    <div class="section-header">
-      <div>
-        <div class="section-eyebrow">所有路線</div>
-        <h2 class="section-title">登山行程</h2>
-        <p class="section-sub">選擇適合你的路線，開始你的山岳之旅。</p>
-      </div>
-    </div>
-    <div id="trips-grid-full">
-      <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
-    </div>
-  </section>
-</div>
-
-<!-- MY TRIPS PAGE -->
-<div id="page-my-trips" style="display:none;padding-top:6rem">
-  <div style="max-width:900px;margin:0 auto;padding:4rem 3rem">
-    <div class="section-eyebrow">個人專區</div>
-    <h2 class="section-title" style="margin-bottom:2rem">我的行程</h2>
-    <div id="my-trips-list">
-      <div class="empty-state"><div class="icon">▲</div><p>// 尚無報名紀錄</p></div>
-    </div>
+  <div id="trips-grid">
+    <div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>
   </div>
-</div>
+</section>
 
-<!-- PROFILE PAGE -->
-<div id="page-profile" style="display:none;padding-top:6rem">
-  <div style="max-width:600px;margin:0 auto;padding:4rem 3rem">
-    <div class="section-eyebrow">個人專區</div>
-    <h2 class="section-title" style="margin-bottom:2rem">我的資料</h2>
-    <div class="profile-card">
-      <div class="profile-field">
-        <label>Email</label>
-        <input class="profile-input" id="profile-email" type="text" readonly>
-      </div>
-      <div class="profile-field">
-        <label>姓名</label>
-        <input class="profile-input" id="profile-name" type="text" placeholder="請輸入姓名">
-      </div>
-      <div class="profile-field">
-        <label>電話</label>
-        <input class="profile-input" id="profile-phone" type="tel" placeholder="請輸入電話">
-      </div>
-      <button class="btn-neon" style="width:100%;margin-top:1rem" onclick="saveProfile()">儲存資料</button>
-      <p class="auth-message" id="profile-msg"></p>
-    </div>
-    <div style="margin-top:2rem;border-top:1px solid var(--border);padding-top:2rem">
-      <p style="font-size:0.85rem;color:var(--dim);margin-bottom:1rem">變更密碼</p>
-      <div class="profile-field">
-        <label>新密碼</label>
-        <input class="profile-input" id="new-password" type="password" placeholder="請輸入新密碼">
-      </div>
-      <button class="btn-neon pink" style="width:100%;margin-top:0.5rem" onclick="changePassword()">變更密碼</button>
-      <p class="auth-message" id="password-msg"></p>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">KineticPath</div>
   <div class="footer-info">info@kineticpath.com · 02-1234-5678<br>週一至週五 09:00–18:00</div>
   <div class="footer-copy">© 2025 KINETICPATH</div>
 </footer>
 
-<!-- TRIP DETAIL MODAL -->
+<!-- 行程詳情 Modal -->
 <div class="modal-overlay" id="tripModal">
-  <div class="trip-modal">
-    <button class="modal-close" onclick="closeTripModal()">✕</button>
-    <div id="trip-modal-content"></div>
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
   </div>
 </div>
 
-<script>
-// ===== SUPABASE =====
-const { createClient } = supabase;
-const sb = createClient(
-  'https://jlgbkakzcgrqrsnhlwgv.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsZ2JrYWt6Y2dycXJzbmhsd2d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc1NzY4ODYsImV4cCI6MjA1MzE1Mjg4Nn0.zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9W0K0tQKqfb2s'
-);
+<!-- 登入/註冊 Modal -->
+<div class="modal-overlay" id="authModal">
+  <div class="auth-modal">
+    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    <div class="auth-title">KineticPath</div>
+    <div class="auth-sub">// 會員登入系統</div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">登入</div>
+      <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">註冊</div>
+    </div>
 
+    <!-- 登入表單 -->
+    <div id="form-login">
+      <div class="f-group"><label>Email</label><input class="f-ctrl" id="login-email" type="email" placeholder="輸入 Email"></div>
+      <div class="f-group"><label>密碼</label><input class="f-ctrl" id="login-pwd" type="password" placeholder="輸入密碼"></div>
+      <div class="auth-msg" id="login-msg"></div>
+      <button class="btn-submit" onclick="doLogin()">登入</button>
+    </div>
+
+    <!-- 註冊表單 -->
+    <div id="form-register" style="display:none">
+      <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email2" type="email" placeholder="輸入 Email"></div>
+      <div class="f-group"><label>密碼（至少6位）</label><input class="f-ctrl" id="reg-pwd2" type="password" placeholder="設定密碼"></div>
+      <div class="auth-msg" id="register-msg"></div>
+      <button class="btn-submit" onclick="doRegister()">註冊</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Supabase 設定
+const SUPABASE_URL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 目前登入用戶
 let currentUser = null;
 
-// ===== AUTH STATE =====
-sb.auth.onAuthStateChange((event, session) => {
-  currentUser = session?.user || null;
-  updateUI();
-  if (currentUser) {
-    loadProfile();
-    loadMyTrips();
+// 初始化：檢查登入狀態
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUser = session.user;
+    updateNav(true);
   }
-});
+  renderTrips();
 
-function updateUI() {
-  const loggedIn = !!currentUser;
-  
-  // 顯示/隱藏頁面
-  document.getElementById('login-screen').style.display = loggedIn ? 'none' : 'block';
-  document.getElementById('page-home').style.display = loggedIn ? 'block' : 'none';
-  
-  // 更新導覽列
-  document.getElementById('nav-home').style.display = loggedIn ? 'none' : 'block';
-  document.getElementById('nav-trips').style.display = loggedIn ? 'block' : 'none';
-  document.getElementById('nav-my-trips').style.display = loggedIn ? 'block' : 'none';
-  document.getElementById('nav-profile').style.display = loggedIn ? 'block' : 'none';
-  document.getElementById('nav-logout').style.display = loggedIn ? 'block' : 'none';
-  
+  sb.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user || null;
+    updateNav(!!currentUser);
+  });
+}
+
+// 更新導覽列
+function updateNav(loggedIn) {
+  const menu = document.getElementById('nav-menu');
   if (loggedIn) {
-    renderTrips();
+    menu.innerHTML = `
+      <li><a href="#trips">行程</a></li>
+      <li><a href="#my-trips">我的行程</a></li>
+      <li><a onclick="openProfile()">我的資料維護</a></li>
+      <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
+    `;
+  } else {
+    menu.innerHTML = `
+      <li><a href="#trips">行程</a></li>
+      <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
+    `;
   }
 }
 
-// ===== AUTH TABS =====
-function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('form-' + tab).classList.add('active');
-  
-  // 清除訊息
-  document.getElementById('login-msg').textContent = '';
-  document.getElementById('register-msg').textContent = '';
-  document.getElementById('login-msg').className = 'auth-message';
-  document.getElementById('register-msg').className = 'auth-message';
-}
-
-// ===== LOGIN =====
+// 登入
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  const msg = document.getElementById('login-msg');
-  const loading = document.getElementById('login-loading');
-  const btn = document.getElementById('login-btn');
-  
-  if (!email || !password) {
-    msg.className = 'auth-message error';
-    msg.textContent = '請填寫所有欄位';
-    return;
-  }
-  
-  loading.classList.add('show');
-  btn.disabled = true;
-  msg.textContent = '';
-  
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  
-  loading.classList.remove('show');
-  btn.disabled = false;
-  
-  if (error) {
-    msg.className = 'auth-message error';
-    msg.textContent = error.message === 'Invalid login credentials' ? '帳號或密碼錯誤' : error.message;
-  } else {
-    msg.className = 'auth-message success';
-    msg.textContent = '登入成功！';
-    setTimeout(() => {
-      updateUI();
-    }, 500);
-  }
+  const pwd   = document.getElementById('login-pwd').value;
+  const msg   = document.getElementById('login-msg');
+  if (!email || !pwd) { msg.className='auth-msg err'; msg.textContent='// 請填寫 Email 和密碼'; return; }
+  msg.className='auth-msg'; msg.textContent='// 登入中...';
+  const { error } = await sb.auth.signInWithPassword({ email, password: pwd });
+  if (error) { msg.className='auth-msg err'; msg.textContent='// 帳號或密碼錯誤'; return; }
+  msg.className='auth-msg ok'; msg.textContent='// 登入成功！';
+  setTimeout(closeAuthModal, 800);
 }
 
-// ===== REGISTER =====
+// 註冊
 async function doRegister() {
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const password2 = document.getElementById('reg-password2').value;
-  const msg = document.getElementById('register-msg');
-  const loading = document.getElementById('register-loading');
-  const btn = document.getElementById('register-btn');
-  
-  if (!email || !password) {
-    msg.className = 'auth-message error';
-    msg.textContent = '請填寫所有欄位';
-    return;
-  }
-  
-  if (password !== password2) {
-    msg.className = 'auth-message error';
-    msg.textContent = '兩次密碼不一致';
-    return;
-  }
-  
-  if (password.length < 6) {
-    msg.className = 'auth-message error';
-    msg.textContent = '密碼至少需要 6 位';
-    return;
-  }
-  
-  loading.classList.add('show');
-  btn.disabled = true;
-  msg.textContent = '';
-  
-  const { error } = await sb.auth.signUp({ 
-    email, 
-    password,
-    options: {
-      emailRedirectTo: window.location.origin
-    }
-  });
-  
-  loading.classList.remove('show');
-  btn.disabled = false;
-  
-  if (error) {
-    msg.className = 'auth-message error';
-    msg.textContent = error.message;
-  } else {
-    msg.className = 'auth-message success';
-    msg.textContent = '註冊成功！正在登入...';
-    setTimeout(() => {
-      updateUI();
-    }, 1000);
-  }
+  const email = document.getElementById('reg-email2').value.trim();
+  const pwd   = document.getElementById('reg-pwd2').value;
+  const msg   = document.getElementById('register-msg');
+  if (!email || !pwd) { msg.className='auth-msg err'; msg.textContent='// 請填寫 Email 和密碼'; return; }
+  if (pwd.length < 6) { msg.className='auth-msg err'; msg.textContent='// 密碼至少需要 6 個字元'; return; }
+  msg.className='auth-msg'; msg.textContent='// 註冊中...';
+  const { error } = await sb.auth.signUp({ email, password: pwd });
+  if (error) { msg.className='auth-msg err'; msg.textContent='// 註冊失敗：' + error.message; return; }
+  msg.className='auth-msg ok'; msg.textContent='// 註冊成功！請查收驗證信';
 }
 
-// ===== GOOGLE LOGIN =====
-async function loginWithGoogle() {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin
-    }
-  });
-  
-  if (error) {
-    alert('Google 登入失敗：' + error.message);
-  }
-}
-
-// ===== RESET PASSWORD =====
-async function resetPassword() {
-  const email = document.getElementById('login-email').value.trim();
-  const msg = document.getElementById('login-msg');
-  
-  if (!email) {
-    msg.className = 'auth-message error';
-    msg.textContent = '請先輸入 Email';
-    return;
-  }
-  
-  const { error } = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin
-  });
-  
-  if (error) {
-    msg.className = 'auth-message error';
-    msg.textContent = error.message;
-  } else {
-    msg.className = 'auth-message success';
-    msg.textContent = '重設信件已寄出，請檢查 Email';
-  }
-}
-
-// ===== LOGOUT =====
-async function logout() {
+// 登出
+async function doLogout() {
   await sb.auth.signOut();
-  showPage('home');
-  updateUI();
+  currentUser = null;
+  updateNav(false);
 }
 
-// ===== PAGES =====
-function showPage(name) {
-  if (!currentUser && name !== 'home') {
-    return;
-  }
-  
-  document.getElementById('page-home').style.display = 'none';
-  document.getElementById('page-trips').style.display = 'none';
-  document.getElementById('page-my-trips').style.display = 'none';
-  document.getElementById('page-profile').style.display = 'none';
-
-  if (name === 'home') {
-    document.getElementById('page-home').style.display = 'block';
-    renderTrips();
-  } else if (name === 'trips') {
-    document.getElementById('page-trips').style.display = 'block';
-    renderTripsPage();
-  } else if (name === 'my-trips') {
-    document.getElementById('page-my-trips').style.display = 'block';
-    loadMyTrips();
-  } else if (name === 'profile') {
-    document.getElementById('page-profile').style.display = 'block';
-    loadProfile();
-  }
-  window.scrollTo(0, 0);
+// Auth Modal
+function openAuthModal(tab) {
+  document.getElementById('authModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchAuthTab(tab);
 }
 
-// ===== PROFILE =====
-async function loadProfile() {
-  if (!currentUser) return;
-  document.getElementById('profile-email').value = currentUser.email;
-  const meta = currentUser.user_metadata;
-  if (meta) {
-    document.getElementById('profile-name').value = meta.name || '';
-    document.getElementById('profile-phone').value = meta.phone || '';
-  }
+function closeAuthModal() {
+  document.getElementById('authModal').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-async function saveProfile() {
-  const name = document.getElementById('profile-name').value.trim();
-  const phone = document.getElementById('profile-phone').value.trim();
-  const msg = document.getElementById('profile-msg');
-  const { error } = await sb.auth.updateUser({ data: { name, phone } });
-  if (error) {
-    msg.className = 'auth-message error';
-    msg.textContent = '儲存失敗';
-  } else {
-    msg.className = 'auth-message success';
-    msg.textContent = '儲存成功！';
-    setTimeout(() => msg.textContent = '', 2000);
-  }
+function switchAuthTab(tab) {
+  document.getElementById('form-login').style.display    = tab === 'login'    ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tab-login').className    = 'auth-tab' + (tab === 'login'    ? ' active' : '');
+  document.getElementById('tab-register').className = 'auth-tab' + (tab === 'register' ? ' active' : '');
 }
 
-async function changePassword() {
-  const password = document.getElementById('new-password').value;
-  const msg = document.getElementById('password-msg');
-  if (password.length < 6) {
-    msg.className = 'auth-message error';
-    msg.textContent = '密碼至少需要 6 位';
-    return;
-  }
-  const { error } = await sb.auth.updateUser({ password });
-  if (error) {
-    msg.className = 'auth-message error';
-    msg.textContent = '變更失敗：' + error.message;
-  } else {
-    msg.className = 'auth-message success';
-    msg.textContent = '密碼已變更！';
-    document.getElementById('new-password').value = '';
-    setTimeout(() => msg.textContent = '', 2000);
-  }
+function openProfile() {
+  alert('我的資料維護功能開發中！');
 }
 
-// ===== TRIPS =====
+// 行程資料
 function getTrips() {
-  try {
-    return JSON.parse(localStorage.getItem('mountain_trips') || '[]');
-  } catch {
-    return [];
-  }
-}
-
-function tripCardHTML(t, i) {
-  const dMap = {
-    easy: { l: '輕鬆', c: 'tag-easy', b: 'easy' },
-    medium: { l: '中級', c: 'tag-medium', b: 'medium' },
-    hard: { l: '進階', c: 'tag-hard', b: 'hard' }
-  };
-  const d = dMap[t.difficulty] || dMap.medium;
-  const img = t.imageUrl
-    ? `<div class="trip-img-wrap"><img class="trip-img" src="${t.imageUrl}" alt="${t.name}"></div>`
-    : '<div class="trip-img-placeholder">▲</div>';
-  
-  return `<div class="trip-card" onclick="openTripModal(${t.id})">
-    ${img}<div class="diff-bar ${d.b}"></div>
-    <div class="trip-body">
-      <div class="trip-top">
-        <div class="trip-tags"><span class="tag ${d.c}">${d.l}</span>${t.area ? `<span class="tag tag-area">${t.area}</span>` : ''}</div>
-        <span class="trip-num">#${String(i + 1).padStart(2, '0')}</span>
-      </div>
-      <h3 class="trip-name">${t.name}</h3>
-      <p class="trip-desc">${t.description || ''}</p>
-      <div class="trip-footer">
-        <div class="trip-price">NT$ ${Number(t.price || 0).toLocaleString()}<small> / 人</small></div>
-        <div class="trip-meta">📅 ${t.date || '待定'}<br>🧗 ${t.days || '-'} 天</div>
-      </div>
-      <button class="btn-card">查看詳情 & 報名 →</button>
-    </div>
-  </div>`;
+  try { return JSON.parse(localStorage.getItem('mountain_trips') || '[]'); } catch { return []; }
 }
 
 function renderTrips() {
+  const grid  = document.getElementById('trips-grid');
   const trips = getTrips();
-  const grid = document.getElementById('trips-grid');
-  grid.innerHTML = trips.length
-    ? trips.slice(0, 3).map((t, i) => tripCardHTML(t, i)).join('')
-    : '<div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>';
-}
-
-function renderTripsPage() {
-  const trips = getTrips();
-  const grid = document.getElementById('trips-grid-full');
-  grid.innerHTML = trips.length
-    ? trips.map((t, i) => tripCardHTML(t, i)).join('')
-    : '<div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>';
-}
-
-// ===== MY TRIPS =====
-function loadMyTrips() {
-  if (!currentUser) return;
-  const regs = JSON.parse(localStorage.getItem('mountain_registrations') || '[]');
-  const trips = getTrips();
-  const myRegs = regs.filter(r => r.userId === currentUser.id);
-  const el = document.getElementById('my-trips-list');
-  
-  if (!myRegs.length) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">▲</div><p>// 尚無報名紀錄</p></div>';
+  if (!trips.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="icon">▲</div><p>// 目前尚無行程，敬請期待</p></div>';
     return;
   }
-  
-  el.innerHTML = myRegs.map(r => {
-    const t = trips.find(x => x.id === r.tripId);
-    return `<div class="my-trip-item">
-      <div>
-        <div class="my-trip-name">${t ? t.name : '行程已刪除'}</div>
-        <div class="my-trip-date">📅 ${r.date || ''} · ${r.count} 人</div>
+  const dMap = { easy:{l:'輕鬆',c:'tag-easy',b:'easy'}, medium:{l:'中級',c:'tag-medium',b:'medium'}, hard:{l:'進階',c:'tag-hard',b:'hard'} };
+  grid.innerHTML = trips.map((t, i) => {
+    const d   = dMap[t.difficulty] || dMap.medium;
+    const img = t.imageUrl ? `<div class="trip-img-wrap"><img class="trip-img" src="${t.imageUrl}" alt="${t.name}"></div>` : '<div class="trip-img-placeholder">▲</div>';
+    const price = t.price ? `NT$ ${Number(t.price).toLocaleString()}<small> / 人</small>` : '<small style="-webkit-text-fill-color:var(--dim)">價格洽詢</small>';
+    return `<div class="trip-card" onclick="openModal(${t.id})">
+      ${img}<div class="diff-bar ${d.b}"></div>
+      <div class="trip-body">
+        <div class="trip-top">
+          <div class="trip-tags"><span class="tag ${d.c}">${d.l}</span>${t.area ? `<span class="tag tag-area">${t.area}</span>` : ''}</div>
+          <span class="trip-num">#${String(i+1).padStart(2,'0')}</span>
+        </div>
+        <h3 class="trip-name">${t.name}</h3>
+        <p class="trip-desc">${t.description || ''}</p>
+        <div class="trip-footer">
+          <div class="trip-price">${price}</div>
+          <div class="trip-meta">${t.date ? '📅 ' + t.date : ''}${t.days ? '<br>🧗 ' + t.days + ' 天' : ''}</div>
+        </div>
+        <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">查看詳情 & 報名 →</button>
       </div>
-      <span class="tag tag-medium">已報名</span>
     </div>`;
   }).join('');
 }
 
-// ===== TRIP MODAL =====
-function openTripModal(id) {
+function openModal(id) {
   const t = getTrips().find(x => x.id === id);
   if (!t) return;
-  
-  const dL = { easy: '輕鬆', medium: '中級', hard: '進階' };
-  const img = t.imageUrl
-    ? `<div class="modal-img-wrap"><img src="${t.imageUrl}" alt="${t.name}"></div>`
-    : '<div class="modal-img-placeholder">▲</div>';
-
-  const regForm = `
-    <div class="reg-block">
-      <h3>// 立即報名</h3>
-      <div id="reg-msg-t"></div>
-      <div class="f-row2">
-        <div class="f-group">
-          <label>姓名</label>
-          <input class="f-ctrl" id="t-name" type="text" placeholder="您的姓名" value="${currentUser.user_metadata?.name || ''}">
-        </div>
-        <div class="f-group">
-          <label>電話</label>
-          <input class="f-ctrl" id="t-phone" type="tel" placeholder="連絡電話" value="${currentUser.user_metadata?.phone || ''}">
-        </div>
-      </div>
-      <div class="f-group">
-        <label>人數</label>
-        <select class="f-ctrl" id="t-count">
-          ${[1, 2, 3, 4, 5].map(n => `<option value="${n}">${n} 人</option>`).join('')}
-        </select>
-      </div>
-      <div class="f-group">
-        <label>備註</label>
-        <textarea class="f-ctrl" id="t-note" rows="2" placeholder="特殊需求或備註"></textarea>
-      </div>
-      <button class="btn-submit" onclick="submitTripReg(${t.id})">確認報名</button>
-    </div>`;
-
-  document.getElementById('trip-modal-content').innerHTML = `
+  const dL  = { easy:'輕鬆', medium:'中級', hard:'進階' };
+  const img = t.imageUrl ? `<div class="modal-img-wrap"><img src="${t.imageUrl}" alt="${t.name}"></div>` : '<div class="modal-img-placeholder">▲</div>';
+  const price = t.price ? `NT$ ${Number(t.price).toLocaleString()}` : '價格洽詢';
+  document.getElementById('modal-content').innerHTML = `
     ${img}
-    <div class="trip-modal-body">
+    <div class="modal-body">
       <p class="modal-eyebrow">// 行程詳情</p>
       <h2 class="modal-title">${t.name}</h2>
       <div class="modal-grid">
         <div class="modal-item"><label>出發日期</label><strong>${t.date || '待定'}</strong></div>
-        <div class="modal-item"><label>天數</label><strong>${t.days || '-'} 天</strong></div>
+        <div class="modal-item"><label>天數</label><strong>${t.days ? t.days + ' 天' : '待定'}</strong></div>
         <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty] || '-'}</strong></div>
-        <div class="modal-item"><label>名額</label><strong>${t.slots || '-'} 人</strong></div>
+        <div class="modal-item"><label>名額</label><strong>${t.slots ? t.slots + ' 人' : '-'}</strong></div>
         <div class="modal-item"><label>集合地點</label><strong>${t.meetingPoint || '-'}</strong></div>
-        <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">NT$ ${Number(t.price || 0).toLocaleString()}</strong></div>
+        <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
       </div>
-      ${t.description ? `<div class="modal-desc">${t.description.replace(/\n/g, '<br>')}</div>` : ''}
-      ${regForm}
+      ${t.description ? `<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>` : ''}
+      <div class="reg-block">
+        <h3>// 立即報名</h3>
+        <div id="reg-msg"></div>
+        <div class="f-row2">
+          <div class="f-group"><label>姓名</label><input class="f-ctrl" id="reg-name" type="text" placeholder="您的姓名"></div>
+          <div class="f-group"><label>電話</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話"></div>
+        </div>
+        <div class="f-row2">
+          <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email" type="email" placeholder="電子郵件" value="${currentUser?.email || ''}"></div>
+          <div class="f-group"><label>人數</label><select class="f-ctrl" id="reg-count">${[1,2,3,4,5].map(n=>`<option value="${n}">${n} 人</option>`).join('')}</select></div>
+        </div>
+        <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求或備註"></textarea></div>
+        <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>
+      </div>
     </div>`;
-  
   document.getElementById('tripModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeTripModal() {
+function closeModal() {
   document.getElementById('tripModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-function submitTripReg(tripId) {
-  const name = document.getElementById('t-name').value.trim();
-  const phone = document.getElementById('t-phone').value.trim();
-  const msg = document.getElementById('reg-msg-t');
-  
-  if (!name || !phone) {
-    msg.className = 'reg-msg err';
-    msg.textContent = '// 請填寫姓名及電話';
-    return;
-  }
-  
+document.getElementById('tripModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuthModal(); });
+
+function submitReg(tripId) {
+  const name  = document.getElementById('reg-name').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const msg   = document.getElementById('reg-msg');
+  if (!name || !phone || !email) { msg.className='reg-msg err'; msg.textContent='// 請填寫姓名、電話及 Email'; return; }
   const regs = JSON.parse(localStorage.getItem('mountain_registrations') || '[]');
-  regs.push({
-    tripId,
-    userId: currentUser.id,
-    name,
-    phone,
-    email: currentUser.email,
-    count: document.getElementById('t-count').value,
-    note: document.getElementById('t-note').value,
-    date: new Date().toLocaleDateString('zh-TW'),
-    time: new Date().toISOString()
-  });
+  regs.push({ tripId, name, phone, email, count: document.getElementById('reg-count').value, note: document.getElementById('reg-note').value, time: new Date().toISOString() });
   localStorage.setItem('mountain_registrations', JSON.stringify(regs));
-  
   msg.className = 'reg-msg ok';
   msg.textContent = '// 報名成功！我們將盡快與您聯繫';
   document.querySelector('.btn-submit').disabled = true;
 }
 
-// ===== MODAL CLOSE ON OUTSIDE CLICK =====
-document.getElementById('tripModal').addEventListener('click', function (e) {
-  if (e.target === this) closeTripModal();
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior:'smooth' }); });
 });
 
-// ===== INIT =====
-(async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  currentUser = session?.user || null;
-  updateUI();
-})();
+init();
 </script>
 </body>
 </html>
