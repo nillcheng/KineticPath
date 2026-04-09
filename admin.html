@@ -9,8 +9,6 @@
 :root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--border:rgba(255,255,255,0.08);--text:#e8e8e8;--dim:#888;--muted:#444;--accent:#c8a96e;--white:#fff;--danger:#c05050;--success:#5a9a52}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text)}
-
-/* LOGIN */
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(to bottom,rgba(10,10,10,0.96),rgba(10,10,10,0.99)),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=60') center/cover}
 .login-box{width:380px;text-align:center;animation:fadeUp 0.5s ease both}
 .login-logo{font-family:'Noto Serif TC',serif;font-size:2rem;font-weight:900;color:var(--white);letter-spacing:0.15em;margin-bottom:0.3rem}
@@ -21,39 +19,27 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .login-btn{width:100%;padding:1rem;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;transition:background 0.3s}
 .login-btn:hover{background:var(--white)}
 .login-err{color:var(--danger);font-size:0.8rem;margin-top:0.8rem}
-.login-hint{color:var(--muted);font-size:0.72rem;margin-top:2rem}
-
-/* ADMIN */
 #admin-screen{display:none}
 .admin-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
 .admin-logo{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:900;color:var(--white);letter-spacing:0.15em}
 .admin-logo em{color:var(--accent);font-style:normal}
 .admin-logo small{font-family:'Noto Sans TC',sans-serif;font-size:0.7rem;font-weight:300;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-left:1rem}
 .header-actions{display:flex;gap:1rem;align-items:center}
-.link-front{font-size:0.78rem;color:var(--dim);text-decoration:none;transition:color 0.3s}
+.link-front{font-size:0.78rem;color:var(--dim);text-decoration:none;transition:color 0.3s;cursor:pointer}
 .link-front:hover{color:var(--accent)}
 .btn-logout{padding:0.5rem 1.2rem;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.3s}
 .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
-
 .admin-main{max-width:1200px;margin:2.5rem auto;padding:0 2.5rem}
-
-/* TABS */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem}
 .tab{padding:0.8rem 2rem;cursor:pointer;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;transition:all 0.3s}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab:hover{color:var(--text)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-
-/* CARD */
+.tab-panel{display:none}.tab-panel.active{display:block}
 .card{background:var(--bg2);border:1px solid var(--border);margin-bottom:1.5rem}
 .card-header{padding:1.2rem 2rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .card-title{font-family:'Noto Serif TC',serif;font-size:1rem;font-weight:700;color:var(--white);letter-spacing:0.05em}
 .card-body{padding:2rem}
-
-/* FORM */
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 .form-group{margin-bottom:1rem}
 .form-group label{display:block;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem}
 .req{color:var(--accent)}
@@ -66,19 +52,13 @@ textarea.form-ctrl{resize:vertical;min-height:80px}
 .btn-save:hover{background:var(--white)}
 .btn-cancel-form{padding:0.85rem 1.5rem;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;letter-spacing:0.1em;transition:all 0.3s}
 .btn-cancel-form:hover{border-color:var(--danger);color:var(--danger)}
-.save-msg{font-size:0.82rem}
-.save-msg.ok{color:var(--success)}
-.save-msg.err{color:var(--danger)}
-
-/* BUTTONS */
+.save-msg{font-size:0.82rem}.save-msg.ok{color:var(--success)}.save-msg.err{color:var(--danger)}
 .btn-add{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.8rem;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;transition:background 0.3s}
 .btn-add:hover{background:var(--white)}
 .btn-export{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.2rem;background:none;border:1px solid var(--success);color:var(--success);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s;margin-bottom:1.5rem;margin-left:1rem}
 .btn-export:hover{background:var(--success);color:var(--bg)}
 .btn-back{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.2rem;background:none;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s;margin-bottom:1.5rem}
 .btn-back:hover{border-color:var(--accent);color:var(--accent)}
-
-/* TABLE */
 table{width:100%;border-collapse:collapse}
 thead th{padding:0.9rem 1.2rem;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--bg3)}
 tbody td{padding:1rem 1.2rem;border-bottom:1px solid var(--border);font-size:0.88rem;vertical-align:middle}
@@ -91,32 +71,22 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .btn-edit{border-color:var(--border);color:var(--dim)}.btn-edit:hover{border-color:var(--accent);color:var(--accent)}
 .btn-del{border-color:var(--border);color:var(--dim)}.btn-del:hover{border-color:var(--danger);color:var(--danger)}
 .empty-td{text-align:center;padding:4rem!important;color:var(--muted);font-size:0.85rem}
-.reg-count-badge{display:inline-block;background:var(--accent);color:var(--bg);font-size:0.72rem;font-weight:700;padding:0.15rem 0.5rem;border-radius:2px;margin-left:0.5rem}
-
-/* TRIP DETAIL VIEW */
-#trip-detail-view{display:none}
-.detail-header{margin-bottom:1.5rem}
 .detail-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:900;color:var(--white)}
-.detail-sub{font-size:0.82rem;color:var(--muted);margin-top:0.3rem}
-
-/* MODAL */
+.detail-sub{font-size:0.82rem;color:var(--muted);margin-top:0.3rem;margin-bottom:1.5rem}
+.loading-td{text-align:center;padding:3rem!important;color:var(--muted);font-size:0.85rem}
 .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:2rem}
 .modal-overlay.open{display:flex}
-.modal-box{background:var(--bg2);border:1px solid var(--border);max-width:500px;width:100%;max-height:80vh;overflow-y:auto;padding:2rem;position:relative;animation:fadeUp 0.3s ease both}
+.modal-box{background:var(--bg2);border:1px solid var(--border);max-width:600px;width:100%;max-height:85vh;overflow-y:auto;padding:2rem;position:relative;animation:fadeUp 0.3s ease both}
 .modal-close{position:absolute;top:1rem;right:1rem;background:none;border:1px solid var(--border);color:var(--dim);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all 0.3s}
 .modal-close:hover{border-color:var(--danger);color:var(--danger)}
 .modal-title{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:1.5rem}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1rem}
-.info-item label{display:block;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem}
-.info-item span{font-size:0.88rem;color:var(--text)}
-
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.form-row,.form-row3{grid-template-columns:1fr}.admin-main{padding:0 1rem}.info-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.form-row,.edit-grid{grid-template-columns:1fr}.admin-main{padding:0 1rem}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">X-<em>Bound</em></div>
@@ -124,16 +94,14 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <input class="login-input" type="password" id="pwd" placeholder="● ● ● ● ● ● ● ●" onkeydown="if(event.key==='Enter')login()">
     <button class="login-btn" onclick="login()">進入後台</button>
     <p class="login-err" id="login-err"></p>
-    
   </div>
 </div>
 
-<!-- ADMIN -->
 <div id="admin-screen">
   <div class="admin-header">
     <div class="admin-logo">X-<em>Bound</em><small>後台管理</small></div>
     <div class="header-actions">
-      <a class="link-front" href="index.html">↗ 前台預覽</a>
+      <a class="link-front" onclick="window.location.href='index.html'">↗ 前台預覽</a>
       <button class="btn-logout" onclick="logout()">登出</button>
     </div>
   </div>
@@ -144,82 +112,43 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="tab" onclick="switchTab('regs',this)">所有報名紀錄</div>
     </div>
 
-    <!-- 行程管理 TAB -->
+    <!-- 行程管理 -->
     <div class="tab-panel active" id="tab-trips">
-
-      <!-- 行程列表 -->
       <div id="trips-list-view">
         <button class="btn-add" onclick="showForm()">＋ 新增行程</button>
 
-        <!-- 新增/編輯表單 -->
         <div class="card" id="form-card" style="display:none;">
-          <div class="card-header">
-            <span class="card-title" id="form-title">新增行程</span>
-          </div>
+          <div class="card-header"><span class="card-title" id="form-title">新增行程</span></div>
           <div class="card-body">
             <input type="hidden" id="edit-id">
             <div class="form-row">
-              <div class="form-group">
-                <label>行程名稱 <span class="req">*</span></label>
-                <input class="form-ctrl" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜">
-              </div>
-              <div class="form-group">
-                <label>地區</label>
-                <input class="form-ctrl" id="f-area" type="text" placeholder="例：南投、花蓮">
-              </div>
+              <div class="form-group"><label>行程名稱 <span class="req">*</span></label><input class="form-ctrl" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜"></div>
+              <div class="form-group"><label>地區</label><input class="form-ctrl" id="f-area" type="text" placeholder="例：南投、花蓮"></div>
             </div>
             <div class="form-row">
-              <div class="form-group">
-                <label>出發日期 <span class="req">*</span></label>
-                <input class="form-ctrl" id="f-date" type="date">
-              </div>
-              <div class="form-group">
-                <label>結束日期</label>
-                <input class="form-ctrl" id="f-date-end" type="date">
-              </div>
+              <div class="form-group"><label>出發日期 <span class="req">*</span></label><input class="form-ctrl" id="f-date" type="date"></div>
+              <div class="form-group"><label>結束日期</label><input class="form-ctrl" id="f-date-end" type="date"></div>
             </div>
             <div class="form-row">
-              <div class="form-group">
-                <label>天數</label>
-                <input class="form-ctrl" id="f-days" type="number" min="1" placeholder="幾天">
-              </div>
-              <div class="form-group"></div>
-            </div>
-              <div class="form-group">
-                <label>費用 NT$（選填）</label>
-                <input class="form-ctrl" id="f-price" type="number" min="0" placeholder="每人費用">
-              </div>
-              <div class="form-group">
-                <label>名額上限</label>
-                <input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數">
-              </div>
+              <div class="form-group"><label>天數</label><input class="form-ctrl" id="f-days" type="number" min="1" placeholder="幾天"></div>
+              <div class="form-group"><label>費用 NT$（選填）</label><input class="form-ctrl" id="f-price" type="number" min="0" placeholder="每人費用"></div>
             </div>
             <div class="form-row">
-              <div class="form-group">
-                <label>難度</label>
+              <div class="form-group"><label>名額上限</label><input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數"></div>
+              <div class="form-group"><label>難度</label>
                 <select class="form-ctrl" id="f-diff">
                   <option value="easy">輕鬆</option>
                   <option value="medium" selected>中級</option>
                   <option value="hard">進階</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label>集合地點</label>
-                <input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門">
-              </div>
             </div>
-            <div class="form-group">
-              <label>封面圖片網址（選填）</label>
-              <input class="form-ctrl" id="f-img" type="url" placeholder="https://...">
+            <div class="form-row">
+              <div class="form-group"><label>集合地點</label><input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門"></div>
+              <div class="form-group"><label>封面圖片網址（選填）</label><input class="form-ctrl" id="f-img" type="url" placeholder="https://..."></div>
             </div>
-            <div class="form-group">
-              <label>詳細行程（選填）</label>
-              <input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址">
-            </div>
-            <div class="form-group">
-              <label>行程介紹</label>
-              <textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea>
-            </div>
+            <div class="form-group"><label>詳細行程（選填）</label><input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址"></div>
+            <div class="form-group"><label>行程介紹</label><textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea></div>
             <div class="form-actions">
               <button class="btn-cancel-form" onclick="hideForm()">取消</button>
               <button class="btn-save" onclick="saveTrip()">儲存行程</button>
@@ -228,195 +157,144 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
           </div>
         </div>
 
-        <!-- 行程列表表格 -->
-        <div class="card" id="trips-table-card" style="padding:0;overflow:hidden;">
+        <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
           <table>
-            <thead>
-              <tr>
-                <th>行程名稱</th>
-                <th>地區</th>
-                <th>出發日期</th>
-                <th>結束日期</th>
-                <th>難度</th>
-                <th>費用</th>
-                <th>名額</th>
-                <th>報名人數</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="trips-tbody"></tbody>
+            <thead><tr>
+              <th>行程名稱</th><th>地區</th><th>出發日期</th><th>結束日期</th><th>難度</th><th>費用</th><th>名額</th><th>報名人數</th><th>操作</th>
+            </tr></thead>
+            <tbody id="trips-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
           </table>
         </div>
       </div>
 
       <!-- 行程報名詳情 -->
-      <div id="trip-detail-view">
+      <div id="trip-detail-view" style="display:none">
         <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center">
-          <button class="btn-back" onclick="backToTrips()" style="margin-bottom:0">← 返回行程列表</button>
-          <button class="btn-export" onclick="exportExcel()" style="margin-bottom:0">⬇ 匯出 Excel</button>
-          <button class="btn-del-selected" onclick="deleteSelected()" style="margin-bottom:0;padding:0.6rem 1.2rem;background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s" onmouseover="this.style.background='var(--danger)';this.style.color='var(--bg)'" onmouseout="this.style.background='none';this.style.color='var(--danger)'">✕ 刪除勾選</button>
+          <button class="btn-back" style="margin-bottom:0" onclick="backToTrips()">← 返回行程列表</button>
+          <button class="btn-export" style="margin-bottom:0;margin-left:0" onclick="exportExcel()">⬇ 匯出 Excel</button>
+          <button onclick="deleteSelected()" style="padding:0.6rem 1.2rem;background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s" onmouseover="this.style.background='var(--danger)';this.style.color='var(--bg)'" onmouseout="this.style.background='none';this.style.color='var(--danger)'">✕ 刪除勾選</button>
         </div>
-        <div class="detail-header">
-          <div class="detail-title" id="detail-trip-name"></div>
-          <div class="detail-sub" id="detail-trip-info"></div>
-        </div>
+        <div class="detail-title" id="detail-trip-name"></div>
+        <div class="detail-sub" id="detail-trip-info"></div>
         <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
-          <table id="detail-table">
-            <thead>
-              <tr>
-                <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
-                <th>#</th>
-                <th>姓名</th>
-                <th>性別</th>
-                <th>出生日期</th>
-                <th>國家</th>
-                <th>身分證/護照</th>
-                <th>電話</th>
-                <th>Email</th>
-                <th>地址</th>
-                <th>緊急聯絡人</th>
-                <th>緊急電話</th>
-                <th>備註</th>
-                <th>報名時間</th>
-                <th>操作</th>
-              </tr>
-            </thead>
+          <table>
+            <thead><tr>
+              <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
+              <th>#</th><th>姓名</th><th>性別</th><th>出生日期</th><th>國家</th><th>身分證/護照</th><th>電話</th><th>Email</th><th>地址</th><th>緊急聯絡人</th><th>緊急電話</th><th>備註</th><th>報名時間</th><th>操作</th>
+            </tr></thead>
             <tbody id="detail-tbody"></tbody>
           </table>
         </div>
       </div>
-
-      <!-- 編輯報名 Modal -->
-      <div class="modal-overlay" id="editRegModal">
-        <div class="modal-box" style="max-width:600px">
-          <button class="modal-close" onclick="closeEditModal()">✕</button>
-          <div class="modal-title">編輯報名資料</div>
-          <input type="hidden" id="edit-reg-idx">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
-            <div class="form-group"><label>姓名</label><input class="form-ctrl" id="er-name" type="text"></div>
-            <div class="form-group"><label>性別</label>
-              <select class="form-ctrl" id="er-gender">
-                <option value="">請選擇</option>
-                <option value="男">男</option>
-                <option value="女">女</option>
-                <option value="其他">其他</option>
-              </select>
-            </div>
-            <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="er-birthday" type="date"></div>
-            <div class="form-group"><label>國家</label><input class="form-ctrl" id="er-country" type="text"></div>
-            <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="er-id" type="text"></div>
-            <div class="form-group"><label>電話</label><input class="form-ctrl" id="er-phone" type="tel"></div>
-            <div class="form-group"><label>Email</label><input class="form-ctrl" id="er-email" type="email"></div>
-            <div class="form-group"><label>地址</label><input class="form-ctrl" id="er-address" type="text"></div>
-            <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="er-emergency" type="text"></div>
-            <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="er-emergency-phone" type="tel"></div>
-          </div>
-          <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="er-note" rows="2"></textarea></div>
-          <div style="display:flex;gap:1rem;margin-top:1rem">
-            <button class="btn-save" onclick="saveEditReg()" style="flex:1">儲存修改</button>
-            <button class="btn-cancel-form" onclick="closeEditModal()" style="flex:1">取消</button>
-          </div>
-          <div class="save-msg" id="edit-reg-msg" style="margin-top:0.5rem;text-align:center"></div>
-        </div>
-      </div>
     </div>
 
-    <!-- 所有報名紀錄 TAB -->
+    <!-- 所有報名紀錄 -->
     <div class="tab-panel" id="tab-regs">
-      <button class="btn-export" onclick="exportAllExcel()" style="margin-bottom:1.5rem">⬇ 匯出全部 Excel</button>
-      <div class="card" style="padding:0;overflow:hidden;">
+      <button class="btn-export" onclick="exportAllExcel()" style="margin-bottom:1.5rem;margin-left:0">⬇ 匯出全部 Excel</button>
+      <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
         <table>
-          <thead>
-            <tr>
-              <th>行程</th>
-              <th>姓名</th>
-              <th>性別</th>
-              <th>電話</th>
-              <th>Email</th>
-              <th>國家</th>
-              <th>緊急聯絡人</th>
-              <th>備註</th>
-              <th>報名時間</th>
-            </tr>
-          </thead>
-          <tbody id="regs-tbody"></tbody>
+          <thead><tr>
+            <th>行程</th><th>姓名</th><th>性別</th><th>電話</th><th>Email</th><th>國家</th><th>緊急聯絡人</th><th>備註</th><th>報名時間</th>
+          </tr></thead>
+          <tbody id="regs-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 報名詳情 Modal -->
-<div class="modal-overlay" id="regModal">
+<!-- 編輯報名 Modal -->
+<div class="modal-overlay" id="editRegModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeRegModal()">✕</button>
-    <div class="modal-title" id="reg-modal-title">報名詳情</div>
-    <div class="info-grid" id="reg-modal-content"></div>
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <div class="modal-title">編輯報名資料</div>
+    <input type="hidden" id="edit-reg-id">
+    <div class="edit-grid">
+      <div class="form-group"><label>姓名</label><input class="form-ctrl" id="er-name" type="text"></div>
+      <div class="form-group"><label>性別</label>
+        <select class="form-ctrl" id="er-gender">
+          <option value="">請選擇</option>
+          <option value="男">男</option><option value="女">女</option><option value="其他">其他</option>
+        </select>
+      </div>
+      <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="er-birthday" type="date"></div>
+      <div class="form-group"><label>國家</label><input class="form-ctrl" id="er-country" type="text"></div>
+      <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="er-id" type="text"></div>
+      <div class="form-group"><label>電話</label><input class="form-ctrl" id="er-phone" type="tel"></div>
+      <div class="form-group"><label>Email</label><input class="form-ctrl" id="er-email" type="email"></div>
+      <div class="form-group"><label>地址</label><input class="form-ctrl" id="er-address" type="text"></div>
+      <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="er-emergency" type="text"></div>
+      <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="er-emergency-phone" type="tel"></div>
+    </div>
+    <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="er-note" rows="2"></textarea></div>
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button class="btn-save" onclick="saveEditReg()" style="flex:1">儲存修改</button>
+      <button class="btn-cancel-form" onclick="closeEditModal()" style="flex:1">取消</button>
+    </div>
+    <div class="save-msg" id="edit-reg-msg" style="margin-top:0.5rem;text-align:center"></div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const PWD = 'zZ0973150449@';
+const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
+const SKEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
+const sb = supabase.createClient(SURL, SKEY);
 let currentTripId = null;
+let currentRegs = [];
 
 function login() {
   if (document.getElementById('pwd').value === PWD) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    renderTripsTable();
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('admin-screen').style.display='block';
+    loadTripsTable();
   } else {
-    document.getElementById('login-err').textContent = '密碼錯誤，請再試一次。';
+    document.getElementById('login-err').textContent='密碼錯誤，請再試一次。';
   }
 }
 
 function logout() {
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('admin-screen').style.display = 'none';
-  document.getElementById('pwd').value = '';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('admin-screen').style.display='none';
+  document.getElementById('pwd').value='';
 }
-
-function getTrips() { try { return JSON.parse(localStorage.getItem('mountain_trips') || '[]'); } catch { return []; } }
-function saveTrips(a) { localStorage.setItem('mountain_trips', JSON.stringify(a)); }
-function getRegs()  { try { return JSON.parse(localStorage.getItem('mountain_registrations') || '[]'); } catch { return []; } }
-function nextId(a)  { return a.length ? Math.max(...a.map(x => x.id)) + 1 : 1; }
 
 function switchTab(name, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('tab-' + name).classList.add('active');
-  if (name === 'regs') renderAllRegs();
+  document.getElementById('tab-'+name).classList.add('active');
+  if (name==='regs') loadAllRegs();
 }
 
-// 行程列表
-function renderTripsTable() {
-  const trips = getTrips();
-  const regs  = getRegs();
-  const diffMap   = { easy:'badge-easy', medium:'badge-medium', hard:'badge-hard' };
-  const diffLabel = { easy:'輕鬆', medium:'中級', hard:'進階' };
+// ===== TRIPS =====
+async function loadTripsTable() {
   const tbody = document.getElementById('trips-tbody');
-  if (!trips.length) {
-    tbody.innerHTML = '<tr><td class="empty-td" colspan="8">尚無行程，點上方「新增行程」開始吧。</td></tr>';
+  tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
+  const {data:trips} = await sb.from('trips').select('*').order('date',{ascending:true});
+  const {data:regCounts} = await sb.from('registrations').select('trip_id');
+
+  const diffMap={easy:'badge-easy',medium:'badge-medium',hard:'badge-hard'};
+  const diffLabel={easy:'輕鬆',medium:'中級',hard:'進階'};
+
+  if (!trips||!trips.length) {
+    tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無行程，點上方「新增行程」開始吧。</td></tr>';
     return;
   }
-  tbody.innerHTML = trips.map(t => {
-    const tripRegs = regs.filter(r => r.tripId === t.id);
-    const regCount = tripRegs.length;
-    const price = t.price ? `NT$ ${Number(t.price).toLocaleString()}` : '價格洽詢';
+
+  tbody.innerHTML = trips.map(t=>{
+    const count = regCounts?regCounts.filter(r=>r.trip_id===t.id).length:0;
+    const price = t.price?`NT$ ${Number(t.price).toLocaleString()}`:'洽詢';
     return `<tr>
       <td><strong>${t.name}</strong></td>
-      <td>${t.area || '—'}</td>
-      <td>${t.date || '—'}</td>
-      <td>${t.dateEnd || '—'}</td>
+      <td>${t.area||'—'}</td>
+      <td>${t.date||'—'}</td>
+      <td>${t.date_end||'—'}</td>
       <td><span class="badge ${diffMap[t.difficulty]||'badge-medium'}">${diffLabel[t.difficulty]||'中級'}</span></td>
       <td>${price}</td>
-      <td>${t.slots || '—'}</td>
-      <td>
-        ${regCount > 0
-          ? `<span style="cursor:pointer;color:var(--accent);font-weight:700" onclick="viewTripRegs(${t.id})">${regCount} 人 →</span>`
-          : `<span style="color:var(--muted)">0 人</span>`
-        }
-      </td>
+      <td>${t.slots||'—'}</td>
+      <td>${count>0?`<span style="cursor:pointer;color:var(--accent);font-weight:700" onclick="viewTripRegs(${t.id})">${count} 人 →</span>`:'<span style="color:var(--muted)">0 人</span>'}</td>
       <td>
         <button class="btn-sm btn-view" onclick="viewTripRegs(${t.id})">查看報名</button>
         <button class="btn-sm btn-edit" onclick="editTrip(${t.id})">編輯</button>
@@ -426,293 +304,220 @@ function renderTripsTable() {
   }).join('');
 }
 
-// 查看單一行程報名
-function viewTripRegs(tripId) {
+async function viewTripRegs(tripId) {
   currentTripId = tripId;
-  const trip = getTrips().find(t => t.id === tripId);
-  if (!trip) return;
-  const regs = getRegs().filter(r => r.tripId === tripId);
+  const {data:trip} = await sb.from('trips').select('*').eq('id',tripId).single();
+  const {data:regs} = await sb.from('registrations').select('*').eq('trip_id',tripId).order('created_at',{ascending:true});
+  currentRegs = regs||[];
 
-  document.getElementById('trips-list-view').style.display = 'none';
-  document.getElementById('trip-detail-view').style.display = 'block';
-  document.getElementById('detail-trip-name').textContent = trip.name;
-  document.getElementById('detail-trip-info').textContent = `${trip.date || ''} · ${trip.area || ''} · 共 ${regs.length} 人報名`;
+  document.getElementById('trips-list-view').style.display='none';
+  document.getElementById('trip-detail-view').style.display='block';
+  document.getElementById('detail-trip-name').textContent=trip.name;
+  document.getElementById('detail-trip-info').textContent=`${trip.date||''} · ${trip.area||''} · 共 ${currentRegs.length} 人報名`;
 
-  const tbody = document.getElementById('detail-tbody');
-  if (!regs.length) {
-    tbody.innerHTML = '<tr><td class="empty-td" colspan="15">此行程尚無報名紀錄。</td></tr>';
-    return;
-  }
-
-  // 找出這些報名在全域的 index
-  const allRegs = getRegs();
-  tbody.innerHTML = regs.map((r) => {
-    const globalIdx = allRegs.findIndex(x => x.tripId === r.tripId && x.time === r.time && x.name === r.name);
-    return `<tr>
-      <td><input type="checkbox" class="reg-check" value="${globalIdx}" style="cursor:pointer;width:16px;height:16px"></td>
-      <td>${regs.indexOf(r)+1}</td>
-      <td><strong>${r.name||'—'}</strong></td>
-      <td>${r.gender||'—'}</td>
-      <td>${r.birthday||'—'}</td>
-      <td>${r.country||'—'}</td>
-      <td>${r.idNumber||'—'}</td>
-      <td>${r.phone||'—'}</td>
-      <td>${r.email||'—'}</td>
-      <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address||'—'}</td>
-      <td>${r.emergency||'—'}</td>
-      <td>${r.emergencyPhone||'—'}</td>
-      <td>${r.note||'—'}</td>
-      <td style="font-size:0.75rem;color:var(--muted)">${r.time ? new Date(r.time).toLocaleString('zh-TW') : '—'}</td>
-      <td><button class="btn-sm btn-edit" onclick="openEditReg(${globalIdx})">編輯</button></td>
-    </tr>`;
-  }).join('');
+  const tbody=document.getElementById('detail-tbody');
+  if (!currentRegs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="15">此行程尚無報名紀錄。</td></tr>';return;}
+  tbody.innerHTML=currentRegs.map((r,i)=>`<tr>
+    <td><input type="checkbox" class="reg-check" value="${r.id}" style="cursor:pointer;width:16px;height:16px"></td>
+    <td>${i+1}</td>
+    <td><strong>${r.name||'—'}</strong></td>
+    <td>${r.gender||'—'}</td>
+    <td>${r.birthday||'—'}</td>
+    <td>${r.country||'—'}</td>
+    <td>${r.id_number||'—'}</td>
+    <td>${r.phone||'—'}</td>
+    <td>${r.email||'—'}</td>
+    <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address||'—'}</td>
+    <td>${r.emergency||'—'}</td>
+    <td>${r.emergency_phone||'—'}</td>
+    <td>${r.note||'—'}</td>
+    <td style="font-size:0.75rem;color:var(--muted)">${r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'—'}</td>
+    <td><button class="btn-sm btn-edit" onclick="openEditReg('${r.id}')">編輯</button></td>
+  </tr>`).join('');
 }
 
-function backToTrips() {
-  currentTripId = null;
-  document.getElementById('trip-detail-view').style.display = 'none';
-  document.getElementById('trips-list-view').style.display = 'block';
-  renderTripsTable();
+function backToTrips(){
+  currentTripId=null;
+  document.getElementById('trip-detail-view').style.display='none';
+  document.getElementById('trips-list-view').style.display='block';
+  loadTripsTable();
 }
 
-// 全選/取消全選
-function toggleAllCheck(cb) {
-  document.querySelectorAll('.reg-check').forEach(c => c.checked = cb.checked);
-}
+function toggleAllCheck(cb){document.querySelectorAll('.reg-check').forEach(c=>c.checked=cb.checked);}
 
-// 刪除勾選的報名
-function deleteSelected() {
-  const checked = [...document.querySelectorAll('.reg-check:checked')].map(c => Number(c.value));
-  if (!checked.length) { alert('請先勾選要刪除的報名。'); return; }
-  if (!confirm(`確定要刪除 ${checked.length} 筆報名嗎？`)) return;
-  const regs = getRegs();
-  const newRegs = regs.filter((_, i) => !checked.includes(i));
-  localStorage.setItem('mountain_registrations', JSON.stringify(newRegs));
+async function deleteSelected(){
+  const ids=[...document.querySelectorAll('.reg-check:checked')].map(c=>c.value);
+  if(!ids.length){alert('請先勾選要刪除的報名。');return;}
+  if(!confirm(`確定要刪除 ${ids.length} 筆報名嗎？`)) return;
+  await sb.from('registrations').delete().in('id',ids);
   viewTripRegs(currentTripId);
 }
 
-// 開啟編輯 Modal
-function openEditReg(globalIdx) {
-  const regs = getRegs();
-  const r = regs[globalIdx];
-  if (!r) return;
-  document.getElementById('edit-reg-idx').value   = globalIdx;
-  document.getElementById('er-name').value         = r.name || '';
-  document.getElementById('er-gender').value       = r.gender || '';
-  document.getElementById('er-birthday').value     = r.birthday || '';
-  document.getElementById('er-country').value      = r.country || '';
-  document.getElementById('er-id').value           = r.idNumber || '';
-  document.getElementById('er-phone').value        = r.phone || '';
-  document.getElementById('er-email').value        = r.email || '';
-  document.getElementById('er-address').value      = r.address || '';
-  document.getElementById('er-emergency').value    = r.emergency || '';
-  document.getElementById('er-emergency-phone').value = r.emergencyPhone || '';
-  document.getElementById('er-note').value         = r.note || '';
-  document.getElementById('edit-reg-msg').textContent = '';
+function openEditReg(regId){
+  const r=currentRegs.find(x=>String(x.id)===String(regId));
+  if(!r) return;
+  document.getElementById('edit-reg-id').value=regId;
+  document.getElementById('er-name').value=r.name||'';
+  document.getElementById('er-gender').value=r.gender||'';
+  document.getElementById('er-birthday').value=r.birthday||'';
+  document.getElementById('er-country').value=r.country||'';
+  document.getElementById('er-id').value=r.id_number||'';
+  document.getElementById('er-phone').value=r.phone||'';
+  document.getElementById('er-email').value=r.email||'';
+  document.getElementById('er-address').value=r.address||'';
+  document.getElementById('er-emergency').value=r.emergency||'';
+  document.getElementById('er-emergency-phone').value=r.emergency_phone||'';
+  document.getElementById('er-note').value=r.note||'';
+  document.getElementById('edit-reg-msg').textContent='';
   document.getElementById('editRegModal').classList.add('open');
 }
 
-function closeEditModal() { document.getElementById('editRegModal').classList.remove('open'); }
+function closeEditModal(){document.getElementById('editRegModal').classList.remove('open');}
+document.getElementById('editRegModal').addEventListener('click',function(e){if(e.target===this)closeEditModal();});
 
-// 儲存編輯
-function saveEditReg() {
-  const idx  = Number(document.getElementById('edit-reg-idx').value);
-  const regs = getRegs();
-  if (!regs[idx]) return;
-  regs[idx] = {
-    ...regs[idx],
-    name:          document.getElementById('er-name').value.trim(),
-    gender:        document.getElementById('er-gender').value,
-    birthday:      document.getElementById('er-birthday').value,
-    country:       document.getElementById('er-country').value.trim(),
-    idNumber:      document.getElementById('er-id').value.trim(),
-    phone:         document.getElementById('er-phone').value.trim(),
-    email:         document.getElementById('er-email').value.trim(),
-    address:       document.getElementById('er-address').value.trim(),
-    emergency:     document.getElementById('er-emergency').value.trim(),
-    emergencyPhone:document.getElementById('er-emergency-phone').value.trim(),
-    note:          document.getElementById('er-note').value.trim(),
-  };
-  localStorage.setItem('mountain_registrations', JSON.stringify(regs));
-  const msg = document.getElementById('edit-reg-msg');
-  msg.className = 'save-msg ok'; msg.textContent = '✓ 儲存成功';
-  setTimeout(() => { closeEditModal(); viewTripRegs(currentTripId); }, 800);
+async function saveEditReg(){
+  const id=document.getElementById('edit-reg-id').value;
+  const msg=document.getElementById('edit-reg-msg');
+  const {error}=await sb.from('registrations').update({
+    name:document.getElementById('er-name').value.trim(),
+    gender:document.getElementById('er-gender').value,
+    birthday:document.getElementById('er-birthday').value||null,
+    country:document.getElementById('er-country').value.trim(),
+    id_number:document.getElementById('er-id').value.trim(),
+    phone:document.getElementById('er-phone').value.trim(),
+    email:document.getElementById('er-email').value.trim(),
+    address:document.getElementById('er-address').value.trim(),
+    emergency:document.getElementById('er-emergency').value.trim(),
+    emergency_phone:document.getElementById('er-emergency-phone').value.trim(),
+    note:document.getElementById('er-note').value.trim(),
+  }).eq('id',id);
+  if(error){msg.className='save-msg err';msg.textContent='// 儲存失敗';return;}
+  msg.className='save-msg ok';msg.textContent='// 儲存成功';
+  setTimeout(()=>{closeEditModal();viewTripRegs(currentTripId);},800);
 }
 
-document.getElementById('editRegModal').addEventListener('click', function(e) { if(e.target===this) closeEditModal(); });
-
-// 報名詳情 Modal
-function openRegModal(r) {
-  if (typeof r === 'string') r = JSON.parse(r);
-  document.getElementById('reg-modal-title').textContent = r.name + ' 的報名資料';
-  document.getElementById('reg-modal-content').innerHTML = `
-    <div class="info-item"><label>姓名</label><span>${r.name||'—'}</span></div>
-    <div class="info-item"><label>性別</label><span>${r.gender||'—'}</span></div>
-    <div class="info-item"><label>出生日期</label><span>${r.birthday||'—'}</span></div>
-    <div class="info-item"><label>國家</label><span>${r.country||'—'}</span></div>
-    <div class="info-item"><label>身分證/護照</label><span>${r.idNumber||'—'}</span></div>
-    <div class="info-item"><label>電話</label><span>${r.phone||'—'}</span></div>
-    <div class="info-item"><label>Email</label><span>${r.email||'—'}</span></div>
-    <div class="info-item" style="grid-column:1/-1"><label>地址</label><span>${r.address||'—'}</span></div>
-    <div class="info-item"><label>緊急聯絡人</label><span>${r.emergency||'—'}</span></div>
-    <div class="info-item"><label>緊急聯絡電話</label><span>${r.emergencyPhone||'—'}</span></div>
-    <div class="info-item" style="grid-column:1/-1"><label>備註</label><span>${r.note||'—'}</span></div>
-    <div class="info-item" style="grid-column:1/-1"><label>報名時間</label><span>${r.time ? new Date(r.time).toLocaleString('zh-TW') : '—'}</span></div>
-  `;
-  document.getElementById('regModal').classList.add('open');
-}
-
-function closeRegModal() { document.getElementById('regModal').classList.remove('open'); }
-document.getElementById('regModal').addEventListener('click', function(e) { if (e.target === this) closeRegModal(); });
-
-// 所有報名紀錄
-function renderAllRegs() {
-  const regs  = getRegs();
-  const trips = getTrips();
-  const tbody = document.getElementById('regs-tbody');
-  if (!regs.length) {
-    tbody.innerHTML = '<tr><td class="empty-td" colspan="9">尚無報名紀錄。</td></tr>';
-    return;
-  }
-  tbody.innerHTML = [...regs].reverse().map(r => {
-    const trip = trips.find(t => t.id === r.tripId);
-    return `<tr>
-      <td><strong>${trip ? trip.name : '—'}</strong></td>
-      <td>${r.name||'—'}</td>
-      <td>${r.gender||'—'}</td>
-      <td>${r.phone||'—'}</td>
-      <td>${r.email||'—'}</td>
-      <td>${r.country||'—'}</td>
-      <td>${r.emergency||'—'} ${r.emergencyPhone ? '(' + r.emergencyPhone + ')' : ''}</td>
-      <td>${r.note||'—'}</td>
-      <td style="font-size:0.75rem;color:var(--muted)">${r.time ? new Date(r.time).toLocaleString('zh-TW') : '—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-// 匯出 Excel（單一行程）
-function exportExcel() {
-  const trip = getTrips().find(t => t.id === currentTripId);
-  const regs = getRegs().filter(r => r.tripId === currentTripId);
-  if (!regs.length) { alert('此行程尚無報名資料。'); return; }
-  const headers = ['姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
-  const rows = regs.map(r => [
-    r.name||'', r.gender||'', r.birthday||'', r.country||'', r.idNumber||'',
-    r.phone||'', r.email||'', r.address||'', r.emergency||'', r.emergencyPhone||'',
-    r.note||'', r.time ? new Date(r.time).toLocaleString('zh-TW') : ''
-  ]);
-  downloadCSV(`${trip?.name || '行程'}_報名名單`, headers, rows);
-}
-
-// 匯出全部
-function exportAllExcel() {
-  const regs  = getRegs();
-  const trips = getTrips();
-  if (!regs.length) { alert('尚無報名資料。'); return; }
-  const headers = ['行程名稱','姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
-  const rows = regs.map(r => {
-    const trip = trips.find(t => t.id === r.tripId);
-    return [
-      trip?.name||'', r.name||'', r.gender||'', r.birthday||'', r.country||'', r.idNumber||'',
-      r.phone||'', r.email||'', r.address||'', r.emergency||'', r.emergencyPhone||'',
-      r.note||'', r.time ? new Date(r.time).toLocaleString('zh-TW') : ''
-    ];
-  });
-  downloadCSV('X-Bound_全部報名名單', headers, rows);
-}
-
-function downloadCSV(filename, headers, rows) {
-  const BOM = '\uFEFF';
-  const csv = BOM + [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = filename + '.csv';
-  a.click(); URL.revokeObjectURL(url);
-}
-
-// 行程表單
-function showForm() {
-  document.getElementById('form-title').textContent = '新增行程';
+// ===== FORM =====
+function showForm(){
+  document.getElementById('form-title').textContent='新增行程';
   clearForm();
-  document.getElementById('form-card').style.display = 'block';
-  document.getElementById('trips-table-card').style.display = 'none';
-  document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('form-card').style.display='block';
+  document.getElementById('form-card').scrollIntoView({behavior:'smooth'});
 }
 
-function hideForm() {
-  document.getElementById('form-card').style.display = 'none';
-  document.getElementById('trips-table-card').style.display = 'block';
-  clearForm();
+function hideForm(){document.getElementById('form-card').style.display='none';clearForm();}
+
+function clearForm(){
+  ['f-name','f-area','f-date','f-date-end','f-days','f-price','f-slots','f-meet','f-img','f-excel','f-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-diff').value='medium';
+  document.getElementById('edit-id').value='';
+  document.getElementById('save-msg').textContent='';
 }
 
-function clearForm() {
-  ['f-name','f-area','f-date','f-date-end','f-days','f-price','f-slots','f-meet','f-img','f-excel','f-desc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('f-diff').value = 'medium';
-  document.getElementById('edit-id').value = '';
-  document.getElementById('save-msg').textContent = '';
+async function editTrip(id){
+  const {data:t}=await sb.from('trips').select('*').eq('id',id).single();
+  if(!t) return;
+  document.getElementById('form-title').textContent='編輯行程';
+  document.getElementById('edit-id').value=id;
+  document.getElementById('f-name').value=t.name||'';
+  document.getElementById('f-area').value=t.area||'';
+  document.getElementById('f-date').value=t.date||'';
+  document.getElementById('f-date-end').value=t.date_end||'';
+  document.getElementById('f-days').value=t.days||'';
+  document.getElementById('f-price').value=t.price||'';
+  document.getElementById('f-slots').value=t.slots||'';
+  document.getElementById('f-diff').value=t.difficulty||'medium';
+  document.getElementById('f-meet').value=t.meeting_point||'';
+  document.getElementById('f-img').value=t.image_url||'';
+  document.getElementById('f-excel').value=t.excel_url||'';
+  document.getElementById('f-desc').value=t.description||'';
+  document.getElementById('form-card').style.display='block';
+  document.getElementById('form-card').scrollIntoView({behavior:'smooth'});
 }
 
-function editTrip(id) {
-  const t = getTrips().find(x => x.id === id);
-  if (!t) return;
-  document.getElementById('form-title').textContent = '編輯行程';
-  document.getElementById('edit-id').value  = id;
-  document.getElementById('f-name').value   = t.name || '';
-  document.getElementById('f-area').value   = t.area || '';
-  document.getElementById('f-date').value   = t.date || '';
-  document.getElementById('f-date-end').value = t.dateEnd || '';
-  document.getElementById('f-days').value   = t.days || '';
-  document.getElementById('f-price').value  = t.price || '';
-  document.getElementById('f-slots').value  = t.slots || '';
-  document.getElementById('f-diff').value   = t.difficulty || 'medium';
-  document.getElementById('f-meet').value   = t.meetingPoint || '';
-  document.getElementById('f-img').value    = t.imageUrl || '';
-  document.getElementById('f-excel').value  = t.excelUrl || '';
-  document.getElementById('f-desc').value   = t.description || '';
-  document.getElementById('form-card').style.display = 'block';
-  document.getElementById('trips-table-card').style.display = 'none';
-  document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
-}
+async function saveTrip(){
+  const name=document.getElementById('f-name').value.trim();
+  const date=document.getElementById('f-date').value;
+  const msg=document.getElementById('save-msg');
+  if(!name){msg.className='save-msg err';msg.textContent='請填寫行程名稱。';return;}
+  if(!date){msg.className='save-msg err';msg.textContent='請選擇出發日期。';return;}
 
-function saveTrip() {
-  const name = document.getElementById('f-name').value.trim();
-  const date = document.getElementById('f-date').value;
-  const msg  = document.getElementById('save-msg');
-  if (!name) { msg.className='save-msg err'; msg.textContent='請填寫行程名稱。'; return; }
-  if (!date) { msg.className='save-msg err'; msg.textContent='請選擇出發日期。'; return; }
-  const trips  = getTrips();
-  const editId = document.getElementById('edit-id').value;
-  const trip = {
-    id: editId ? Number(editId) : nextId(trips),
-    name, area: document.getElementById('f-area').value.trim(), date,
-    days: document.getElementById('f-days').value,
-    dateEnd: document.getElementById('f-date-end').value,
-    price: document.getElementById('f-price').value ? Number(document.getElementById('f-price').value) : '',
-    slots: document.getElementById('f-slots').value,
-    difficulty: document.getElementById('f-diff').value,
-    meetingPoint: document.getElementById('f-meet').value.trim(),
-    imageUrl: document.getElementById('f-img').value.trim(),
-    excelUrl: document.getElementById('f-excel').value.trim(),
-    description: document.getElementById('f-desc').value.trim(),
-    createdAt: editId ? trips.find(t=>t.id===Number(editId))?.createdAt : new Date().toISOString(),
+  const trip={
+    name, area:document.getElementById('f-area').value.trim(), date,
+    date_end:document.getElementById('f-date-end').value||null,
+    days:document.getElementById('f-days').value?Number(document.getElementById('f-days').value):null,
+    price:document.getElementById('f-price').value?Number(document.getElementById('f-price').value):null,
+    slots:document.getElementById('f-slots').value?Number(document.getElementById('f-slots').value):null,
+    difficulty:document.getElementById('f-diff').value,
+    meeting_point:document.getElementById('f-meet').value.trim(),
+    image_url:document.getElementById('f-img').value.trim(),
+    excel_url:document.getElementById('f-excel').value.trim(),
+    description:document.getElementById('f-desc').value.trim(),
   };
-  if (editId) { const idx = trips.findIndex(t=>t.id===Number(editId)); if(idx!==-1) trips[idx]=trip; else trips.push(trip); }
-  else trips.push(trip);
-  saveTrips(trips);
-  renderTripsTable();
-  hideForm();
-  msg.className='save-msg ok'; msg.textContent='✓ 儲存成功';
+
+  const editId=document.getElementById('edit-id').value;
+  let error;
+  if(editId){({error}=await sb.from('trips').update(trip).eq('id',editId));}
+  else{({error}=await sb.from('trips').insert(trip));}
+
+  if(error){msg.className='save-msg err';msg.textContent='// 儲存失敗：'+error.message;return;}
+  loadTripsTable();hideForm();
+  msg.className='save-msg ok';msg.textContent='✓ 儲存成功';
   setTimeout(()=>{msg.textContent=''},3000);
 }
 
-function delTrip(id) {
-  if (!confirm('確定要刪除這個行程嗎？')) return;
-  saveTrips(getTrips().filter(t=>t.id!==id));
-  renderTripsTable();
+async function delTrip(id){
+  if(!confirm('確定要刪除這個行程嗎？此行程的所有報名紀錄也會一併刪除。')) return;
+  await sb.from('trips').delete().eq('id',id);
+  loadTripsTable();
 }
 
-document.getElementById('pwd').addEventListener('keydown', e => { if (e.key==='Enter') login(); });
+// ===== ALL REGS =====
+async function loadAllRegs(){
+  const tbody=document.getElementById('regs-tbody');
+  tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
+  const {data:regs}=await sb.from('registrations').select('*,trips(name)').order('created_at',{ascending:false});
+  if(!regs||!regs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無報名紀錄。</td></tr>';return;}
+  tbody.innerHTML=regs.map(r=>`<tr>
+    <td><strong>${r.trips?.name||'—'}</strong></td>
+    <td>${r.name||'—'}</td>
+    <td>${r.gender||'—'}</td>
+    <td>${r.phone||'—'}</td>
+    <td>${r.email||'—'}</td>
+    <td>${r.country||'—'}</td>
+    <td>${r.emergency||'—'} ${r.emergency_phone?'('+r.emergency_phone+')':''}</td>
+    <td>${r.note||'—'}</td>
+    <td style="font-size:0.75rem;color:var(--muted)">${r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'—'}</td>
+  </tr>`).join('');
+}
+
+// ===== EXPORT =====
+async function exportExcel(){
+  const {data:regs}=await sb.from('registrations').select('*').eq('trip_id',currentTripId);
+  const {data:trip}=await sb.from('trips').select('name').eq('id',currentTripId).single();
+  if(!regs||!regs.length){alert('此行程尚無報名資料。');return;}
+  const headers=['姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
+  const rows=regs.map(r=>[r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
+  downloadCSV(`${trip?.name||'行程'}_報名名單`,headers,rows);
+}
+
+async function exportAllExcel(){
+  const {data:regs}=await sb.from('registrations').select('*,trips(name)').order('created_at',{ascending:false});
+  if(!regs||!regs.length){alert('尚無報名資料。');return;}
+  const headers=['行程名稱','姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
+  const rows=regs.map(r=>[r.trips?.name||'',r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
+  downloadCSV('X-Bound_全部報名名單',headers,rows);
+}
+
+function downloadCSV(filename,headers,rows){
+  const BOM='\uFEFF';
+  const csv=BOM+[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename+'.csv';a.click();URL.revokeObjectURL(url);
+}
+
+document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 </script>
 </body>
 </html>
