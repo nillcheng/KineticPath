@@ -516,7 +516,7 @@ function renderTrips() {
         <p class="trip-desc">${t.description||''}</p>
         <div class="trip-footer">
           <div class="trip-price">${price}</div>
-          <div class="trip-meta">${t.date?'📅 '+t.date:''}${t.days?'<br>🧗 '+t.days+' 天':''}</div>
+          <div class="trip-meta">${t.date?'📅 '+t.date:''}${t.dateEnd?' – '+t.dateEnd:''}${t.days?'<br>🧗 '+t.days+' 天':''}</div>
         </div>
         <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">查看詳情 & 報名 →</button>
       </div>
@@ -582,6 +582,7 @@ function openModal(id) {
       <h2 class="modal-title">${t.name}</h2>
       <div class="modal-grid">
         <div class="modal-item"><label>出發日期</label><strong>${t.date||'待定'}</strong></div>
+        <div class="modal-item"><label>結束日期</label><strong>${t.dateEnd||'待定'}</strong></div>
         <div class="modal-item"><label>天數</label><strong>${t.days?t.days+' 天':'待定'}</strong></div>
         <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
         <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
