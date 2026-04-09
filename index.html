@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -395,14 +394,33 @@ function openModal(id) {
         <h3>// 立即報名</h3>
         <div id="reg-msg"></div>
         <div class="f-row2">
-          <div class="f-group"><label>姓名</label><input class="f-ctrl" id="reg-name" type="text" placeholder="您的姓名"></div>
-          <div class="f-group"><label>電話</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話"></div>
+          <div class="f-group"><label>姓名 *</label><input class="f-ctrl" id="reg-name" type="text" placeholder="真實姓名"></div>
+          <div class="f-group"><label>性別 *</label>
+            <select class="f-ctrl" id="reg-gender">
+              <option value="">請選擇</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
         </div>
         <div class="f-row2">
-          <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email" type="email" placeholder="電子郵件" value="${currentUser?.email || ''}"></div>
-          <div class="f-group"><label>人數</label><select class="f-ctrl" id="reg-count">${[1,2,3,4,5].map(n=>`<option value="${n}">${n} 人</option>`).join('')}</select></div>
+          <div class="f-group"><label>出生日期（西元）*</label><input class="f-ctrl" id="reg-birthday" type="date" placeholder="YYYY-MM-DD"></div>
+          <div class="f-group"><label>國家 *</label><input class="f-ctrl" id="reg-country" type="text" placeholder="例：台灣" value="台灣"></div>
         </div>
-        <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求或備註"></textarea></div>
+        <div class="f-row2">
+          <div class="f-group"><label>身分證字號 / 護照號碼 *</label><input class="f-ctrl" id="reg-id" type="text" placeholder="身分證字號或護照號碼"></div>
+          <div class="f-group"><label>電話 *</label><input class="f-ctrl" id="reg-phone" type="tel" placeholder="連絡電話"></div>
+        </div>
+        <div class="f-row2">
+          <div class="f-group"><label>電子郵件 *</label><input class="f-ctrl" id="reg-email" type="email" placeholder="Email" value="${currentUser?.email || ''}"></div>
+          <div class="f-group"><label>地址</label><input class="f-ctrl" id="reg-address" type="text" placeholder="通訊地址"></div>
+        </div>
+        <div class="f-row2">
+          <div class="f-group"><label>緊急聯絡人 *</label><input class="f-ctrl" id="reg-emergency" type="text" placeholder="緊急聯絡人姓名"></div>
+          <div class="f-group"><label>緊急聯絡電話 *</label><input class="f-ctrl" id="reg-emergency-phone" type="tel" placeholder="緊急聯絡電話"></div>
+        </div>
+        <div class="f-group"><label>備註</label><textarea class="f-ctrl" id="reg-note" rows="2" placeholder="特殊需求、飲食限制等"></textarea></div>
         <button class="btn-submit" onclick="submitReg(${t.id})">確認報名</button>
       </div>
     </div>`;
@@ -419,13 +437,25 @@ document.getElementById('tripModal').addEventListener('click', function(e) { if 
 document.getElementById('authModal').addEventListener('click', function(e) { if (e.target === this) closeAuthModal(); });
 
 function submitReg(tripId) {
-  const name  = document.getElementById('reg-name').value.trim();
-  const phone = document.getElementById('reg-phone').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const msg   = document.getElementById('reg-msg');
-  if (!name || !phone || !email) { msg.className='reg-msg err'; msg.textContent='// 請填寫姓名、電話及 Email'; return; }
+  const name          = document.getElementById('reg-name').value.trim();
+  const gender        = document.getElementById('reg-gender').value;
+  const birthday      = document.getElementById('reg-birthday').value;
+  const country       = document.getElementById('reg-country').value.trim();
+  const idNumber      = document.getElementById('reg-id').value.trim();
+  const phone         = document.getElementById('reg-phone').value.trim();
+  const email         = document.getElementById('reg-email').value.trim();
+  const address       = document.getElementById('reg-address').value.trim();
+  const emergency     = document.getElementById('reg-emergency').value.trim();
+  const emergencyPhone= document.getElementById('reg-emergency-phone').value.trim();
+  const note          = document.getElementById('reg-note').value.trim();
+  const msg           = document.getElementById('reg-msg');
+
+  if (!name || !gender || !birthday || !country || !idNumber || !phone || !email || !emergency || !emergencyPhone) {
+    msg.className='reg-msg err'; msg.textContent='// 請填寫所有必填欄位（標示 * 的項目）'; return;
+  }
+
   const regs = JSON.parse(localStorage.getItem('mountain_registrations') || '[]');
-  regs.push({ tripId, name, phone, email, count: document.getElementById('reg-count').value, note: document.getElementById('reg-note').value, time: new Date().toISOString() });
+  regs.push({ tripId, name, gender, birthday, country, idNumber, phone, email, address, emergency, emergencyPhone, note, time: new Date().toISOString() });
   localStorage.setItem('mountain_registrations', JSON.stringify(regs));
   msg.className = 'reg-msg ok';
   msg.textContent = '// 報名成功！我們將盡快與您聯繫';
