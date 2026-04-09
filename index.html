@@ -307,23 +307,40 @@ async function init() {
 async function updateNav(loggedIn) {
   const menu = document.getElementById('nav-menu');
   if (loggedIn) {
-    // 檢查是否為管理員
+    // 查詢是否為管理員，並把角色存到 sessionStorage
     const { data: adminData } = await sb.from('admins').select('role').eq('email', currentUser.email).single();
     const isAdmin = !!adminData;
+
+    // 把管理員角色存起來，點後台時直接帶過去，不需要再輸入
+    if (isAdmin) {
+      sessionStorage.setItem('adminRole', adminData.role);
+      sessionStorage.setItem('adminEmail', currentUser.email);
+    } else {
+      sessionStorage.removeItem('adminRole');
+      sessionStorage.removeItem('adminEmail');
+    }
 
     menu.innerHTML = `
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="showPage('my-trips')">我的行程</a></li>
       <li><a onclick="showPage('profile')">我的資料維護</a></li>
-      ${isAdmin ? `<li><a onclick="window.location.href='admin.html'">後台</a></li>` : ''}
+      ${isAdmin ? `<li><a onclick="goAdmin()">後台</a></li>` : ''}
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
   } else {
+    // 登出時清除管理員資訊
+    sessionStorage.removeItem('adminRole');
+    sessionStorage.removeItem('adminEmail');
     menu.innerHTML = `
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
     `;
   }
+}
+
+// 前往後台（不需要再輸入任何資訊）
+function goAdmin() {
+  window.location.href = 'admin.html';
 }
 
 async function doLogin() {
