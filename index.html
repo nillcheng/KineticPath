@@ -277,12 +277,26 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
       <div class="f-group"><label>密碼</label><input class="f-ctrl" id="login-pwd" type="password" placeholder="輸入密碼"></div>
       <div class="auth-msg" id="login-msg"></div>
       <button class="btn-submit" onclick="doLogin()">登入</button>
+      <!-- 忘記密碼連結 -->
+      <div style="text-align:center;margin-top:1rem">
+        <a onclick="switchAuthTab('forgot')" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);cursor:pointer;letter-spacing:0.05em">// 忘記密碼？</a>
+      </div>
     </div>
     <div id="form-register" style="display:none">
       <div class="f-group"><label>Email</label><input class="f-ctrl" id="reg-email2" type="email" placeholder="輸入 Email"></div>
       <div class="f-group"><label>密碼（至少6位）</label><input class="f-ctrl" id="reg-pwd2" type="password" placeholder="設定密碼"></div>
       <div class="auth-msg" id="register-msg"></div>
       <button class="btn-submit" onclick="doRegister()">註冊</button>
+    </div>
+    <!-- 忘記密碼表單 -->
+    <div id="form-forgot" style="display:none">
+      <p style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--dim);margin-bottom:1.2rem;line-height:1.8;">// 輸入您的 Email，系統將寄送重設密碼連結</p>
+      <div class="f-group"><label>Email</label><input class="f-ctrl" id="forgot-email" type="email" placeholder="輸入 Email"></div>
+      <div class="auth-msg" id="forgot-msg"></div>
+      <button class="btn-submit" onclick="doForgotPwd()">寄送重設連結</button>
+      <div style="text-align:center;margin-top:1rem">
+        <a onclick="switchAuthTab('login')" style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--dim);cursor:pointer;letter-spacing:0.05em">// 返回登入</a>
+      </div>
     </div>
   </div>
 </div>
@@ -403,11 +417,26 @@ async function doLogout() {
 
 function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchAuthTab(tab);}
 function closeAuthModal(){document.getElementById('authModal').classList.remove('open');document.body.style.overflow='';}
+// 切換登入/註冊/忘記密碼 tab
 function switchAuthTab(tab){
-  document.getElementById('form-login').style.display=tab==='login'?'block':'none';
-  document.getElementById('form-register').style.display=tab==='register'?'block':'none';
-  document.getElementById('tab-login').className='auth-tab'+(tab==='login'?' active':'');
-  document.getElementById('tab-register').className='auth-tab'+(tab==='register'?' active':'');
+  document.getElementById('form-login').style.display   = tab==='login'    ? 'block' : 'none';
+  document.getElementById('form-register').style.display= tab==='register' ? 'block' : 'none';
+  document.getElementById('form-forgot').style.display  = tab==='forgot'   ? 'block' : 'none';
+  document.getElementById('tab-login').className    = 'auth-tab' + (tab==='login'    ? ' active' : '');
+  document.getElementById('tab-register').className = 'auth-tab' + (tab==='register' ? ' active' : '');
+}
+
+// 忘記密碼：寄重設密碼信
+async function doForgotPwd() {
+  const email = document.getElementById('forgot-email').value.trim();
+  const msg   = document.getElementById('forgot-msg');
+  if (!email) { msg.className='auth-msg err'; msg.textContent='// 請填寫 Email'; return; }
+  msg.className='auth-msg'; msg.textContent='// 寄送中...';
+  const { error } = await sb.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/index.html' // 重設後導回首頁
+  });
+  if (error) { msg.className='auth-msg err'; msg.textContent='// 寄送失敗：'+error.message; return; }
+  msg.className='auth-msg ok'; msg.textContent='// 重設連結已寄出，請查收 Email！';
 }
 
 // ===== PROFILE =====
