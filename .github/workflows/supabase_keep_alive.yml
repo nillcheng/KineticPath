@@ -1,0 +1,17 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # 每週一、三、五的午夜 0 點（UTC 時間）執行一次
+    - cron: '0 0 * * 1,3,5'
+  workflow_dispatch: # 讓你可以隨時手動點擊執行測試
+
+jobs:
+  ping_supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase API
+        run: |
+          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/admins?select=*" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
