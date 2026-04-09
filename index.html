@@ -391,9 +391,14 @@ async function doRegister() {
   msg.className='auth-msg ok';msg.textContent='// 註冊成功！請查收驗證信';
 }
 
+// 登出：清除 Supabase session 和管理員資訊，回首頁
 async function doLogout() {
   await sb.auth.signOut();
-  currentUser=null;updateNav(false);showPage('home');
+  currentUser = null;
+  sessionStorage.removeItem('adminRole');
+  sessionStorage.removeItem('adminEmail');
+  await updateNav(false);
+  showPage('home');
 }
 
 function openAuthModal(tab){document.getElementById('authModal').classList.add('open');document.body.style.overflow='hidden';switchAuthTab(tab);}
