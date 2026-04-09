@@ -96,7 +96,7 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .f-ctrl option{background:var(--bg3)}
 .btn-save-profile{padding:0.9rem 2.5rem;background:var(--neon1);color:var(--bg);border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;transition:background 0.3s}
 .btn-save-profile:hover{background:var(--white)}
-.save-status{font-family:'Share Tech Mono',monospace;font-size:0.78rem;margin-left:1rem}
+.save-status{font-family:'Share Tech Mono',monospace;font-size:0.9rem;margin-left:1rem;font-weight:600}
 .save-status.ok{color:var(--neon3)}.save-status.err{color:var(--neon2)}
 footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
 .footer-logo{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -137,6 +137,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .auth-msg{font-family:'Share Tech Mono',monospace;font-size:0.75rem;text-align:center;padding:0.5rem 0;letter-spacing:0.05em}
 .auth-msg.ok{color:var(--neon3)}.auth-msg.err{color:var(--neon2)}
 .loading{text-align:center;padding:3rem;font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--dim);letter-spacing:0.1em}
+/* 儲存成功 Toast 提示 */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--bg2);border:1px solid var(--neon3);color:var(--neon3);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em;padding:0.9rem 2rem;z-index:999;opacity:0;transition:all 0.4s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:768px){
   nav{padding:1rem 1.5rem}nav ul{gap:1rem}
@@ -249,6 +252,17 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
       </div>
       <div class="f-group"><label>備註 / 特殊需求</label><input class="f-ctrl" id="pf-note" type="text" placeholder="飲食限制、健康狀況等"></div>
     </div>
+    <div class="profile-card">
+      <div class="profile-section-title">修改密碼</div>
+      <div class="form-row2">
+        <div class="f-group"><label>新密碼（至少6位）</label><input class="f-ctrl" id="pf-new-pwd" type="password" placeholder="輸入新密碼"></div>
+        <div class="f-group"><label>確認新密碼</label><input class="f-ctrl" id="pf-confirm-pwd" type="password" placeholder="再輸入一次新密碼"></div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <button class="btn-save-profile" onclick="changePassword()">修改密碼</button>
+        <span class="save-status" id="pwd-status"></span>
+      </div>
+    </div>
     <div style="display:flex;align-items:center">
       <button class="btn-save-profile" onclick="saveProfile()">儲存資料</button>
       <span class="save-status" id="profile-status"></span>
@@ -300,6 +314,8 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     </div>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -439,6 +455,32 @@ async function doForgotPwd() {
   msg.className='auth-msg ok'; msg.textContent='// 重設連結已寄出，請查收 Email！';
 }
 
+// 顯示 Toast 提示（底部彈出訊息）
+function showToast(msg, isErr=false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.borderColor = isErr ? 'var(--neon2)' : 'var(--neon3)';
+  toast.style.color = isErr ? 'var(--neon2)' : 'var(--neon3)';
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); }, 3000);
+}
+
+// ===== 修改密碼 =====
+async function changePassword() {
+  const newPwd     = document.getElementById('pf-new-pwd').value;
+  const confirmPwd = document.getElementById('pf-confirm-pwd').value;
+  const st         = document.getElementById('pwd-status');
+  if (!newPwd) { st.className='save-status err'; st.textContent='// 請輸入新密碼'; return; }
+  if (newPwd.length < 6) { st.className='save-status err'; st.textContent='// 密碼至少需要 6 個字元'; return; }
+  if (newPwd !== confirmPwd) { st.className='save-status err'; st.textContent='// 兩次密碼不一致'; return; }
+  st.className='save-status'; st.textContent='// 更新中...';
+  const { error } = await sb.auth.updateUser({ password: newPwd });
+  if (error) { showToast('// 密碼修改失敗：'+error.message, true); return; }
+  showToast('✓ 密碼修改成功！');
+  document.getElementById('pf-new-pwd').value='';
+  document.getElementById('pf-confirm-pwd').value='';
+}
+
 // ===== PROFILE =====
 async function loadProfile() {
   if (!currentUser) return;
@@ -481,10 +523,8 @@ async function saveProfile() {
     updated_at:     new Date().toISOString()
   };
   const {error} = await sb.from('profiles').upsert(profile);
-  const st = document.getElementById('profile-status');
-  if (error){st.className='save-status err';st.textContent='// 儲存失敗';return;}
-  st.className='save-status ok';st.textContent='// 儲存成功！';
-  setTimeout(()=>{st.textContent=''},3000);
+  if (error){ showToast('// 儲存失敗，請稍後再試', true); return; }
+  showToast('✓ 資料儲存成功！');
 }
 
 // ===== TRIPS =====
