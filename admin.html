@@ -87,12 +87,12 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 </head>
 <body>
 
-<div id="login-screen">
+<div id="login-screen" style="display:none">
   <div class="login-box">
     <div class="login-logo">X-<em>Bound</em></div>
     <p class="login-sub">Admin Dashboard</p>
-    <input class="login-input" type="password" id="pwd" placeholder="● ● ● ● ● ● ● ●" onkeydown="if(event.key==='Enter')login()">
-    <button class="login-btn" onclick="login()">進入後台</button>
+    <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1rem">請先從前台登入後再進入後台</p>
+    <button class="login-btn" onclick="window.location.href='index.html'">前往前台登入</button>
     <p class="login-err" id="login-err"></p>
   </div>
 </div>
@@ -255,7 +255,6 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // 後台密碼（只是第一道門，真正的管理員驗證靠 Supabase）
-const PWD = 'zZ0973150449@';
 const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
 const SKEY = 'sb_publishable_zKjVJdBzn3H8DauS0uEuXA_KEAoy-n9';
 const sb = supabase.createClient(SURL, SKEY);
@@ -263,36 +262,45 @@ let currentTripId = null;
 let currentRegs = [];
 let currentAdminRole = null; // 'super' 或 'admin'
 
-// 登入後台
-async function login() {
-  if (document.getElementById('pwd').value !== PWD) {
-    document.getElementById('login-err').textContent='密碼錯誤，請再試一次。';
+// 後台啟動：自動讀取前台存的管理員資訊，不需要再輸入任何東西
+async function initAdmin() {
+  const role  = sessionStorage.getItem('adminRole');
+  const email = sessionStorage.getItem('adminEmail');
+
+  // 沒有管理員資訊 → 導回前台要求登入
+  if (!role || !email) {
+    document.getElementById('login-screen').style.display = 'flex';
     return;
   }
-  // 檢查管理員身份（用 email 對照）
-  // 這裡用一個簡單的提示請管理員輸入自己的 email 確認身份
-  const email = prompt('請輸入您的管理員 Email 確認身份：');
-  if (!email) return;
-  const { data: adminData } = await sb.from('admins').select('role').eq('email', email.trim().toLowerCase()).single();
+
+  // 再次向 Supabase 確認管理員身份（防止偽造 sessionStorage）
+  const { data: adminData } = await sb.from('admins').select('role').eq('email', email).single();
   if (!adminData) {
-    document.getElementById('login-err').textContent='此 Email 無管理員權限。';
+    document.getElementById('login-screen').style.display = 'flex';
     return;
   }
+
+  // 驗證通過，直接進入後台
   currentAdminRole = adminData.role;
-  document.getElementById('login-screen').style.display='none';
-  document.getElementById('admin-screen').style.display='block';
-  // 超級管理員才顯示管理員設定 tab
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+
+  // 超級管理員才顯示「管理員設定」tab
   if (currentAdminRole === 'super') {
-    document.getElementById('tab-admins-btn').style.display='block';
+    document.getElementById('tab-admins-btn').style.display = 'block';
   }
   loadTripsTable();
 }
 
+// 登出後台，清除管理員資訊並回前台
 function logout() {
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('admin-screen').style.display='none';
-  document.getElementById('pwd').value='';
+  sessionStorage.removeItem('adminRole');
+  sessionStorage.removeItem('adminEmail');
+  window.location.href = 'index.html';
 }
+
+// 頁面載入時自動執行
+initAdmin();
 
 // 切換 Tab
 function switchTab(name, el) {
