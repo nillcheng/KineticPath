@@ -124,7 +124,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <input class="login-input" type="password" id="pwd" placeholder="● ● ● ● ● ● ● ●" onkeydown="if(event.key==='Enter')login()">
     <button class="login-btn" onclick="login()">進入後台</button>
     <p class="login-err" id="login-err"></p>
-    <p class="login-hint">預設密碼：admin</p>
+    
   </div>
 </div>
 
@@ -207,6 +207,10 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
               <input class="form-ctrl" id="f-img" type="url" placeholder="https://...">
             </div>
             <div class="form-group">
+              <label>詳細行程（選填）</label>
+              <input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址">
+            </div>
+            <div class="form-group">
               <label>行程介紹</label>
               <textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea>
             </div>
@@ -219,7 +223,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
         </div>
 
         <!-- 行程列表表格 -->
-        <div class="card" style="padding:0;overflow:hidden;">
+        <div class="card" id="trips-table-card" style="padding:0;overflow:hidden;">
           <table>
             <thead>
               <tr>
@@ -240,16 +244,20 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 
       <!-- 行程報名詳情 -->
       <div id="trip-detail-view">
-        <button class="btn-back" onclick="backToTrips()">← 返回行程列表</button>
-        <button class="btn-export" onclick="exportExcel()">⬇ 匯出 Excel</button>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center">
+          <button class="btn-back" onclick="backToTrips()" style="margin-bottom:0">← 返回行程列表</button>
+          <button class="btn-export" onclick="exportExcel()" style="margin-bottom:0">⬇ 匯出 Excel</button>
+          <button class="btn-del-selected" onclick="deleteSelected()" style="margin-bottom:0;padding:0.6rem 1.2rem;background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s" onmouseover="this.style.background='var(--danger)';this.style.color='var(--bg)'" onmouseout="this.style.background='none';this.style.color='var(--danger)'">✕ 刪除勾選</button>
+        </div>
         <div class="detail-header">
           <div class="detail-title" id="detail-trip-name"></div>
           <div class="detail-sub" id="detail-trip-info"></div>
         </div>
-        <div class="card" style="padding:0;overflow:hidden;">
+        <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
           <table id="detail-table">
             <thead>
               <tr>
+                <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
                 <th>#</th>
                 <th>姓名</th>
                 <th>性別</th>
@@ -263,10 +271,45 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
                 <th>緊急電話</th>
                 <th>備註</th>
                 <th>報名時間</th>
+                <th>操作</th>
               </tr>
             </thead>
             <tbody id="detail-tbody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- 編輯報名 Modal -->
+      <div class="modal-overlay" id="editRegModal">
+        <div class="modal-box" style="max-width:600px">
+          <button class="modal-close" onclick="closeEditModal()">✕</button>
+          <div class="modal-title">編輯報名資料</div>
+          <input type="hidden" id="edit-reg-idx">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem">
+            <div class="form-group"><label>姓名</label><input class="form-ctrl" id="er-name" type="text"></div>
+            <div class="form-group"><label>性別</label>
+              <select class="form-ctrl" id="er-gender">
+                <option value="">請選擇</option>
+                <option value="男">男</option>
+                <option value="女">女</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+            <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="er-birthday" type="date"></div>
+            <div class="form-group"><label>國家</label><input class="form-ctrl" id="er-country" type="text"></div>
+            <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="er-id" type="text"></div>
+            <div class="form-group"><label>電話</label><input class="form-ctrl" id="er-phone" type="tel"></div>
+            <div class="form-group"><label>Email</label><input class="form-ctrl" id="er-email" type="email"></div>
+            <div class="form-group"><label>地址</label><input class="form-ctrl" id="er-address" type="text"></div>
+            <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="er-emergency" type="text"></div>
+            <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="er-emergency-phone" type="tel"></div>
+          </div>
+          <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="er-note" rows="2"></textarea></div>
+          <div style="display:flex;gap:1rem;margin-top:1rem">
+            <button class="btn-save" onclick="saveEditReg()" style="flex:1">儲存修改</button>
+            <button class="btn-cancel-form" onclick="closeEditModal()" style="flex:1">取消</button>
+          </div>
+          <div class="save-msg" id="edit-reg-msg" style="margin-top:0.5rem;text-align:center"></div>
         </div>
       </div>
     </div>
@@ -306,7 +349,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 
 <script>
-const PWD = 'admin';
+const PWD = 'zZ0973150449@';
 let currentTripId = null;
 
 function login() {
@@ -389,12 +432,17 @@ function viewTripRegs(tripId) {
 
   const tbody = document.getElementById('detail-tbody');
   if (!regs.length) {
-    tbody.innerHTML = '<tr><td class="empty-td" colspan="13">此行程尚無報名紀錄。</td></tr>';
+    tbody.innerHTML = '<tr><td class="empty-td" colspan="15">此行程尚無報名紀錄。</td></tr>';
     return;
   }
-  tbody.innerHTML = regs.map((r, i) => `
-    <tr style="cursor:pointer" onclick="openRegModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">
-      <td>${i+1}</td>
+
+  // 找出這些報名在全域的 index
+  const allRegs = getRegs();
+  tbody.innerHTML = regs.map((r) => {
+    const globalIdx = allRegs.findIndex(x => x.tripId === r.tripId && x.time === r.time && x.name === r.name);
+    return `<tr>
+      <td><input type="checkbox" class="reg-check" value="${globalIdx}" style="cursor:pointer;width:16px;height:16px"></td>
+      <td>${regs.indexOf(r)+1}</td>
       <td><strong>${r.name||'—'}</strong></td>
       <td>${r.gender||'—'}</td>
       <td>${r.birthday||'—'}</td>
@@ -402,13 +450,14 @@ function viewTripRegs(tripId) {
       <td>${r.idNumber||'—'}</td>
       <td>${r.phone||'—'}</td>
       <td>${r.email||'—'}</td>
-      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address||'—'}</td>
+      <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address||'—'}</td>
       <td>${r.emergency||'—'}</td>
       <td>${r.emergencyPhone||'—'}</td>
       <td>${r.note||'—'}</td>
       <td style="font-size:0.75rem;color:var(--muted)">${r.time ? new Date(r.time).toLocaleString('zh-TW') : '—'}</td>
-    </tr>
-  `).join('');
+      <td><button class="btn-sm btn-edit" onclick="openEditReg(${globalIdx})">編輯</button></td>
+    </tr>`;
+  }).join('');
 }
 
 function backToTrips() {
@@ -417,6 +466,72 @@ function backToTrips() {
   document.getElementById('trips-list-view').style.display = 'block';
   renderTripsTable();
 }
+
+// 全選/取消全選
+function toggleAllCheck(cb) {
+  document.querySelectorAll('.reg-check').forEach(c => c.checked = cb.checked);
+}
+
+// 刪除勾選的報名
+function deleteSelected() {
+  const checked = [...document.querySelectorAll('.reg-check:checked')].map(c => Number(c.value));
+  if (!checked.length) { alert('請先勾選要刪除的報名。'); return; }
+  if (!confirm(`確定要刪除 ${checked.length} 筆報名嗎？`)) return;
+  const regs = getRegs();
+  const newRegs = regs.filter((_, i) => !checked.includes(i));
+  localStorage.setItem('mountain_registrations', JSON.stringify(newRegs));
+  viewTripRegs(currentTripId);
+}
+
+// 開啟編輯 Modal
+function openEditReg(globalIdx) {
+  const regs = getRegs();
+  const r = regs[globalIdx];
+  if (!r) return;
+  document.getElementById('edit-reg-idx').value   = globalIdx;
+  document.getElementById('er-name').value         = r.name || '';
+  document.getElementById('er-gender').value       = r.gender || '';
+  document.getElementById('er-birthday').value     = r.birthday || '';
+  document.getElementById('er-country').value      = r.country || '';
+  document.getElementById('er-id').value           = r.idNumber || '';
+  document.getElementById('er-phone').value        = r.phone || '';
+  document.getElementById('er-email').value        = r.email || '';
+  document.getElementById('er-address').value      = r.address || '';
+  document.getElementById('er-emergency').value    = r.emergency || '';
+  document.getElementById('er-emergency-phone').value = r.emergencyPhone || '';
+  document.getElementById('er-note').value         = r.note || '';
+  document.getElementById('edit-reg-msg').textContent = '';
+  document.getElementById('editRegModal').classList.add('open');
+}
+
+function closeEditModal() { document.getElementById('editRegModal').classList.remove('open'); }
+
+// 儲存編輯
+function saveEditReg() {
+  const idx  = Number(document.getElementById('edit-reg-idx').value);
+  const regs = getRegs();
+  if (!regs[idx]) return;
+  regs[idx] = {
+    ...regs[idx],
+    name:          document.getElementById('er-name').value.trim(),
+    gender:        document.getElementById('er-gender').value,
+    birthday:      document.getElementById('er-birthday').value,
+    country:       document.getElementById('er-country').value.trim(),
+    idNumber:      document.getElementById('er-id').value.trim(),
+    phone:         document.getElementById('er-phone').value.trim(),
+    email:         document.getElementById('er-email').value.trim(),
+    address:       document.getElementById('er-address').value.trim(),
+    emergency:     document.getElementById('er-emergency').value.trim(),
+    emergencyPhone:document.getElementById('er-emergency-phone').value.trim(),
+    note:          document.getElementById('er-note').value.trim(),
+  };
+  localStorage.setItem('mountain_registrations', JSON.stringify(regs));
+  const msg = document.getElementById('edit-reg-msg');
+  msg.className = 'save-msg ok'; msg.textContent = '✓ 儲存成功';
+  setTimeout(() => { closeEditModal(); viewTripRegs(currentTripId); }, 800);
+}
+
+document.getElementById('editRegModal').addEventListener('click', function(e) { if(e.target===this) closeEditModal(); });
 
 // 報名詳情 Modal
 function openRegModal(r) {
@@ -513,16 +628,18 @@ function showForm() {
   document.getElementById('form-title').textContent = '新增行程';
   clearForm();
   document.getElementById('form-card').style.display = 'block';
+  document.getElementById('trips-table-card').style.display = 'none';
   document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
 }
 
 function hideForm() {
   document.getElementById('form-card').style.display = 'none';
+  document.getElementById('trips-table-card').style.display = 'block';
   clearForm();
 }
 
 function clearForm() {
-  ['f-name','f-area','f-date','f-days','f-price','f-slots','f-meet','f-img','f-desc'].forEach(id => document.getElementById(id).value = '');
+  ['f-name','f-area','f-date','f-days','f-price','f-slots','f-meet','f-img','f-excel','f-desc'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-diff').value = 'medium';
   document.getElementById('edit-id').value = '';
   document.getElementById('save-msg').textContent = '';
@@ -542,8 +659,10 @@ function editTrip(id) {
   document.getElementById('f-diff').value   = t.difficulty || 'medium';
   document.getElementById('f-meet').value   = t.meetingPoint || '';
   document.getElementById('f-img').value    = t.imageUrl || '';
+  document.getElementById('f-excel').value  = t.excelUrl || '';
   document.getElementById('f-desc').value   = t.description || '';
   document.getElementById('form-card').style.display = 'block';
+  document.getElementById('trips-table-card').style.display = 'none';
   document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -564,6 +683,7 @@ function saveTrip() {
     difficulty: document.getElementById('f-diff').value,
     meetingPoint: document.getElementById('f-meet').value.trim(),
     imageUrl: document.getElementById('f-img').value.trim(),
+    excelUrl: document.getElementById('f-excel').value.trim(),
     description: document.getElementById('f-desc').value.trim(),
     createdAt: editId ? trips.find(t=>t.id===Number(editId))?.createdAt : new Date().toISOString(),
   };
