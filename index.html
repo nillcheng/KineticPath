@@ -151,17 +151,17 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:0.3rem;background:none;border:none}
 .hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all 0.3s}
 /* 手機選單覆蓋層 */
-.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.97);flex-direction:column;align-items:center;justify-content:center;gap:0.5rem}
+.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.98);flex-direction:column;align-items:center;justify-content:center;gap:0}
 .mobile-menu.open{display:flex}
-.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text);cursor:pointer;text-decoration:none;transition:color 0.3s;padding:0.8rem 2rem;border-bottom:1px solid var(--border);width:80%;text-align:center}
+.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);cursor:pointer;text-decoration:none;transition:color 0.3s;padding:1.1rem 0;width:75%;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1);display:block}
+.mobile-menu a:first-of-type{border-top:1px solid rgba(255,255,255,0.1)}
 .mobile-menu a:hover{color:var(--neon1)}
-.mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.5rem;cursor:pointer}
+.mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.8rem;cursor:pointer}
 
 @media(max-width:768px){
-  /* 導覽列 */
-  nav{padding:1rem 1.5rem}
-  nav ul{display:none} /* 桌機選單隱藏 */
-  .hamburger{display:flex} /* 漢堡按鈕顯示 */
+  /* 隱藏桌機橫排選單，顯示漢堡按鈕 */
+  nav ul{display:none}
+  .hamburger{display:flex}
 
   /* Hero */
   .hero{padding:6rem 1.5rem 3rem;min-height:60vh}
@@ -178,8 +178,6 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
   .modal-body{grid-template-columns:1fr;gap:1rem}
   .modal-left,.modal-right{grid-column:1}
   .modal-grid{grid-template-columns:1fr 1fr}
-  .modal-item:nth-child(3n){border-right:1px solid var(--border)}
-  .modal-item:nth-child(even){border-right:none}
   .modal-img-wrap{height:200px}
 
   /* 表單 */
