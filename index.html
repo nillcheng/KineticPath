@@ -223,7 +223,19 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 <!-- 手機版覆蓋選單 -->
 <div class="mobile-menu" id="mobile-menu">
   <button class="close-btn" onclick="closeMobileMenu()">✕</button>
-  <div id="mobile-nav-links"></div>
+  <!-- 未登入選單 -->
+  <div id="mobile-guest">
+    <a onclick="mobileNav('trips')">行程</a>
+    <a onclick="mobileNav('login')">登入</a>
+  </div>
+  <!-- 登入後選單 -->
+  <div id="mobile-user" style="display:none">
+    <a onclick="mobileNav('trips')">行程</a>
+    <a onclick="mobileNav('my-trips')">我的行程</a>
+    <a onclick="mobileNav('profile')">我的資料維護</a>
+    <a id="mobile-admin-link" onclick="mobileNav('admin')" style="display:none">後台</a>
+    <a onclick="mobileNav('logout')" style="color:var(--neon2)">登出</a>
+  </div>
 </div>
 
 <div class="page active" id="page-home">
@@ -422,8 +434,7 @@ async function init() {
 
 // 更新導覽列（同時更新桌機和手機選單）
 async function updateNav(loggedIn) {
-  const menu       = document.getElementById('nav-menu');
-  const mobileNav  = document.getElementById('mobile-nav-links');
+  const menu = document.getElementById('nav-menu');
   if (loggedIn) {
     const { data: adminData } = await sb.from('admins').select('role').eq('email', currentUser.email).single();
     const isAdmin = !!adminData;
@@ -442,14 +453,11 @@ async function updateNav(loggedIn) {
       ${isAdmin ? `<li><a onclick="goAdmin()">後台</a></li>` : ''}
       <li><a onclick="doLogout()" style="color:var(--neon2)">登出</a></li>
     `;
-    // 手機選單
-    mobileNav.innerHTML = `
-      <a onclick="mobileNav('trips')">行程</a>
-      <a onclick="mobileNav('my-trips')">我的行程</a>
-      <a onclick="mobileNav('profile')">我的資料維護</a>
-      ${isAdmin ? `<a onclick="mobileNav('admin')">後台</a>` : ''}
-      <a onclick="mobileNav('logout')" style="color:var(--neon2)">登出</a>
-    `;
+    // 手機選單：顯示登入後版本
+    document.getElementById('mobile-guest').style.display = 'none';
+    document.getElementById('mobile-user').style.display  = 'block';
+    // 管理員才顯示後台連結
+    document.getElementById('mobile-admin-link').style.display = isAdmin ? 'block' : 'none';
   } else {
     sessionStorage.removeItem('adminRole');
     sessionStorage.removeItem('adminEmail');
@@ -458,11 +466,9 @@ async function updateNav(loggedIn) {
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
     `;
-    // 手機選單
-    mobileNav.innerHTML = `
-      <a onclick="mobileNav('trips')">行程</a>
-      <a onclick="mobileNav('login')">登入</a>
-    `;
+    // 手機選單：顯示未登入版本
+    document.getElementById('mobile-guest').style.display = 'block';
+    document.getElementById('mobile-user').style.display  = 'none';
   }
 }
 
