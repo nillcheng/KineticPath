@@ -114,6 +114,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="tabs">
       <div class="tab active" onclick="switchTab('trips',this)">行程管理</div>
       <div class="tab" onclick="switchTab('regs',this)">所有報名紀錄</div>
+      <div class="tab" id="tab-members-btn" style="display:none" onclick="switchTab('members',this)">會員管理</div>
       <div class="tab" id="tab-admins-btn" style="display:none" onclick="switchTab('admins',this)">管理員設定</div>
     </div>
 
@@ -216,6 +217,18 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       </div>
     </div>
 
+    <!-- 會員管理（超級管理員可見） -->
+    <div class="tab-panel" id="tab-members">
+      <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Email</th><th>姓名</th><th>性別</th><th>電話</th><th>國家</th><th>身分證/護照</th><th>緊急聯絡人</th><th>緊急電話</th><th>註冊時間</th>
+          </tr></thead>
+          <tbody id="members-tbody"><tr><td class="loading-td" colspan="10">// 載入中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- 管理員設定（只有超級管理員可見） -->
     <div class="tab-panel" id="tab-admins">
       <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;font-family:'Noto Sans TC',sans-serif;">只有超級管理員可以管理其他管理員帳號。</p>
@@ -302,6 +315,7 @@ async function initAdmin() {
   // 超級管理員才顯示「管理員設定」tab
   if (currentAdminRole === 'super') {
     document.getElementById('tab-admins-btn').style.display = 'block';
+    document.getElementById('tab-members-btn').style.display = 'block';
   }
   loadTripsTable();
 }
@@ -324,6 +338,7 @@ function switchTab(name, el) {
   document.getElementById('tab-'+name).classList.add('active');
   if (name==='regs') loadAllRegs();
   if (name==='admins') loadAdmins();
+  if (name==='members') loadMembers();
 }
 
 // ===== TRIPS =====
@@ -614,7 +629,34 @@ function downloadCSV(filename,headers,rows){
 
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-// ===== 管理員管理（只有超級管理員可用）=====
+// 載入會員列表（從 auth.users + profiles 合併）
+async function loadMembers() {
+  const tbody = document.getElementById('members-tbody');
+  tbody.innerHTML='<tr><td class="loading-td" colspan="10">// 載入中...</td></tr>';
+
+  // 從 profiles 取得有填資料的會員
+  const {data:profiles} = await sb.from('profiles').select('*').order('updated_at',{ascending:false});
+
+  if (!profiles||!profiles.length) {
+    tbody.innerHTML='<tr><td class="empty-td" colspan="10">尚無會員資料。</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = profiles.map((p,i)=>`<tr>
+    <td>${i+1}</td>
+    <td style="font-size:0.8rem">${p.email||'—'}</td>
+    <td><strong>${p.name||'—'}</strong></td>
+    <td>${p.gender||'—'}</td>
+    <td>${p.phone||'—'}</td>
+    <td>${p.country||'—'}</td>
+    <td>${p.id_number||'—'}</td>
+    <td>${p.emergency||'—'}</td>
+    <td>${p.emergency_phone||'—'}</td>
+    <td style="font-size:0.75rem;color:var(--muted)">${p.updated_at?new Date(p.updated_at).toLocaleDateString('zh-TW'):'—'}</td>
+  </tr>`).join('');
+}
+
+// ===== 管理員管理 =====
 
 // 載入管理員列表
 async function loadAdmins() {
