@@ -60,7 +60,7 @@ textarea.form-ctrl{resize:vertical;min-height:320px}
 .btn-back{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.2rem;background:none;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s;margin-bottom:1.5rem}
 .btn-back:hover{border-color:var(--accent);color:var(--accent)}
 table{width:100%;border-collapse:collapse}
-thead th{padding:0.9rem 1.2rem;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#ffffff;border-bottom:1px solid var(--border);background:var(--bg3)}
+thead th{padding:0.9rem 1.2rem;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#ffffff;border-bottom:1px solid var(--border);background:var(--bg3);white-space:nowrap}
 tbody td{padding:1rem 1.2rem;border-bottom:1px solid var(--border);font-size:0.88rem;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(255,255,255,0.02)}
@@ -664,18 +664,18 @@ async function loadMembers() {
 
   tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
-    <td style="font-size:0.8rem">${p.email||'—'}</td>
-    <td><strong>${p.name||'—'}</strong></td>
+    <td>${p.email||'—'}</td>
+    <td>${p.name||'—'}</td>
     <td>${p.gender||'—'}</td>
-    <td>${p.birthday||'—'}</td>
+    <td style="white-space:nowrap">${p.birthday||'—'}</td>
     <td>${p.country||'—'}</td>
     <td>${p.id_number||'—'}</td>
-    <td>${p.phone||'—'}</td>
-    <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.address||'—'}</td>
+    <td style="white-space:nowrap">${p.phone||'—'}</td>
+    <td>${p.address||'—'}</td>
     <td>${p.emergency||'—'}</td>
-    <td>${p.emergency_phone||'—'}</td>
+    <td style="white-space:nowrap">${p.emergency_phone||'—'}</td>
     <td>${p.note||'—'}</td>
-    <td style="font-size:0.75rem">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td style="white-space:nowrap;font-size:0.75rem">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
   </tr>`).join('');
 }
 
