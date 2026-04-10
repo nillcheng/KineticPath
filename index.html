@@ -6,7 +6,7 @@
 <title>X-Bound</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0e14;--bg2:#0f1319;--bg3:#151a22;--border:rgba(255,255,255,0.07);--text:#c8d0dc;--dim:#5a6475;--muted:#2e3440;--neon1:#f0a050;--neon2:#e05878;--neon3:#f0c840;--grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));--grad2:linear-gradient(90deg,var(--neon1),var(--neon2));--white:#fff}
+:root{--bg:#0b0e14;--bg2:#0f1319;--bg3:#151a22;--border:rgba(255,255,255,0.07);--text:#e8edf5;--dim:#8a95a8;--muted:#3d4556;--neon1:#f0a050;--neon2:#e05878;--neon3:#f0c840;--grad:linear-gradient(135deg,var(--neon1),var(--neon2),var(--neon3));--grad2:linear-gradient(90deg,var(--neon1),var(--neon2));--white:#fff}
 *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(240,160,80,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(240,160,80,0.025) 1px,transparent 1px);background-size:60px 60px}
@@ -150,9 +150,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:0.3rem;background:none;border:none}
 .hamburger span{display:block;width:24px;height:2px;background:var(--text);transition:all 0.3s}
 /* 手機選單覆蓋層 */
-.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.97);flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.97);flex-direction:column;align-items:center;justify-content:center;gap:0.5rem}
 .mobile-menu.open{display:flex}
-.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text);cursor:pointer;text-decoration:none;transition:color 0.3s}
+.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text);cursor:pointer;text-decoration:none;transition:color 0.3s;padding:0.8rem 2rem;border-bottom:1px solid var(--border);width:80%;text-align:center}
 .mobile-menu a:hover{color:var(--neon1)}
 .mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--dim);font-size:1.5rem;cursor:pointer}
 
