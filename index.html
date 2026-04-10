@@ -227,6 +227,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 <nav>
   <div class="logo" onclick="showPage('home')">X-Bound</div>
   <ul id="nav-menu">
+    <li><a onclick="showPage('home')">首頁</a></li>
     <li><a onclick="showPage('trips')">行程</a></li>
     <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
   </ul>
@@ -241,11 +242,13 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
   <button class="close-btn" onclick="closeMobileMenu()">✕</button>
   <!-- 未登入選單 -->
   <div id="mobile-guest">
+    <a onclick="mobileNav('home')">首頁</a>
     <a onclick="mobileNav('trips')">行程</a>
     <a onclick="mobileNav('login')">登入</a>
   </div>
   <!-- 登入後選單 -->
   <div id="mobile-user" style="display:none">
+    <a onclick="mobileNav('home')">首頁</a>
     <a onclick="mobileNav('trips')">行程</a>
     <a onclick="mobileNav('my-trips')">我的行程</a>
     <a onclick="mobileNav('profile')">我的資料維護</a>
@@ -462,6 +465,7 @@ async function updateNav(loggedIn) {
     }
     // 桌機選單
     menu.innerHTML = `
+      <li><a onclick="showPage('home')">首頁</a></li>
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="showPage('my-trips')">我的行程</a></li>
       <li><a onclick="showPage('profile')">我的資料維護</a></li>
@@ -478,6 +482,7 @@ async function updateNav(loggedIn) {
     sessionStorage.removeItem('adminEmail');
     // 桌機選單
     menu.innerHTML = `
+      <li><a onclick="showPage('home')">首頁</a></li>
       <li><a onclick="showPage('trips')">行程</a></li>
       <li><a onclick="openAuthModal('login')" class="nav-login-btn">登入</a></li>
     `;
@@ -502,7 +507,8 @@ function closeMobileMenu() {
 // 手機選單點擊後關閉
 function mobileNav(action) {
   closeMobileMenu();
-  if (action === 'trips') showPage('trips');
+  if (action === 'home') showPage('home');
+  else if (action === 'trips') showPage('trips');
   else if (action === 'my-trips') showPage('my-trips');
   else if (action === 'profile') showPage('profile');
   else if (action === 'admin') goAdmin();
