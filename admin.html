@@ -235,9 +235,44 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
             <th>緊急電話</th>
             <th>備註</th>
             <th>註冊時間</th>
+            <th>操作</th>
           </tr></thead>
-          <tbody id="members-tbody"><tr><td class="loading-td" colspan="13">// 載入中...</td></tr></tbody>
+          <tbody id="members-tbody"><tr><td class="loading-td" colspan="14">// 載入中...</td></tr></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- 編輯會員 Modal -->
+    <div class="modal-overlay" id="editMemberModal">
+      <div class="modal-box" style="max-width:600px">
+        <button class="modal-close" onclick="closeEditMember()">✕</button>
+        <div class="modal-title">編輯會員資料</div>
+        <input type="hidden" id="em-id">
+        <div class="edit-grid">
+          <div class="form-group"><label>姓名</label><input class="form-ctrl" id="em-name" type="text"></div>
+          <div class="form-group"><label>性別</label>
+            <select class="form-ctrl" id="em-gender">
+              <option value="">請選擇</option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+          <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="em-birthday" type="date"></div>
+          <div class="form-group"><label>國家</label><input class="form-ctrl" id="em-country" type="text"></div>
+          <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="em-id-number" type="text"></div>
+          <div class="form-group"><label>電話</label><input class="form-ctrl" id="em-phone" type="tel"></div>
+          <div class="form-group"><label>Email（不可修改）</label><input class="form-ctrl" id="em-email" type="email" disabled style="opacity:0.5"></div>
+          <div class="form-group"><label>地址</label><input class="form-ctrl" id="em-address" type="text"></div>
+          <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="em-emergency" type="text"></div>
+          <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="em-emergency-phone" type="tel"></div>
+        </div>
+        <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="em-note" rows="2" style="min-height:60px"></textarea></div>
+        <div style="display:flex;gap:1rem;margin-top:1rem">
+          <button class="btn-save" onclick="saveEditMember()" style="flex:1">儲存修改</button>
+          <button class="btn-cancel-form" onclick="closeEditMember()" style="flex:1">取消</button>
+        </div>
+        <div class="save-msg" id="edit-member-msg" style="margin-top:0.5rem;text-align:center"></div>
       </div>
     </div>
 
@@ -642,9 +677,11 @@ function downloadCSV(filename,headers,rows){
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
 // 載入所有會員（從 members_view 讀取）
+let cachedMembers = [];
+
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
-  tbody.innerHTML='<tr><td class="loading-td" colspan="13">// 載入中...</td></tr>';
+  tbody.innerHTML='<tr><td class="loading-td" colspan="14">// 載入中...</td></tr>';
 
   const {data:members, error} = await sb
     .from('members_view')
@@ -652,20 +689,20 @@ async function loadMembers() {
     .order('created_at', {ascending: false});
 
   if (error) {
-    console.error('loadMembers error:', error);
-    tbody.innerHTML=`<tr><td class="empty-td" colspan="13">讀取失敗：${error.message}</td></tr>`;
+    tbody.innerHTML=`<tr><td class="empty-td" colspan="14">讀取失敗：${error.message}</td></tr>`;
     return;
   }
 
   if (!members || !members.length) {
-    tbody.innerHTML='<tr><td class="empty-td" colspan="13">尚無會員資料。</td></tr>';
+    tbody.innerHTML='<tr><td class="empty-td" colspan="14">尚無會員資料。</td></tr>';
     return;
   }
 
+  cachedMembers = members;
   tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
     <td>${p.email||'—'}</td>
-    <td>${p.name||'—'}</td>
+    <td><strong>${p.name||'—'}</strong></td>
     <td>${p.gender||'—'}</td>
     <td style="white-space:nowrap">${p.birthday||'—'}</td>
     <td>${p.country||'—'}</td>
@@ -676,8 +713,57 @@ async function loadMembers() {
     <td style="white-space:nowrap">${p.emergency_phone||'—'}</td>
     <td>${p.note||'—'}</td>
     <td style="white-space:nowrap;font-size:0.75rem">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td><button class="btn-sm btn-edit" onclick="openEditMember('${p.id}')">編輯</button></td>
   </tr>`).join('');
 }
+
+function openEditMember(userId) {
+  const p = cachedMembers.find(m => m.id === userId);
+  if (!p) return;
+  document.getElementById('em-id').value              = userId;
+  document.getElementById('em-email').value           = p.email||'';
+  document.getElementById('em-name').value            = p.name||'';
+  document.getElementById('em-gender').value          = p.gender||'';
+  document.getElementById('em-birthday').value        = p.birthday||'';
+  document.getElementById('em-country').value         = p.country||'';
+  document.getElementById('em-id-number').value       = p.id_number||'';
+  document.getElementById('em-phone').value           = p.phone||'';
+  document.getElementById('em-address').value         = p.address||'';
+  document.getElementById('em-emergency').value       = p.emergency||'';
+  document.getElementById('em-emergency-phone').value = p.emergency_phone||'';
+  document.getElementById('em-note').value            = p.note||'';
+  document.getElementById('edit-member-msg').textContent = '';
+  document.getElementById('editMemberModal').classList.add('open');
+}
+
+function closeEditMember() {
+  document.getElementById('editMemberModal').classList.remove('open');
+}
+
+async function saveEditMember() {
+  const userId = document.getElementById('em-id').value;
+  const msg    = document.getElementById('edit-member-msg');
+  msg.className='save-msg'; msg.textContent='// 儲存中...';
+  const { error } = await sb.from('profiles').upsert({
+    id:             userId,
+    name:           document.getElementById('em-name').value.trim(),
+    gender:         document.getElementById('em-gender').value,
+    birthday:       document.getElementById('em-birthday').value||null,
+    country:        document.getElementById('em-country').value.trim(),
+    id_number:      document.getElementById('em-id-number').value.trim(),
+    phone:          document.getElementById('em-phone').value.trim(),
+    address:        document.getElementById('em-address').value.trim(),
+    emergency:      document.getElementById('em-emergency').value.trim(),
+    emergency_phone:document.getElementById('em-emergency-phone').value.trim(),
+    note:           document.getElementById('em-note').value.trim(),
+    updated_at:     new Date().toISOString()
+  });
+  if (error) { msg.className='save-msg err'; msg.textContent='// 儲存失敗：'+error.message; return; }
+  msg.className='save-msg ok'; msg.textContent='// ✓ 儲存成功';
+  setTimeout(()=>{ closeEditMember(); loadMembers(); }, 800);
+}
+
+document.getElementById('editMemberModal').addEventListener('click', function(e){ if(e.target===this) closeEditMember(); });
 
 // ===== 管理員管理 =====
 
