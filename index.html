@@ -68,6 +68,7 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .trip-price{font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .trip-price small{font-family:'Noto Sans TC',sans-serif;font-size:0.7rem;font-weight:300;color:var(--white);-webkit-text-fill-color:var(--white)}
 .trip-meta{text-align:right;font-size:0.75rem;color:var(--white);line-height:1.7}
+.trip-date{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--neon1);letter-spacing:0.05em;line-height:1.5;text-align:right}
 .btn-card{display:block;width:100%;margin-top:1rem;padding:0.7rem;background:transparent;border:1px solid var(--border);color:var(--white);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;transition:all 0.3s}
 .btn-card:hover{border-color:var(--neon1);color:var(--neon1)}
 .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--white);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
@@ -123,7 +124,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 .modal-item:nth-last-child(-n+3){border-bottom:none}
 .modal-item label{display:block;font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--white);margin-bottom:0.3rem}
 .modal-item strong{font-size:0.92rem;color:#ffffff;font-weight:400}
-.modal-desc{font-size:0.85rem;color:var(--white);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem}
+.modal-desc{font-size:0.85rem;color:var(--white);line-height:2;border-top:1px solid var(--border);padding-top:1.5rem;margin-bottom:2rem;white-space:pre-wrap}
+.modal-link{display:inline-block;margin-top:1rem;padding:0.6rem 1.5rem;background:transparent;border:1px solid var(--neon3);color:var(--neon3);font-family:'Share Tech Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;text-decoration:none;transition:all 0.3s}
+.modal-link:hover{background:var(--neon3);color:var(--bg)}
 .reg-block{border-top:1px solid var(--border);padding-top:1.5rem}
 .reg-block h3{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--neon1);margin-bottom:1.2rem}
 .f-row2{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
@@ -259,7 +262,7 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     <div class="hero-content">
       <p class="hero-tag">戶外活動 · Since 2025</p>
       <h1 class="hero-title">Cross Every<br><span class="grad-line">Boundary</span></h1>
-      <p class="hero-sub">路跑野營・山海遠征・純粹揪團<br>沒有商業包裝，只有最真實的冒險<br>跨越界限，找回探索未知的快樂</p>
+      <p class="hero-sub">路跑野營・山海遠征・純粹揪團<br>沒有商業包裝，只有最真實的冒險<br>跨越界限,找回探索未知的快樂</p>
       <div class="hero-cta">
         <a onclick="showPage('trips')" class="btn-neon" style="cursor:pointer">探索行程</a>
       </div>
@@ -699,7 +702,7 @@ function filterTrips(diff, btn) {
   renderTripCards(diff);
 }
 
-// 渲染行程卡片（含過期標示）
+// 渲染行程卡片（含過期標示 + 三行日期格式）
 function renderTripCards(diffFilter) {
   const grid = document.getElementById('trips-grid');
   const today = new Date().toISOString().split('T')[0];
@@ -713,8 +716,18 @@ function renderTripCards(diffFilter) {
   grid.innerHTML = trips.map((t,i)=>{
     const d=dMap[t.difficulty]||dMap.medium;
     const img=t.image_url?`<div class="trip-img-wrap"><img class="trip-img" src="${t.image_url}" alt="${t.name}"></div>`:'<div class="trip-img-placeholder">▲</div>';
-    const price=t.price?`NT$ ${Number(t.price).toLocaleString()}<small> / 人</small>`:'<small style="-webkit-text-fill-color:var(--white)">價格洽詢</small>';
-    const dateStr = t.date?(t.date_end?`📅 ${t.date} – ${t.date_end}`:`📅 ${t.date}`):'';
+    const price=t.price||'洽詢';
+    
+    // ✅ 修改：日期改為三行格式（卡片上）
+    let dateStr = '';
+    if (t.date && t.date_end) {
+      dateStr = `<div class="trip-date">${t.date}<br>–<br>${t.date_end}</div>`;
+    } else if (t.date) {
+      dateStr = `<div class="trip-date">${t.date}</div>`;
+    } else {
+      dateStr = '<div class="trip-date">日期待定</div>';
+    }
+    
     // 判斷是否已過期
     const isExpired = t.date && t.date < today;
     return `<div class="trip-card${isExpired?' expired-card':''}" onclick="openModal(${t.id})">
@@ -733,7 +746,7 @@ function renderTripCards(diffFilter) {
         <h3 class="trip-name">${t.name}</h3>
         <p class="trip-desc">${t.description||''}</p>
         <div class="trip-footer">
-          <div class="trip-price">${price}</div>
+          <div class="trip-price">${price}<small style="-webkit-text-fill-color:var(--white)"> / 人</small></div>
           <div class="trip-meta">${dateStr}${t.days?'<br>🧗 '+t.days+' 天':''}</div>
         </div>
         <button class="btn-card" onclick="event.stopPropagation();openModal(${t.id})">${isExpired?'查看詳情':'查看詳情 & 報名 →'}</button>
@@ -742,14 +755,17 @@ function renderTripCards(diffFilter) {
   }).join('');
 }
 
+// ✅ 修改：Modal 加入完整資訊展示
 async function openModal(id) {
   const t = cachedTrips.find(x=>x.id===id);
   if (!t) return;
   const dL={easy:'輕鬆',medium:'中級',hard:'進階'};
   const img=t.image_url?`<div class="modal-img-wrap"><img src="${t.image_url}" alt="${t.name}"></div>`:'<div class="modal-img-placeholder">▲</div>';
+  
   // 費用顯示（支援文字或數字）
-  const price=t.price?t.price:'價格洽詢';
-  // 出發日期三行格式
+  const price=t.price||'價格洽詢';
+  
+  // 出發日期三行格式（Modal 裡）
   const dateStr=t.date_end?`${t.date}<br>–<br>${t.date_end}`:(t.date||'待定');
 
   // 判斷是否已過期
@@ -815,6 +831,10 @@ async function openModal(id) {
     }
   }
 
+  // ✅ 修改：加入完整行程資訊 + 詳細行程連結
+  const fullDesc = t.description || '暫無詳細說明';
+  const excelLink = t.excel_url ? `<a href="${t.excel_url}" target="_blank" class="modal-link">→ 查看詳細行程</a>` : '';
+
   document.getElementById('modal-content').innerHTML=`
     ${img}
     <div class="modal-body">
@@ -825,11 +845,12 @@ async function openModal(id) {
           <div class="modal-item"><label>出發日期</label><strong>${dateStr}</strong></div>
           <div class="modal-item"><label>天數</label><strong>${t.days?t.days+' 天':'待定'}</strong></div>
           <div class="modal-item"><label>難度</label><strong>${dL[t.difficulty]||'-'}</strong></div>
+          <div class="modal-item"><label>地區</label><strong>${t.area||'-'}</strong></div>
           <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
-          <div class="modal-item"><label>集合地點</label><strong>${t.meeting_point||'-'}</strong></div>
           <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
+          <div class="modal-item" style="grid-column:1/-1"><label>集合地點</label><strong>${t.meeting_point||'-'}</strong></div>
         </div>
-        ${t.description?`<div class="modal-desc">${t.description.replace(/\n/g,'<br>')}</div>`:''}
+        <div class="modal-desc">${fullDesc}${excelLink}</div>
       </div>
       <div class="modal-right">
         <div class="reg-block" style="border-top:none;padding-top:0">${regContent}</div>
@@ -889,7 +910,7 @@ async function loadMyTrips() {
   list.innerHTML=regs.map(r=>{
     const t=r.trips;
     if(!t) return '';
-    const price=t.price?`NT$ ${Number(t.price).toLocaleString()} / 人`:'價格洽詢';
+    const price=t.price||'價格洽詢';
     const dateStr=t.date_end?`${t.date} – ${t.date_end}`:(t.date||'');
     const isExpired = t.date && t.date < today2;
     return `<div class="my-trip-card${isExpired?' expired-card':''}">
