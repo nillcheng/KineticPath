@@ -74,8 +74,8 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--white);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
 .empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
 /* 已結束行程樣式 */
-.expired-card{opacity:0.6;filter:grayscale(0.5)}
-.expired-banner{position:absolute;top:0;left:0;right:0;background:rgba(224,88,120,0.85);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-align:center;padding:0.5rem;z-index:3}
+.expired-card{opacity:1}
+.expired-banner{position:absolute;top:0;left:0;right:0;background:linear-gradient(135deg,#e05878,#c04858);color:#fff;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.25em;text-align:center;padding:1rem 0.5rem;z-index:3;box-shadow:0 4px 12px rgba(224,88,120,0.4);border-bottom:2px solid rgba(255,255,255,0.3)}
 .inner-page{max-width:900px;margin:0 auto;padding:3rem}
 .page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
 .page-eyebrow::before{content:'//';opacity:0.5}
@@ -751,7 +751,7 @@ function renderTripCards(diffFilter) {
     const isExpired = t.date && t.date < today;
     return `<div class="trip-card${isExpired?' expired-card':''}" onclick="openModal(${t.id})">
       ${img}
-      ${isExpired?'<div class="expired-banner">// 已結束</div>':''}
+      ${isExpired?'<div class="expired-banner">已結束</div>':''}
       <div class="diff-bar ${d.b}"></div>
       <div class="trip-body">
         <div class="trip-top">
