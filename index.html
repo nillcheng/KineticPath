@@ -153,10 +153,11 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 /* 手機選單覆蓋層 */
 .mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:rgba(11,14,20,0.98);flex-direction:column;align-items:center;justify-content:center;gap:0}
 .mobile-menu.open{display:flex}
-.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);cursor:pointer;text-decoration:none;transition:color 0.3s;padding:1rem 0;width:80%;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1);display:block;white-space:nowrap}
+.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);cursor:pointer;text-decoration:none;transition:color 0.3s;padding:1rem 0;width:80%;text-align:center;border-bottom:1px solid rgba(255,255,255,0.1);display:block;white-space:nowrap;margin:0 auto}
 .mobile-menu a:first-of-type{border-top:1px solid rgba(255,255,255,0.1)}
 .mobile-menu a:hover{color:var(--neon1)}
 .mobile-menu .close-btn{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:var(--white);font-size:1.8rem;cursor:pointer}
+#mobile-guest,#mobile-user{display:flex;flex-direction:column;align-items:center;width:100%}
 
 @media(max-width:768px){
   /* 隱藏桌機橫排選單，顯示漢堡按鈕 */
@@ -182,13 +183,19 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
 
   /* 選單文字確保置中 */
   .mobile-menu{align-items:center}
-  .mobile-menu a{text-align:center}
+  .mobile-menu a{text-align:center;margin:0 auto}
+  #mobile-guest,#mobile-user{width:100%;display:flex;flex-direction:column;align-items:center}
 
   /* 資料維護表單手機版單欄 */
   .f-row2,.form-row2{grid-template-columns:1fr}
 
-  /* date input 手機版不讓它跑版 */
-  input[type="date"].f-ctrl{width:100%;font-size:0.85rem}
+  /* date input 手機版完整寬度，防止跑版 */
+  input[type="date"].f-ctrl{
+    width:100%;
+    font-size:0.85rem;
+    -webkit-appearance:none;
+    appearance:none;
+  }
 
   /* 內頁 */
   .inner-page{padding:1.5rem 1rem}
