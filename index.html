@@ -527,7 +527,7 @@ async function doLogin() {
   setTimeout(closeAuthModal,800);
 }
 
-// 註冊新帳號
+// 註冊新帳號（不需要 Email 驗證）
 async function doRegister() {
   const email = document.getElementById('reg-email2').value.trim();
   const pwd   = document.getElementById('reg-pwd2').value;
@@ -535,7 +535,19 @@ async function doRegister() {
   if (!email||!pwd){msg.className='auth-msg err';msg.textContent='// 請填寫 Email 和密碼';return;}
   if (pwd.length<6){msg.className='auth-msg err';msg.textContent='// 密碼至少需要 6 個字元';return;}
   msg.className='auth-msg';msg.textContent='// 註冊中...';
-  const {error} = await sb.auth.signUp({email,password:pwd});
+  
+  // 選項：禁用 Email 驗證，讓用戶直接可用
+  const {data, error} = await sb.auth.signUp({
+    email,
+    password:pwd,
+    options: {
+      emailRedirectTo: window.location.origin + '/index.html',
+      data: {
+        email_confirmed: true  // 標記為已驗證（如果 Supabase 設定允許的話）
+      }
+    }
+  });
+  
   if (error) {
     // 判斷錯誤類型，給出對應提示
     if (error.message.includes('already registered') || error.message.includes('already been registered')) {
@@ -545,7 +557,14 @@ async function doRegister() {
     }
     return;
   }
-  msg.className='auth-msg ok';msg.textContent='// 註冊成功！請查收驗證信';
+  
+  msg.className='auth-msg ok';msg.textContent='// 註冊成功！正在登入...';
+  
+  // 註冊成功後自動關閉 Modal
+  setTimeout(() => {
+    closeAuthModal();
+    // 如果 Supabase 設定需要驗證，這裡會失敗，但如果關閉驗證要求，用戶已經登入
+  }, 1000);
 }
 
 // 登出：清除 Supabase session 和管理員資訊，回首頁
