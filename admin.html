@@ -683,10 +683,11 @@ async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="14">// 載入中...</td></tr>';
 
+  // 讀取 profiles 資料表（有填過資料的會員）
   const {data:members, error} = await sb
-    .from('members_view')
+    .from('profiles')
     .select('*')
-    .order('created_at', {ascending: false});
+    .order('updated_at', {ascending: false});
 
   if (error) {
     tbody.innerHTML=`<tr><td class="empty-td" colspan="14">讀取失敗：${error.message}</td></tr>`;
@@ -694,7 +695,7 @@ async function loadMembers() {
   }
 
   if (!members || !members.length) {
-    tbody.innerHTML='<tr><td class="empty-td" colspan="14">尚無會員資料。</td></tr>';
+    tbody.innerHTML='<tr><td class="empty-td" colspan="14">尚無會員資料（會員需先填寫個人資料才會顯示）。</td></tr>';
     return;
   }
 
@@ -712,7 +713,7 @@ async function loadMembers() {
     <td>${p.emergency||'—'}</td>
     <td style="white-space:nowrap">${p.emergency_phone||'—'}</td>
     <td>${p.note||'—'}</td>
-    <td style="white-space:nowrap;font-size:0.75rem">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td style="white-space:nowrap;font-size:0.75rem">${p.updated_at?new Date(p.updated_at).toLocaleDateString('zh-TW'):'—'}</td>
     <td><button class="btn-sm btn-edit" onclick="openEditMember('${p.id}')">編輯</button></td>
   </tr>`).join('');
 }
