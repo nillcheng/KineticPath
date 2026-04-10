@@ -74,7 +74,6 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .detail-title{font-family:'Noto Serif TC',serif;font-size:1.3rem;font-weight:900;color:var(--white)}
 .detail-sub{font-size:0.82rem;color:var(--muted);margin-top:0.3rem;margin-bottom:1.5rem}
 .loading-td{text-align:center;padding:3rem!important;color:var(--muted);font-size:0.85rem}
-/* 後台篩選按鈕 */
 .admin-filter-btn{padding:0.4rem 1rem;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.75rem;letter-spacing:0.1em;transition:all 0.3s}
 .admin-filter-btn:hover{border-color:var(--accent);color:var(--accent)}
 .admin-filter-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,0.1)}
@@ -87,24 +86,16 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:768px){
-  /* 表單欄位手機版單欄 */
   .form-row,.edit-grid{grid-template-columns:1fr}
-  /* 主要內容區 padding 縮小 */
   .admin-main{padding:0 1rem}
-  /* header 手機版 */
   .admin-header{padding:1rem}
   .admin-logo small{display:none}
-  /* tabs 手機版可滾動 */
   .tabs{overflow-x:auto;white-space:nowrap;flex-wrap:nowrap}
   .tab{padding:0.6rem 1rem;font-size:0.72rem}
-  /* 表格手機版可滾動 */
   .card{overflow-x:auto}
-  /* modal 手機版全寬 */
   .modal-box{max-width:100%;padding:1.2rem}
-  /* 按鈕區 */
   .btn-add{width:100%;justify-content:center;margin-bottom:1rem}
   .btn-export{margin-left:0}
-  /* 行程表單 card body */
   .card-body{padding:1.2rem}
 }
 </style>
@@ -143,7 +134,6 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div id="trips-list-view">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
           <button class="btn-add" style="margin-bottom:0" onclick="showForm()">＋ 新增行程</button>
-          <!-- 難度篩選按鈕 -->
           <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
             <button class="admin-filter-btn active" onclick="filterAdminTrips('all',this)">全部</button>
             <button class="admin-filter-btn" onclick="filterAdminTrips('easy',this)">輕鬆</button>
@@ -216,7 +206,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
           <table>
             <thead><tr>
               <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
-              <th>#</th><th>姓名</th><th>性別</th><th>出生日期</th><th>國家</th><th>身分證/護照</th><th>電話</th><th>Email</th><th>地址</th><th>緊急聯絡人</th><th>緊急電話</th><th>備註</th><th>報名時間</th><th>操作</th>
+              <th>#</th><th>姓名</th><th>性別</th><th>出生日期</th><th>國家</th><th>身分證/護照</th><th>電話</th><th>Email</th><th>Line ID</th><th>地址</th><th>緊急聯絡人</th><th>緊急電話</th><th>備註</th><th>報名時間</th><th>操作</th>
             </tr></thead>
             <tbody id="detail-tbody"></tbody>
           </table>
@@ -230,9 +220,9 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
         <table>
           <thead><tr>
-            <th>行程</th><th>姓名</th><th>性別</th><th>電話</th><th>Email</th><th>國家</th><th>緊急聯絡人</th><th>備註</th><th>報名時間</th>
+            <th>行程</th><th>姓名</th><th>性別</th><th>電話</th><th>Email</th><th>Line ID</th><th>國家</th><th>緊急聯絡人</th><th>備註</th><th>報名時間</th>
           </tr></thead>
-          <tbody id="regs-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
+          <tbody id="regs-tbody"><tr><td class="loading-td" colspan="10">// 載入中...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -250,6 +240,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
             <th>國家</th>
             <th>身分證/護照</th>
             <th>電話</th>
+            <th>Line ID</th>
             <th>地址</th>
             <th>緊急聯絡人</th>
             <th>緊急電話</th>
@@ -257,7 +248,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
             <th>註冊時間</th>
             <th>操作</th>
           </tr></thead>
-          <tbody id="members-tbody"><tr><td class="loading-td" colspan="14">// 載入中...</td></tr></tbody>
+          <tbody id="members-tbody"><tr><td class="loading-td" colspan="15">// 載入中...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -282,6 +273,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
           <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="em-id-number" type="text"></div>
           <div class="form-group"><label>電話</label><input class="form-ctrl" id="em-phone" type="tel"></div>
           <div class="form-group"><label>Email（不可修改）</label><input class="form-ctrl" id="em-email" type="email" disabled style="opacity:0.5"></div>
+          <div class="form-group"><label>Line ID</label><input class="form-ctrl" id="em-line" type="text"></div>
           <div class="form-group"><label>地址</label><input class="form-ctrl" id="em-address" type="text"></div>
           <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="em-emergency" type="text"></div>
           <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="em-emergency-phone" type="tel"></div>
@@ -349,38 +341,28 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// 後台密碼（只是第一道門，真正的管理員驗證靠 Supabase）
 const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
 const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsZ2JrYWt6Y2dycXJzbmhsd2d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDgyNjAsImV4cCI6MjA5MDA4NDI2MH0.49Y_0ZInQXJ4IeA3BdyEc7sIOske9IZrKHU2h_ypar4';
 const sb = supabase.createClient(SURL, SKEY);
 let currentTripId = null;
 let currentRegs = [];
-let currentAdminRole = null; // 'super' 或 'admin'
+let currentAdminRole = null;
 
-// 後台啟動：自動讀取前台存的管理員資訊，不需要再輸入任何東西
 async function initAdmin() {
   const role  = sessionStorage.getItem('adminRole');
   const email = sessionStorage.getItem('adminEmail');
-
-  // 沒有管理員資訊 → 導回前台要求登入
   if (!role || !email) {
     document.getElementById('login-screen').style.display = 'flex';
     return;
   }
-
-  // 再次向 Supabase 確認管理員身份（防止偽造 sessionStorage）
   const { data: adminData } = await sb.from('admins').select('role').eq('email', email).single();
   if (!adminData) {
     document.getElementById('login-screen').style.display = 'flex';
     return;
   }
-
-  // 驗證通過，直接進入後台
   currentAdminRole = adminData.role;
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-screen').style.display = 'block';
-
-  // 超級管理員才顯示「管理員設定」tab
   if (currentAdminRole === 'super') {
     document.getElementById('tab-admins-btn').style.display = 'block';
     document.getElementById('tab-members-btn').style.display = 'block';
@@ -388,17 +370,14 @@ async function initAdmin() {
   loadTripsTable();
 }
 
-// 登出後台，清除管理員資訊並回前台
 function logout() {
   sessionStorage.removeItem('adminRole');
   sessionStorage.removeItem('adminEmail');
   window.location.href = 'index.html';
 }
 
-// 頁面載入時自動執行
 initAdmin();
 
-// 切換 Tab
 function switchTab(name, el) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -409,23 +388,18 @@ function switchTab(name, el) {
   if (name==='members') loadMembers();
 }
 
-// ===== TRIPS =====
-let cachedAdminTrips = {}; // 儲存後台行程資料供篩選使用
-let cachedMembers = []; // 儲存會員資料供編輯使用
+let cachedAdminTrips = {};
+let cachedMembers = [];
 
-// 載入行程列表（未結束的在前，已結束的在後）
 async function loadTripsTable() {
   const tbody = document.getElementById('trips-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
   const {data:trips} = await sb.from('trips').select('*').order('date',{ascending:true});
   const {data:regCounts} = await sb.from('registrations').select('trip_id');
-
   if (!trips||!trips.length) {
     tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無行程，點上方「新增行程」開始吧。</td></tr>';
     return;
   }
-
-  // 未結束的排前面，已結束的排後面
   const today = new Date().toISOString().split('T')[0];
   const active  = trips.filter(t => !t.date || t.date >= today);
   const expired = trips.filter(t => t.date && t.date < today);
@@ -433,34 +407,28 @@ async function loadTripsTable() {
   renderAdminTrips('all');
 }
 
-// 篩選按鈕點擊
 function filterAdminTrips(filter, btn) {
   document.querySelectorAll('.admin-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAdminTrips(filter);
 }
 
-// 渲染後台行程表格
 function renderAdminTrips(filter) {
   const tbody = document.getElementById('trips-tbody');
   const today = new Date().toISOString().split('T')[0];
   const regCounts = cachedAdminTrips.regCounts || [];
   const diffMap={easy:'badge-easy',medium:'badge-medium',hard:'badge-hard'};
   const diffLabel={easy:'輕鬆',medium:'中級',hard:'進階'};
-
-  // 依篩選條件過濾
   let trips = cachedAdminTrips.all || [];
   if (filter === 'expired') {
     trips = trips.filter(t => t.date && t.date < today);
   } else if (filter !== 'all') {
     trips = trips.filter(t => t.difficulty === filter);
   }
-
   if (!trips.length) {
     tbody.innerHTML='<tr><td class="empty-td" colspan="9">此條件下沒有行程。</td></tr>';
     return;
   }
-
   tbody.innerHTML = trips.map(t=>{
     const count = regCounts.filter(r=>r.trip_id===t.id).length;
     const price = t.price||'洽詢';
@@ -488,14 +456,12 @@ async function viewTripRegs(tripId) {
   const {data:trip} = await sb.from('trips').select('*').eq('id',tripId).single();
   const {data:regs} = await sb.from('registrations').select('*').eq('trip_id',tripId).order('created_at',{ascending:true});
   currentRegs = regs||[];
-
   document.getElementById('trips-list-view').style.display='none';
   document.getElementById('trip-detail-view').style.display='block';
   document.getElementById('detail-trip-name').textContent=trip.name;
   document.getElementById('detail-trip-info').textContent=`${trip.date||''} · ${trip.area||''} · 共 ${currentRegs.length} 人報名`;
-
   const tbody=document.getElementById('detail-tbody');
-  if (!currentRegs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="15">此行程尚無報名紀錄。</td></tr>';return;}
+  if (!currentRegs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="16">此行程尚無報名紀錄。</td></tr>';return;}
   tbody.innerHTML=currentRegs.map((r,i)=>`<tr>
     <td><input type="checkbox" class="reg-check" value="${r.id}" style="cursor:pointer;width:16px;height:16px"></td>
     <td>${i+1}</td>
@@ -506,6 +472,7 @@ async function viewTripRegs(tripId) {
     <td>${r.id_number||'—'}</td>
     <td>${r.phone||'—'}</td>
     <td>${r.email||'—'}</td>
+    <td>${r.line_id||'—'}</td>
     <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.address||'—'}</td>
     <td>${r.emergency||'—'}</td>
     <td>${r.emergency_phone||'—'}</td>
@@ -553,7 +520,6 @@ function openEditReg(regId){
 }
 
 function closeEditModal(){document.getElementById('editRegModal').classList.remove('open');}
-// editRegModal 點擊關閉已整合到 document click 事件
 
 async function saveEditReg(){
   const id=document.getElementById('edit-reg-id').value;
@@ -577,7 +543,6 @@ async function saveEditReg(){
   setTimeout(()=>{closeEditModal();viewTripRegs(currentTripId);},800);
 }
 
-// ===== FORM =====
 function showForm(){
   document.getElementById('form-title').textContent='新增行程';
   clearForm();
@@ -621,7 +586,6 @@ async function saveTrip(){
   const msg=document.getElementById('save-msg');
   if(!name){msg.className='save-msg err';msg.textContent='請填寫行程名稱。';return;}
   if(!date){msg.className='save-msg err';msg.textContent='請選擇出發日期。';return;}
-
   const trip={
     name, area:document.getElementById('f-area').value.trim(), date,
     date_end:document.getElementById('f-date-end').value||null,
@@ -634,12 +598,10 @@ async function saveTrip(){
     excel_url:document.getElementById('f-excel').value.trim(),
     description:document.getElementById('f-desc').value.trim(),
   };
-
   const editId=document.getElementById('edit-id').value;
   let error;
   if(editId){({error}=await sb.from('trips').update(trip).eq('id',editId));}
   else{({error}=await sb.from('trips').insert(trip));}
-
   if(error){msg.className='save-msg err';msg.textContent='// 儲存失敗：'+error.message;return;}
   loadTripsTable();hideForm();
   msg.className='save-msg ok';msg.textContent='✓ 儲存成功';
@@ -652,18 +614,18 @@ async function delTrip(id){
   loadTripsTable();
 }
 
-// ===== ALL REGS =====
 async function loadAllRegs(){
   const tbody=document.getElementById('regs-tbody');
-  tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
+  tbody.innerHTML='<tr><td class="loading-td" colspan="10">// 載入中...</td></tr>';
   const {data:regs}=await sb.from('registrations').select('*,trips(name)').order('created_at',{ascending:false});
-  if(!regs||!regs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無報名紀錄。</td></tr>';return;}
+  if(!regs||!regs.length){tbody.innerHTML='<tr><td class="empty-td" colspan="10">尚無報名紀錄。</td></tr>';return;}
   tbody.innerHTML=regs.map(r=>`<tr>
     <td><strong>${r.trips?.name||'—'}</strong></td>
     <td>${r.name||'—'}</td>
     <td>${r.gender||'—'}</td>
     <td>${r.phone||'—'}</td>
     <td>${r.email||'—'}</td>
+    <td>${r.line_id||'—'}</td>
     <td>${r.country||'—'}</td>
     <td>${r.emergency||'—'} ${r.emergency_phone?'('+r.emergency_phone+')':''}</td>
     <td>${r.note||'—'}</td>
@@ -671,21 +633,20 @@ async function loadAllRegs(){
   </tr>`).join('');
 }
 
-// ===== EXPORT =====
 async function exportExcel(){
   const {data:regs}=await sb.from('registrations').select('*').eq('trip_id',currentTripId);
   const {data:trip}=await sb.from('trips').select('name').eq('id',currentTripId).single();
   if(!regs||!regs.length){alert('此行程尚無報名資料。');return;}
-  const headers=['姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
-  const rows=regs.map(r=>[r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
+  const headers=['姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','Line ID','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
+  const rows=regs.map(r=>[r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.line_id||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
   downloadCSV(`${trip?.name||'行程'}_報名名單`,headers,rows);
 }
 
 async function exportAllExcel(){
   const {data:regs}=await sb.from('registrations').select('*,trips(name)').order('created_at',{ascending:false});
   if(!regs||!regs.length){alert('尚無報名資料。');return;}
-  const headers=['行程名稱','姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
-  const rows=regs.map(r=>[r.trips?.name||'',r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
+  const headers=['行程名稱','姓名','性別','出生日期','國家','身分證/護照號碼','電話','Email','Line ID','地址','緊急聯絡人','緊急聯絡電話','備註','報名時間'];
+  const rows=regs.map(r=>[r.trips?.name||'',r.name||'',r.gender||'',r.birthday||'',r.country||'',r.id_number||'',r.phone||'',r.email||'',r.line_id||'',r.address||'',r.emergency||'',r.emergency_phone||'',r.note||'',r.created_at?new Date(r.created_at).toLocaleString('zh-TW'):'']);
   downloadCSV('X-Bound_全部報名名單',headers,rows);
 }
 
@@ -698,25 +659,18 @@ function downloadCSV(filename,headers,rows){
   a.href=url;a.download=filename+'.csv';a.click();URL.revokeObjectURL(url);
 }
 
-document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
-
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
-  tbody.innerHTML='<tr><td class="loading-td" colspan="14">// 載入中...</td></tr>';
-
-  // 用 RPC function 讀取所有已註冊用戶（包含未填資料的）
+  tbody.innerHTML='<tr><td class="loading-td" colspan="15">// 載入中...</td></tr>';
   const {data:members, error} = await sb.rpc('get_all_users');
-
   if (error) {
-    tbody.innerHTML=`<tr><td class="empty-td" colspan="14">讀取失敗：${error.message}</td></tr>`;
+    tbody.innerHTML=`<tr><td class="empty-td" colspan="15">讀取失敗：${error.message}</td></tr>`;
     return;
   }
-
   if (!members || !members.length) {
-    tbody.innerHTML='<tr><td class="empty-td" colspan="14">尚無會員資料。</td></tr>';
+    tbody.innerHTML='<tr><td class="empty-td" colspan="15">尚無會員資料。</td></tr>';
     return;
   }
-
   cachedMembers = members;
   tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
@@ -727,6 +681,7 @@ async function loadMembers() {
     <td>${p.country||'—'}</td>
     <td>${p.id_number||'—'}</td>
     <td style="white-space:nowrap">${p.phone||'—'}</td>
+    <td>${p.line_id||'—'}</td>
     <td>${p.address||'—'}</td>
     <td>${p.emergency||'—'}</td>
     <td style="white-space:nowrap">${p.emergency_phone||'—'}</td>
@@ -747,6 +702,7 @@ function openEditMember(userId) {
   document.getElementById('em-country').value         = p.country||'';
   document.getElementById('em-id-number').value       = p.id_number||'';
   document.getElementById('em-phone').value           = p.phone||'';
+  document.getElementById('em-line').value            = p.line_id||'';
   document.getElementById('em-address').value         = p.address||'';
   document.getElementById('em-emergency').value       = p.emergency||'';
   document.getElementById('em-emergency-phone').value = p.emergency_phone||'';
@@ -771,6 +727,7 @@ async function saveEditMember() {
     country:        document.getElementById('em-country').value.trim(),
     id_number:      document.getElementById('em-id-number').value.trim(),
     phone:          document.getElementById('em-phone').value.trim(),
+    line_id:        document.getElementById('em-line').value.trim(),
     address:        document.getElementById('em-address').value.trim(),
     emergency:      document.getElementById('em-emergency').value.trim(),
     emergency_phone:document.getElementById('em-emergency-phone').value.trim(),
@@ -787,9 +744,6 @@ document.addEventListener('click', function(e){
   if(e.target && e.target.id==='editRegModal') closeEditModal();
 });
 
-// ===== 管理員管理 =====
-
-// 載入管理員列表
 async function loadAdmins() {
   const tbody = document.getElementById('admins-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="4">// 載入中...</td></tr>';
@@ -806,7 +760,6 @@ async function loadAdmins() {
   </tr>`).join('');
 }
 
-// 新增管理員
 async function addAdmin() {
   const email = document.getElementById('new-admin-email').value.trim().toLowerCase();
   const msg = document.getElementById('admin-msg');
@@ -819,7 +772,6 @@ async function addAdmin() {
   loadAdmins();
 }
 
-// 移除管理員
 async function removeAdmin(id, email) {
   if (!confirm(`確定要移除管理員 ${email} 嗎？`)) return;
   await sb.from('admins').delete().eq('id', id);
