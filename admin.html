@@ -86,7 +86,27 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 .modal-title{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:1.5rem}
 .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:768px){.form-row,.edit-grid{grid-template-columns:1fr}.admin-main{padding:0 1rem}}
+@media(max-width:768px){
+  /* 表單欄位手機版單欄 */
+  .form-row,.edit-grid{grid-template-columns:1fr}
+  /* 主要內容區 padding 縮小 */
+  .admin-main{padding:0 1rem}
+  /* header 手機版 */
+  .admin-header{padding:1rem}
+  .admin-logo small{display:none}
+  /* tabs 手機版可滾動 */
+  .tabs{overflow-x:auto;white-space:nowrap;flex-wrap:nowrap}
+  .tab{padding:0.6rem 1rem;font-size:0.72rem}
+  /* 表格手機版可滾動 */
+  .card{overflow-x:auto}
+  /* modal 手機版全寬 */
+  .modal-box{max-width:100%;padding:1.2rem}
+  /* 按鈕區 */
+  .btn-add{width:100%;justify-content:center;margin-bottom:1rem}
+  .btn-export{margin-left:0}
+  /* 行程表單 card body */
+  .card-body{padding:1.2rem}
+}
 </style>
 </head>
 <body>
