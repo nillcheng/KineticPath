@@ -331,8 +331,9 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
       </div>
       <div class="form-row2">
         <div class="f-group"><label>電子郵件</label><input class="f-ctrl" id="pf-email" type="email"></div>
-        <div class="f-group"><label>地址</label><input class="f-ctrl" id="pf-address" type="text"></div>
+        <div class="f-group"><label>Line ID</label><input class="f-ctrl" id="pf-line" type="text" placeholder="Line ID (選填)"></div>
       </div>
+      <div class="f-group"><label>地址</label><input class="f-ctrl" id="pf-address" type="text"></div>
     </div>
     <div class="profile-card">
       <div class="profile-section-title">緊急聯絡資訊</div>
@@ -668,6 +669,7 @@ async function loadProfile() {
   document.getElementById('pf-id').value            = data.id_number||'';
   document.getElementById('pf-phone').value         = data.phone||'';
   document.getElementById('pf-email').value         = data.email||currentUser.email||'';
+  document.getElementById('pf-line').value          = data.line_id||'';
   document.getElementById('pf-address').value       = data.address||'';
   document.getElementById('pf-emergency').value     = data.emergency||'';
   document.getElementById('pf-emergency-phone').value = data.emergency_phone||'';
@@ -691,6 +693,7 @@ async function saveProfile() {
     id_number:      document.getElementById('pf-id').value.trim(),
     phone:          document.getElementById('pf-phone').value.trim(),
     email:          document.getElementById('pf-email').value.trim(),
+    line_id:        document.getElementById('pf-line').value.trim(),
     address:        document.getElementById('pf-address').value.trim(),
     emergency:      document.getElementById('pf-emergency').value.trim(),
     emergency_phone:document.getElementById('pf-emergency-phone').value.trim(),
