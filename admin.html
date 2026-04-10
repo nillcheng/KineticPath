@@ -6,14 +6,14 @@
 <title>X-Bound | 後台管理</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--border:rgba(255,255,255,0.08);--text:#e8e8e8;--dim:#888;--muted:#444;--accent:#c8a96e;--white:#fff;--danger:#c05050;--success:#5a9a52}
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#181818;--border:rgba(255,255,255,0.08);--text:#ffffff;--dim:#ffffff;--muted:#aaaaaa;--accent:#c8a96e;--white:#fff;--danger:#c05050;--success:#5a9a52}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text)}
 #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(to bottom,rgba(10,10,10,0.96),rgba(10,10,10,0.99)),url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=60') center/cover}
 .login-box{width:380px;text-align:center;animation:fadeUp 0.5s ease both}
 .login-logo{font-family:'Noto Serif TC',serif;font-size:2rem;font-weight:900;color:var(--white);letter-spacing:0.15em;margin-bottom:0.3rem}
 .login-logo em{color:var(--accent);font-style:normal}
-.login-sub{color:var(--muted);font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:2.5rem}
+.login-sub{color:#aaa;font-size:0.75rem;letter-spacing:0.3em;text-transform:uppercase;margin-bottom:2.5rem}
 .login-input{width:100%;padding:1rem 1.2rem;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.95rem;margin-bottom:0.8rem;outline:none;text-align:center;letter-spacing:0.15em;transition:border-color 0.3s}
 .login-input:focus{border-color:var(--accent)}
 .login-btn{width:100%;padding:1rem;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.8rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;transition:background 0.3s}
@@ -31,7 +31,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .btn-logout:hover{border-color:var(--danger);color:var(--danger)}
 .admin-main{max-width:1200px;margin:2.5rem auto;padding:0 2.5rem}
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:2rem}
-.tab{padding:0.8rem 2rem;cursor:pointer;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;transition:all 0.3s}
+.tab{padding:0.8rem 2rem;cursor:pointer;font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:#ffffff;border-bottom:1px solid transparent;margin-bottom:-1px;transition:all 0.3s}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab:hover{color:var(--text)}
 .tab-panel{display:none}.tab-panel.active{display:block}
@@ -41,7 +41,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text
 .card-body{padding:2rem}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .form-group{margin-bottom:1rem}
-.form-group label{display:block;font-size:0.7rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem}
+.form-group label{display:block;font-size:0.7rem;color:#ffffff;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:0.5rem}
 .req{color:var(--accent)}
 .form-ctrl{width:100%;padding:0.75rem 1rem;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:0.88rem;outline:none;transition:border-color 0.3s}
 .form-ctrl:focus{border-color:var(--accent)}
@@ -60,7 +60,7 @@ textarea.form-ctrl{resize:vertical;min-height:80px}
 .btn-back{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.2rem;background:none;border:1px solid var(--border);color:var(--dim);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s;margin-bottom:1.5rem}
 .btn-back:hover{border-color:var(--accent);color:var(--accent)}
 table{width:100%;border-collapse:collapse}
-thead th{padding:0.9rem 1.2rem;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);background:var(--bg3)}
+thead th{padding:0.9rem 1.2rem;text-align:left;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#ffffff;border-bottom:1px solid var(--border);background:var(--bg3)}
 tbody td{padding:1rem 1.2rem;border-bottom:1px solid var(--border);font-size:0.88rem;vertical-align:middle}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(255,255,255,0.02)}
