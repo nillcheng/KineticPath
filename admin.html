@@ -147,7 +147,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
             </div>
             <div class="form-row">
               <div class="form-group"><label>天數</label><input class="form-ctrl" id="f-days" type="number" min="1" placeholder="幾天"></div>
-              <div class="form-group"><label>費用 NT$（選填）</label><input class="form-ctrl" id="f-price" type="number" min="0" placeholder="每人費用"></div>
+              <div class="form-group"><label>費用（選填）</label><input class="form-ctrl" id="f-price" type="text" placeholder="例：免費、均分、NT$2500"></div>
             </div>
             <div class="form-row">
               <div class="form-group"><label>名額上限</label><input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數"></div>
@@ -305,7 +305,8 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="form-group"><label>性別</label>
         <select class="form-ctrl" id="er-gender">
           <option value="">請選擇</option>
-          <option value="男">男</option><option value="女">女</option><option value="其他">其他</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
         </select>
       </div>
       <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="er-birthday" type="date"></div>
@@ -313,6 +314,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="er-id" type="text"></div>
       <div class="form-group"><label>電話</label><input class="form-ctrl" id="er-phone" type="tel"></div>
       <div class="form-group"><label>Email</label><input class="form-ctrl" id="er-email" type="email"></div>
+      <div class="form-group"><label>Line ID</label><input class="form-ctrl" id="er-line" type="text"></div>
       <div class="form-group"><label>地址</label><input class="form-ctrl" id="er-address" type="text"></div>
       <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="er-emergency" type="text"></div>
       <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="er-emergency-phone" type="tel"></div>
@@ -442,7 +444,7 @@ function renderAdminTrips(filter) {
 
   tbody.innerHTML = trips.map(t=>{
     const count = regCounts.filter(r=>r.trip_id===t.id).length;
-    const price = t.price?`NT$ ${Number(t.price).toLocaleString()}`:'洽詢';
+    const price = t.price||'洽詢';
     const isExpired = t.date && t.date < today;
     return `<tr style="${isExpired?'opacity:0.6':''}">
       <td><strong>${t.name}</strong>${isExpired?' <span style="font-size:0.68rem;color:var(--muted);letter-spacing:0.1em">已結束</span>':''}</td>
@@ -522,6 +524,7 @@ function openEditReg(regId){
   document.getElementById('er-id').value=r.id_number||'';
   document.getElementById('er-phone').value=r.phone||'';
   document.getElementById('er-email').value=r.email||'';
+  document.getElementById('er-line').value=r.line_id||'';
   document.getElementById('er-address').value=r.address||'';
   document.getElementById('er-emergency').value=r.emergency||'';
   document.getElementById('er-emergency-phone').value=r.emergency_phone||'';
@@ -544,6 +547,7 @@ async function saveEditReg(){
     id_number:document.getElementById('er-id').value.trim(),
     phone:document.getElementById('er-phone').value.trim(),
     email:document.getElementById('er-email').value.trim(),
+    line_id:document.getElementById('er-line').value.trim(),
     address:document.getElementById('er-address').value.trim(),
     emergency:document.getElementById('er-emergency').value.trim(),
     emergency_phone:document.getElementById('er-emergency-phone').value.trim(),
@@ -603,7 +607,7 @@ async function saveTrip(){
     name, area:document.getElementById('f-area').value.trim(), date,
     date_end:document.getElementById('f-date-end').value||null,
     days:document.getElementById('f-days').value?Number(document.getElementById('f-days').value):null,
-    price:document.getElementById('f-price').value?Number(document.getElementById('f-price').value):null,
+    price:document.getElementById('f-price').value.trim()||null,
     slots:document.getElementById('f-slots').value?Number(document.getElementById('f-slots').value):null,
     difficulty:document.getElementById('f-diff').value,
     meeting_point:document.getElementById('f-meet').value.trim(),
