@@ -180,9 +180,15 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
   .modal-grid{grid-template-columns:1fr 1fr}
   .modal-img-wrap{height:200px}
 
-  /* 表單 */
+  /* 選單文字確保置中 */
+  .mobile-menu{align-items:center}
+  .mobile-menu a{text-align:center}
+
+  /* 資料維護表單手機版單欄 */
   .f-row2,.form-row2{grid-template-columns:1fr}
-  .modal-overlay{padding:0.5rem}
+
+  /* date input 手機版不讓它跑版 */
+  input[type="date"].f-ctrl{width:100%;font-size:0.85rem}
 
   /* 內頁 */
   .inner-page{padding:1.5rem 1rem}
