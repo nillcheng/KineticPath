@@ -73,8 +73,8 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .empty-state{grid-column:1/-1;text-align:center;padding:6rem 2rem;color:var(--white);font-family:'Share Tech Mono',monospace;font-size:0.85rem;letter-spacing:0.1em}
 .empty-state .icon{font-size:2rem;margin-bottom:1rem;opacity:0.3}
 /* 已結束行程樣式 */
-.expired-card{opacity:0.55;filter:grayscale(0.4)}
-.expired-banner{position:absolute;top:0;left:0;right:0;background:rgba(46,52,64,0.85);color:var(--white);font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-align:center;padding:0.4rem;z-index:3}
+.expired-card{opacity:0.6;filter:grayscale(0.5)}
+.expired-banner{position:absolute;top:0;left:0;right:0;background:rgba(224,88,120,0.85);color:#fff;font-family:'Share Tech Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-align:center;padding:0.5rem;z-index:3}
 .inner-page{max-width:900px;margin:0 auto;padding:3rem}
 .page-eyebrow{font-family:'Share Tech Mono',monospace;font-size:0.7rem;letter-spacing:0.3em;color:var(--neon1);margin-bottom:0.8rem;display:flex;align-items:center;gap:0.8rem}
 .page-eyebrow::before{content:'//';opacity:0.5}
@@ -748,8 +748,10 @@ async function openModal(id) {
   if (!t) return;
   const dL={easy:'輕鬆',medium:'中級',hard:'進階'};
   const img=t.image_url?`<div class="modal-img-wrap"><img src="${t.image_url}" alt="${t.name}"></div>`:'<div class="modal-img-placeholder">▲</div>';
-  const price=t.price?`NT$ ${Number(t.price).toLocaleString()}`:'價格洽詢';
-  const dateStr=t.date_end?`${t.date} – ${t.date_end}`:(t.date||'待定');
+  // 費用顯示（支援文字或數字）
+  const price=t.price?t.price:'價格洽詢';
+  // 出發日期三行格式
+  const dateStr=t.date_end?`${t.date}<br>–<br>${t.date_end}`:(t.date||'待定');
 
   // 判斷是否已過期
   const today = new Date().toISOString().split('T')[0];
@@ -786,7 +788,6 @@ async function openModal(id) {
               <option value="">請選擇</option>
               <option value="男" ${p.gender==='男'?'selected':''}>男</option>
               <option value="女" ${p.gender==='女'?'selected':''}>女</option>
-              <option value="其他" ${p.gender==='其他'?'selected':''}>其他</option>
             </select>
           </div>
         </div>
@@ -800,7 +801,11 @@ async function openModal(id) {
         </div>
         <div class="f-row2">
           <div class="f-group"><label>Email *</label><input class="f-ctrl" id="reg-email" type="email" value="${p.email||currentUser.email||''}"></div>
+          <div class="f-group"><label>Line ID</label><input class="f-ctrl" id="reg-line" type="text" value="${p.line_id||''}"></div>
+        </div>
+        <div class="f-row2">
           <div class="f-group"><label>地址</label><input class="f-ctrl" id="reg-address" type="text" value="${p.address||''}"></div>
+          <div class="f-group"></div>
         </div>
         <div class="f-row2">
           <div class="f-group"><label>緊急聯絡人 *</label><input class="f-ctrl" id="reg-emergency" type="text" value="${p.emergency||''}"></div>
@@ -847,6 +852,7 @@ async function submitReg(tripId) {
   const idNumber=document.getElementById('reg-id').value.trim();
   const phone=document.getElementById('reg-phone').value.trim();
   const email=document.getElementById('reg-email').value.trim();
+  const lineId=document.getElementById('reg-line').value.trim();
   const address=document.getElementById('reg-address').value.trim();
   const emergency=document.getElementById('reg-emergency').value.trim();
   const emergencyPhone=document.getElementById('reg-emergency-phone').value.trim();
@@ -861,7 +867,7 @@ async function submitReg(tripId) {
   const {error} = await sb.from('registrations').insert({
     trip_id:tripId, user_id:currentUser.id,
     name, gender, birthday:birthday||null, country, id_number:idNumber,
-    phone, email, address, emergency, emergency_phone:emergencyPhone, note
+    phone, email, line_id:lineId, address, emergency, emergency_phone:emergencyPhone, note
   });
 
   if(error){msg.className='reg-msg err';msg.textContent='// 報名失敗，請稍後再試';return;}
