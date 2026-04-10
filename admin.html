@@ -390,6 +390,7 @@ function switchTab(name, el) {
 
 // ===== TRIPS =====
 let cachedAdminTrips = {}; // 儲存後台行程資料供篩選使用
+let cachedMembers = []; // 儲存會員資料供編輯使用
 
 // 載入行程列表（未結束的在前，已結束的在後）
 async function loadTripsTable() {
@@ -530,7 +531,7 @@ function openEditReg(regId){
 }
 
 function closeEditModal(){document.getElementById('editRegModal').classList.remove('open');}
-document.getElementById('editRegModal').addEventListener('click',function(e){if(e.target===this)closeEditModal();});
+// editRegModal 點擊關閉已整合到 document click 事件
 
 async function saveEditReg(){
   const id=document.getElementById('edit-reg-id').value;
@@ -676,9 +677,6 @@ function downloadCSV(filename,headers,rows){
 
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-// 載入所有會員（從 members_view 讀取）
-let cachedMembers = [];
-
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="14">// 載入中...</td></tr>';
@@ -761,7 +759,10 @@ async function saveEditMember() {
   setTimeout(()=>{ closeEditMember(); loadMembers(); }, 800);
 }
 
-document.getElementById('editMemberModal').addEventListener('click', function(e){ if(e.target===this) closeEditMember(); });
+document.addEventListener('click', function(e){
+  if(e.target && e.target.id==='editMemberModal') closeEditMember();
+  if(e.target && e.target.id==='editRegModal') closeEditModal();
+});
 
 // ===== 管理員管理 =====
 
