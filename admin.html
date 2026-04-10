@@ -629,14 +629,23 @@ function downloadCSV(filename,headers,rows){
 
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-// 載入所有會員（從 members_view 讀取，包含所有註冊用戶）
+// 載入所有會員（從 members_view 讀取）
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="10">// 載入中...</td></tr>';
 
-  const {data:members, error} = await sb.from('members_view').select('*');
+  const {data:members, error} = await sb
+    .from('members_view')
+    .select('*')
+    .order('created_at', {ascending: false});
 
-  if (error || !members || !members.length) {
+  if (error) {
+    console.error('loadMembers error:', error);
+    tbody.innerHTML=`<tr><td class="empty-td" colspan="10">讀取失敗：${error.message}</td></tr>`;
+    return;
+  }
+
+  if (!members || !members.length) {
     tbody.innerHTML='<tr><td class="empty-td" colspan="10">尚無會員資料。</td></tr>';
     return;
   }
@@ -651,7 +660,7 @@ async function loadMembers() {
     <td>${p.id_number||'—'}</td>
     <td>${p.emergency||'—'}</td>
     <td>${p.emergency_phone||'—'}</td>
-    <td style="font-size:0.75rem;color:var(--muted)">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td style="font-size:0.75rem">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
   </tr>`).join('');
 }
 
