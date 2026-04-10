@@ -629,20 +629,19 @@ function downloadCSV(filename,headers,rows){
 
 document.getElementById('pwd').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
 
-// 載入會員列表（從 auth.users + profiles 合併）
+// 載入所有會員（從 members_view 讀取，包含所有註冊用戶）
 async function loadMembers() {
   const tbody = document.getElementById('members-tbody');
   tbody.innerHTML='<tr><td class="loading-td" colspan="10">// 載入中...</td></tr>';
 
-  // 從 profiles 取得有填資料的會員
-  const {data:profiles} = await sb.from('profiles').select('*').order('updated_at',{ascending:false});
+  const {data:members, error} = await sb.from('members_view').select('*');
 
-  if (!profiles||!profiles.length) {
+  if (error || !members || !members.length) {
     tbody.innerHTML='<tr><td class="empty-td" colspan="10">尚無會員資料。</td></tr>';
     return;
   }
 
-  tbody.innerHTML = profiles.map((p,i)=>`<tr>
+  tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
     <td style="font-size:0.8rem">${p.email||'—'}</td>
     <td><strong>${p.name||'—'}</strong></td>
@@ -652,7 +651,7 @@ async function loadMembers() {
     <td>${p.id_number||'—'}</td>
     <td>${p.emergency||'—'}</td>
     <td>${p.emergency_phone||'—'}</td>
-    <td style="font-size:0.75rem;color:var(--muted)">${p.updated_at?new Date(p.updated_at).toLocaleDateString('zh-TW'):'—'}</td>
+    <td style="font-size:0.75rem;color:var(--muted)">${p.created_at?new Date(p.created_at).toLocaleDateString('zh-TW'):'—'}</td>
   </tr>`).join('');
 }
 
