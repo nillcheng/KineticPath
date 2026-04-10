@@ -856,9 +856,9 @@ async function openModal(id) {
     }
   }
 
-  // ✅ 修改：加入完整行程資訊 + 詳細行程連結
+  // ✅ 修改：加入完整行程資訊 + 詳細行程連結移到資訊區
   const fullDesc = t.description || '暫無詳細說明';
-  const excelLink = t.excel_url ? `<a href="${t.excel_url}" target="_blank" class="modal-link">→ 查看詳細行程</a>` : '';
+  const excelLink = t.excel_url ? `<div class="modal-item" style="grid-column:1/-1"><label>詳細行程</label><strong><a href="${t.excel_url}" target="_blank" style="color:var(--neon3);text-decoration:none">→ 查看完整行程表</a></strong></div>` : '';
 
   document.getElementById('modal-content').innerHTML=`
     ${img}
@@ -874,8 +874,9 @@ async function openModal(id) {
           <div class="modal-item"><label>名額</label><strong>${t.slots?t.slots+' 人':'-'}</strong></div>
           <div class="modal-item"><label>費用</label><strong style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent">${price}</strong></div>
           <div class="modal-item" style="grid-column:1/-1"><label>集合地點</label><strong>${t.meeting_point||'-'}</strong></div>
+          ${excelLink}
         </div>
-        <div class="modal-desc">${fullDesc}${excelLink}</div>
+        <div class="modal-desc">${fullDesc}</div>
       </div>
       <div class="modal-right">
         <div class="reg-block" style="border-top:none;padding-top:0">${regContent}</div>
