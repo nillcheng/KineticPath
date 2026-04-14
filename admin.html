@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -129,183 +130,187 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="tab" id="tab-admins-btn" style="display:none" onclick="switchTab('admins',this)">管理員設定</div>
     </div>
 
-    <!-- 行程管理 -->
-    <div class="tab-panel active" id="tab-trips">
-      <div id="trips-list-view">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
-          <button class="btn-add" style="margin-bottom:0" onclick="showForm()">＋ 新增行程</button>
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-            <button class="admin-filter-btn active" onclick="filterAdminTrips('all',this)">全部</button>
-            <button class="admin-filter-btn" onclick="filterAdminTrips('easy',this)">輕鬆</button>
-            <button class="admin-filter-btn" onclick="filterAdminTrips('medium',this)">中級</button>
-            <button class="admin-filter-btn" onclick="filterAdminTrips('hard',this)">進階</button>
-            <button class="admin-filter-btn" onclick="filterAdminTrips('expired',this)">已結束</button>
-          </div>
-        </div>
-
-        <div class="card" id="form-card" style="display:none;">
-          <div class="card-header"><span class="card-title" id="form-title">新增行程</span></div>
-          <div class="card-body">
-            <input type="hidden" id="edit-id">
-            <div class="form-row">
-              <div class="form-group"><label>行程名稱 <span class="req">*</span></label><input class="form-ctrl" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜"></div>
-              <div class="form-group"><label>地區</label><input class="form-ctrl" id="f-area" type="text" placeholder="例：南投、花蓮"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>出發日期 <span class="req">*</span></label><input class="form-ctrl" id="f-date" type="date"></div>
-              <div class="form-group"><label>結束日期</label><input class="form-ctrl" id="f-date-end" type="date"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>天數</label><input class="form-ctrl" id="f-days" type="number" min="1" placeholder="幾天"></div>
-              <div class="form-group"><label>費用（選填）</label><input class="form-ctrl" id="f-price" type="text" placeholder="例：免費、均分、NT$2500"></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>名額上限</label><input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數"></div>
-              <div class="form-group"><label>難度</label>
-                <select class="form-ctrl" id="f-diff">
-                  <option value="easy">輕鬆</option>
-                  <option value="medium" selected>中級</option>
-                  <option value="hard">進階</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group"><label>集合地點</label><input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門"></div>
-              <div class="form-group"><label>封面圖片網址（選填）</label><input class="form-ctrl" id="f-img" type="url" placeholder="https://..."></div>
-            </div>
-            <div class="form-group"><label>詳細行程（選填）</label><input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址"></div>
-            <div class="form-group"><label>行程介紹</label><textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea></div>
-            <div class="form-actions">
-              <button class="btn-cancel-form" onclick="hideForm()">取消</button>
-              <button class="btn-save" onclick="saveTrip()">儲存行程</button>
-              <span class="save-msg" id="save-msg"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
-          <table>
-            <thead><tr>
-              <th>行程名稱</th><th>地區</th><th>出發日期</th><th>結束日期</th><th>難度</th><th>費用</th><th>名額</th><th>報名人數</th><th>操作</th>
-            </tr></thead>
-            <tbody id="trips-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- 行程報名詳情 -->
-      <div id="trip-detail-view" style="display:none">
-        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center">
-          <button class="btn-back" style="margin-bottom:0" onclick="backToTrips()">← 返回行程列表</button>
-          <button class="btn-export" style="margin-bottom:0;margin-left:0" onclick="exportExcel()">⬇ 匯出 Excel</button>
-          <button onclick="deleteSelected()" style="padding:0.6rem 1.2rem;background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s" onmouseover="this.style.background='var(--danger)';this.style.color='var(--bg)'" onmouseout="this.style.background='none';this.style.color='var(--danger)'">✕ 刪除勾選</button>
-        </div>
-        <div class="detail-title" id="detail-trip-name"></div>
-        <div class="detail-sub" id="detail-trip-info"></div>
-        <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
-          <table>
-            <thead><tr>
-              <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
-              <th>#</th><th>姓名</th><th>性別</th><th>出生日期</th><th>國家</th><th>身分證/護照</th><th>電話</th><th>Email</th><th>Line ID</th><th>地址</th><th>緊急聯絡人</th><th>緊急電話</th><th>備註</th><th>報名時間</th><th>操作</th>
-            </tr></thead>
-            <tbody id="detail-tbody"></tbody>
-          </table>
-        </div>
+```
+<!-- 行程管理 -->
+<div class="tab-panel active" id="tab-trips">
+  <div id="trips-list-view">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+      <button class="btn-add" style="margin-bottom:0" onclick="showForm()">＋ 新增行程</button>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+        <button class="admin-filter-btn active" onclick="filterAdminTrips('all',this)">全部</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('easy',this)">輕鬆</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('medium',this)">中級</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('hard',this)">進階</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('expired',this)">已結束</button>
       </div>
     </div>
 
-    <!-- 所有報名紀錄 -->
-    <div class="tab-panel" id="tab-regs">
-      <button class="btn-export" onclick="exportAllExcel()" style="margin-bottom:1.5rem;margin-left:0">⬇ 匯出全部 Excel</button>
-      <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
-        <table>
-          <thead><tr>
-            <th>行程</th><th>姓名</th><th>性別</th><th>電話</th><th>Email</th><th>Line ID</th><th>國家</th><th>緊急聯絡人</th><th>備註</th><th>報名時間</th>
-          </tr></thead>
-          <tbody id="regs-tbody"><tr><td class="loading-td" colspan="10">// 載入中...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 會員管理（超級管理員可見） -->
-    <div class="tab-panel" id="tab-members">
-      <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
-        <table>
-          <thead><tr>
-            <th>#</th>
-            <th>Email</th>
-            <th>姓名</th>
-            <th>性別</th>
-            <th>出生日期</th>
-            <th>國家</th>
-            <th>身分證/護照</th>
-            <th>電話</th>
-            <th>Line ID</th>
-            <th>地址</th>
-            <th>緊急聯絡人</th>
-            <th>緊急電話</th>
-            <th>備註</th>
-            <th>註冊時間</th>
-            <th>操作</th>
-          </tr></thead>
-          <tbody id="members-tbody"><tr><td class="loading-td" colspan="15">// 載入中...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 編輯會員 Modal -->
-    <div class="modal-overlay" id="editMemberModal">
-      <div class="modal-box" style="max-width:600px">
-        <button class="modal-close" onclick="closeEditMember()">✕</button>
-        <div class="modal-title">編輯會員資料</div>
-        <input type="hidden" id="em-id">
-        <div class="edit-grid">
-          <div class="form-group"><label>姓名</label><input class="form-ctrl" id="em-name" type="text"></div>
-          <div class="form-group"><label>性別</label>
-            <select class="form-ctrl" id="em-gender">
-              <option value="">請選擇</option>
-              <option value="男">男</option>
-              <option value="女">女</option>
+    <div class="card" id="form-card" style="display:none;">
+      <div class="card-header"><span class="card-title" id="form-title">新增行程</span></div>
+      <div class="card-body">
+        <input type="hidden" id="edit-id">
+        <div class="form-row">
+          <div class="form-group"><label>行程名稱 <span class="req">*</span></label><input class="form-ctrl" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜"></div>
+          <div class="form-group"><label>地區</label><input class="form-ctrl" id="f-area" type="text" placeholder="例：南投、花蓮"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>出發日期 <span class="req">*</span></label><input class="form-ctrl" id="f-date" type="date"></div>
+          <div class="form-group"><label>結束日期</label><input class="form-ctrl" id="f-date-end" type="date"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>天數</label><input class="form-ctrl" id="f-days" type="number" min="1" placeholder="幾天"></div>
+          <div class="form-group"><label>費用（選填）</label><input class="form-ctrl" id="f-price" type="text" placeholder="例：免費、均分、NT$2500"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>名額上限</label><input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數"></div>
+          <div class="form-group"><label>難度</label>
+            <select class="form-ctrl" id="f-diff">
+              <option value="easy">輕鬆</option>
+              <option value="medium" selected>中級</option>
+              <option value="hard">進階</option>
             </select>
           </div>
-          <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="em-birthday" type="date"></div>
-          <div class="form-group"><label>國家</label><input class="form-ctrl" id="em-country" type="text"></div>
-          <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="em-id-number" type="text"></div>
-          <div class="form-group"><label>電話</label><input class="form-ctrl" id="em-phone" type="tel"></div>
-          <div class="form-group"><label>Email（不可修改）</label><input class="form-ctrl" id="em-email" type="email" disabled style="opacity:0.5"></div>
-          <div class="form-group"><label>Line ID</label><input class="form-ctrl" id="em-line" type="text"></div>
-          <div class="form-group"><label>地址</label><input class="form-ctrl" id="em-address" type="text"></div>
-          <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="em-emergency" type="text"></div>
-          <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="em-emergency-phone" type="tel"></div>
         </div>
-        <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="em-note" rows="2" style="min-height:60px"></textarea></div>
-        <div style="display:flex;gap:1rem;margin-top:1rem">
-          <button class="btn-save" onclick="saveEditMember()" style="flex:1">儲存修改</button>
-          <button class="btn-cancel-form" onclick="closeEditMember()" style="flex:1">取消</button>
+        <div class="form-row">
+          <div class="form-group"><label>集合地點</label><input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門"></div>
+          <div class="form-group"><label>封面圖片網址（選填）</label><input class="form-ctrl" id="f-img" type="url" placeholder="https://..."></div>
         </div>
-        <div class="save-msg" id="edit-member-msg" style="margin-top:0.5rem;text-align:center"></div>
+        <div class="form-group"><label>詳細行程（選填）</label><input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址"></div>
+        <div class="form-group"><label>行程介紹</label><textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea></div>
+        <div class="form-actions">
+          <button class="btn-cancel-form" onclick="hideForm()">取消</button>
+          <button class="btn-save" onclick="saveTrip()">儲存行程</button>
+          <span class="save-msg" id="save-msg"></span>
+        </div>
       </div>
     </div>
 
-    <!-- 管理員設定（只有超級管理員可見） -->
-    <div class="tab-panel" id="tab-admins">
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;font-family:'Noto Sans TC',sans-serif;">只有超級管理員可以管理其他管理員帳號。</p>
-      <div style="margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-        <input class="form-ctrl" id="new-admin-email" type="email" placeholder="輸入 Email 新增管理員" style="max-width:350px">
-        <button class="btn-add" style="margin-bottom:0" onclick="addAdmin()">＋ 新增管理員</button>
-        <span class="save-msg" id="admin-msg"></span>
-      </div>
-      <div class="card" style="padding:0;overflow:hidden">
-        <table>
-          <thead><tr><th>Email</th><th>權限</th><th>新增時間</th><th>操作</th></tr></thead>
-          <tbody id="admins-tbody"><tr><td class="loading-td" colspan="4">// 載入中...</td></tr></tbody>
-        </table>
-      </div>
+    <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th>行程名稱</th><th>地區</th><th>出發日期</th><th>結束日期</th><th>難度</th><th>費用</th><th>名額</th><th>報名人數</th><th>操作</th>
+        </tr></thead>
+        <tbody id="trips-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 行程報名詳情 -->
+  <div id="trip-detail-view" style="display:none">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center">
+      <button class="btn-back" style="margin-bottom:0" onclick="backToTrips()">← 返回行程列表</button>
+      <button class="btn-export" style="margin-bottom:0;margin-left:0" onclick="exportExcel()">⬇ 匯出 Excel</button>
+      <button onclick="deleteSelected()" style="padding:0.6rem 1.2rem;background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.78rem;letter-spacing:0.1em;transition:all 0.3s" onmouseover="this.style.background='var(--danger)';this.style.color='var(--bg)'" onmouseout="this.style.background='none';this.style.color='var(--danger)'">✕ 刪除勾選</button>
+    </div>
+    <div class="detail-title" id="detail-trip-name"></div>
+    <div class="detail-sub" id="detail-trip-info"></div>
+    <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+      <table>
+        <thead><tr>
+          <th><input type="checkbox" id="check-all" onchange="toggleAllCheck(this)" style="cursor:pointer;width:16px;height:16px"></th>
+          <th>#</th><th>姓名</th><th>性別</th><th>出生日期</th><th>國家</th><th>身分證/護照</th><th>電話</th><th>Email</th><th>Line ID</th><th>地址</th><th>緊急聯絡人</th><th>緊急電話</th><th>備註</th><th>報名時間</th><th>操作</th>
+        </tr></thead>
+        <tbody id="detail-tbody"></tbody>
+      </table>
     </div>
   </div>
 </div>
 
+<!-- 所有報名紀錄 -->
+<div class="tab-panel" id="tab-regs">
+  <button class="btn-export" onclick="exportAllExcel()" style="margin-bottom:1.5rem;margin-left:0">⬇ 匯出全部 Excel</button>
+  <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th>行程</th><th>姓名</th><th>性別</th><th>電話</th><th>Email</th><th>Line ID</th><th>國家</th><th>緊急聯絡人</th><th>備註</th><th>報名時間</th>
+      </tr></thead>
+      <tbody id="regs-tbody"><tr><td class="loading-td" colspan="10">// 載入中...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 會員管理（超級管理員可見） -->
+<div class="tab-panel" id="tab-members">
+  <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th>#</th>
+        <th>Email</th>
+        <th>姓名</th>
+        <th>性別</th>
+        <th>出生日期</th>
+        <th>國家</th>
+        <th>身分證/護照</th>
+        <th>電話</th>
+        <th>Line ID</th>
+        <th>地址</th>
+        <th>緊急聯絡人</th>
+        <th>緊急電話</th>
+        <th>備註</th>
+        <th>註冊時間</th>
+        <th>操作</th>
+      </tr></thead>
+      <tbody id="members-tbody"><tr><td class="loading-td" colspan="15">// 載入中...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 編輯會員 Modal -->
+<div class="modal-overlay" id="editMemberModal">
+  <div class="modal-box" style="max-width:600px">
+    <button class="modal-close" onclick="closeEditMember()">✕</button>
+    <div class="modal-title">編輯會員資料</div>
+    <input type="hidden" id="em-id">
+    <div class="edit-grid">
+      <div class="form-group"><label>姓名</label><input class="form-ctrl" id="em-name" type="text"></div>
+      <div class="form-group"><label>性別</label>
+        <select class="form-ctrl" id="em-gender">
+          <option value="">請選擇</option>
+          <option value="男">男</option>
+          <option value="女">女</option>
+        </select>
+      </div>
+      <div class="form-group"><label>出生日期</label><input class="form-ctrl" id="em-birthday" type="date"></div>
+      <div class="form-group"><label>國家</label><input class="form-ctrl" id="em-country" type="text"></div>
+      <div class="form-group"><label>身分證/護照號碼</label><input class="form-ctrl" id="em-id-number" type="text"></div>
+      <div class="form-group"><label>電話</label><input class="form-ctrl" id="em-phone" type="tel"></div>
+      <div class="form-group"><label>Email（不可修改）</label><input class="form-ctrl" id="em-email" type="email" disabled style="opacity:0.5"></div>
+      <div class="form-group"><label>Line ID</label><input class="form-ctrl" id="em-line" type="text"></div>
+      <div class="form-group"><label>地址</label><input class="form-ctrl" id="em-address" type="text"></div>
+      <div class="form-group"><label>緊急聯絡人</label><input class="form-ctrl" id="em-emergency" type="text"></div>
+      <div class="form-group"><label>緊急聯絡電話</label><input class="form-ctrl" id="em-emergency-phone" type="tel"></div>
+    </div>
+    <div class="form-group"><label>備註</label><textarea class="form-ctrl" id="em-note" rows="2" style="min-height:60px"></textarea></div>
+    <div style="display:flex;gap:1rem;margin-top:1rem">
+      <button class="btn-save" onclick="saveEditMember()" style="flex:1">儲存修改</button>
+      <button class="btn-cancel-form" onclick="closeEditMember()" style="flex:1">取消</button>
+    </div>
+    <div class="save-msg" id="edit-member-msg" style="margin-top:0.5rem;text-align:center"></div>
+  </div>
+</div>
+
+<!-- 管理員設定（只有超級管理員可見） -->
+<div class="tab-panel" id="tab-admins">
+  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem;font-family:'Noto Sans TC',sans-serif;">只有超級管理員可以管理其他管理員帳號。</p>
+  <div style="margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <input class="form-ctrl" id="new-admin-email" type="email" placeholder="輸入 Email 新增管理員" style="max-width:350px">
+    <button class="btn-add" style="margin-bottom:0" onclick="addAdmin()">＋ 新增管理員</button>
+    <span class="save-msg" id="admin-msg"></span>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table>
+      <thead><tr><th>Email</th><th>權限</th><th>新增時間</th><th>操作</th></tr></thead>
+      <tbody id="admins-tbody"><tr><td class="loading-td" colspan="4">// 載入中...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
 <!-- 編輯報名 Modal -->
+
 <div class="modal-overlay" id="editRegModal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeEditModal()">✕</button>
@@ -340,6 +345,7 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const SURL = 'https://jlgbkakzcgrqrsnhlwgv.supabase.co';
 const SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsZ2JrYWt6Y2dycXJzbmhsd2d2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MDgyNjAsImV4cCI6MjA5MDA4NDI2MH0.49Y_0ZInQXJ4IeA3BdyEc7sIOske9IZrKHU2h_ypar4';
@@ -671,6 +677,8 @@ async function loadMembers() {
     tbody.innerHTML='<tr><td class="empty-td" colspan="15">尚無會員資料。</td></tr>';
     return;
   }
+  console.log('👥 會員資料:', members);
+  console.log('🔍 第一個會員的 line_id:', members[0]?.line_id);
   cachedMembers = members;
   tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
@@ -681,7 +689,7 @@ async function loadMembers() {
     <td>${p.country||'—'}</td>
     <td>${p.id_number||'—'}</td>
     <td style="white-space:nowrap">${p.phone||'—'}</td>
-    <td>${p.line_id||'—'}</td>
+    <td><strong style="color:var(--accent)">${p.line_id||'—'}</strong></td>
     <td>${p.address||'—'}</td>
     <td>${p.emergency||'—'}</td>
     <td style="white-space:nowrap">${p.emergency_phone||'—'}</td>
@@ -778,5 +786,6 @@ async function removeAdmin(id, email) {
   loadAdmins();
 }
 </script>
+
 </body>
 </html>
