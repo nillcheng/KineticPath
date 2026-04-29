@@ -970,18 +970,12 @@ async function exportBaiyueImage() {
   ctx.font = '24px Arial';
   ctx.fillText('已完成座數', 600, 340);
   
-  // 完成日期
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '20px Arial';
-  ctx.textAlign = 'left';
-  ctx.fillText('完登日期：' + new Date().toLocaleDateString('zh-TW'), 100, 400);
-  
   // 分隔線
   ctx.strokeStyle = 'rgba(255,255,255,0.1)';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(100, 430);
-  ctx.lineTo(1100, 430);
+  ctx.moveTo(100, 400);
+  ctx.lineTo(1100, 400);
   ctx.stroke();
   
   // 已完成的山列表（分三欄）
@@ -989,7 +983,7 @@ async function exportBaiyueImage() {
   ctx.fillStyle = '#ffffff';
   ctx.font = '18px Arial';
   
-  let y = 480;
+  let y = 450;
   let col = 0;
   const colWidth = 350;
   const startX = [100, 450, 800];
@@ -997,7 +991,7 @@ async function exportBaiyueImage() {
   completed.forEach((m, i) => {
     if (i > 0 && i % 30 === 0) {
       col++;
-      y = 480;
+      y = 450;
     }
     if (col < 3) {
       const x = startX[col];
