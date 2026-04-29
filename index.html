@@ -119,6 +119,8 @@ nav ul a:hover{color:var(--neon1)}nav ul a:hover::after{width:100%}
 .baiyue-date-input.filled{border-color:var(--neon3);background:rgba(90,154,82,0.1)}
 .baiyue-clear{padding:0.3rem 0.6rem;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:0.7rem;transition:all 0.3s;margin-left:0.5rem}
 .baiyue-clear:hover{border-color:var(--neon2);color:var(--neon2)}
+.btn-export-baiyue{padding:0.7rem 1.5rem;background:transparent;border:1px solid var(--neon1);color:var(--neon1);cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.15em;transition:all 0.3s}
+.btn-export-baiyue:hover{background:var(--neon1);color:var(--bg)}
 
 footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
 .footer-logo{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -302,6 +304,15 @@ footer{background:var(--bg);border-top:1px solid var(--border);padding:3rem;disp
     <div class="baiyue-progress">
       <div class="baiyue-count" id="baiyue-count">0 / 100</div>
       <div class="baiyue-label">已完成座數</div>
+    </div>
+
+    <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+      <button class="btn-export-baiyue" onclick="exportBaiyueExcel()">
+        ⬇ 匯出 Excel
+      </button>
+      <button class="btn-export-baiyue" onclick="exportBaiyueImage()">
+        📸 匯出成就圖
+      </button>
     </div>
 
     <div class="baiyue-table-wrap">
@@ -878,6 +889,146 @@ async function saveBaiyueDate(num, date) {
 // 清除百岳日期
 async function clearBaiyueDate(num) {
   saveBaiyueDate(num, '');
+}
+
+// 匯出百岳 Excel
+async function exportBaiyueExcel() {
+  if (!currentUser) return;
+  
+  const {data:profile} = await sb.from('profiles').select('baiyue_records').eq('id', currentUser.id).single();
+  const records = profile?.baiyue_records || {};
+  
+  // CSV 標題
+  const headers = ['編號', '山名', '分級', '高度(公尺)', '完成日期'];
+  
+  // 資料列
+  const rows = BAIYUE_DATA.map(m => [
+    m.num,
+    m.name,
+    m.level,
+    m.height,
+    records[m.num] || ''
+  ]);
+  
+  // 產生 CSV（UTF-8 BOM）
+  const BOM = '\uFEFF';
+  const csv = BOM + [headers, ...rows]
+    .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+  
+  // 下載
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `我的百岳紀錄_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  showToast('✓ Excel 已下載');
+}
+
+// 匯出百岳成就圖
+async function exportBaiyueImage() {
+  if (!currentUser) return;
+  
+  const {data:profile} = await sb.from('profiles').select('baiyue_records,name').eq('id', currentUser.id).single();
+  const records = profile?.baiyue_records || {};
+  const userName = profile?.name || '登山者';
+  const completedCount = Object.keys(records).length;
+  
+  // 建立 Canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 1600;
+  const ctx = canvas.getContext('2d');
+  
+  // 背景漸層
+  const gradient = ctx.createLinearGradient(0, 0, 0, 1600);
+  gradient.addColorStop(0, '#0b0e14');
+  gradient.addColorStop(1, '#151a22');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 1200, 1600);
+  
+  // 標題
+  ctx.fillStyle = '#f0a050';
+  ctx.font = 'bold 60px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('台灣百岳完登紀錄', 600, 100);
+  
+  // 使用者名稱
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '32px Arial';
+  ctx.fillText(userName, 600, 160);
+  
+  // 進度大字
+  ctx.fillStyle = '#f0a050';
+  ctx.font = 'bold 120px Arial';
+  ctx.fillText(`${completedCount} / 100`, 600, 300);
+  
+  ctx.fillStyle = '#8a95a8';
+  ctx.font = '24px Arial';
+  ctx.fillText('已完成座數', 600, 340);
+  
+  // 完成日期
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '20px Arial';
+  ctx.textAlign = 'left';
+  ctx.fillText('完登日期：' + new Date().toLocaleDateString('zh-TW'), 100, 400);
+  
+  // 分隔線
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(100, 430);
+  ctx.lineTo(1100, 430);
+  ctx.stroke();
+  
+  // 已完成的山列表（分三欄）
+  const completed = BAIYUE_DATA.filter(m => records[m.num]);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '18px Arial';
+  
+  let y = 480;
+  let col = 0;
+  const colWidth = 350;
+  const startX = [100, 450, 800];
+  
+  completed.forEach((m, i) => {
+    if (i > 0 && i % 30 === 0) {
+      col++;
+      y = 480;
+    }
+    if (col < 3) {
+      const x = startX[col];
+      ctx.fillStyle = '#5a9a52';
+      ctx.fillText('✓', x, y);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(`${m.num}. ${m.name}`, x + 30, y);
+      ctx.fillStyle = '#8a95a8';
+      ctx.font = '14px Arial';
+      ctx.fillText(`${records[m.num]}`, x + 30, y + 18);
+      ctx.font = '18px Arial';
+      y += 36;
+    }
+  });
+  
+  // 底部標記
+  ctx.fillStyle = '#8a95a8';
+  ctx.font = '16px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('X-Bound © 2026', 600, 1560);
+  
+  // 轉成圖片下載
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `我的百岳成就_${completedCount}座_${new Date().toISOString().split('T')[0]}.jpg`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✓ 成就圖已下載');
+  }, 'image/jpeg', 0.95);
 }
 
 // ===== TRIPS =====
