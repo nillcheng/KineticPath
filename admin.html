@@ -130,7 +130,6 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="tab" id="tab-admins-btn" style="display:none" onclick="switchTab('admins',this)">管理員設定</div>
     </div>
 
-```
 <!-- 行程管理 -->
 <div class="tab-panel active" id="tab-trips">
   <div id="trips-list-view">
@@ -138,9 +137,14 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
       <button class="btn-add" style="margin-bottom:0" onclick="showForm()">＋ 新增行程</button>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
         <button class="admin-filter-btn active" onclick="filterAdminTrips('all',this)">全部</button>
-        <button class="admin-filter-btn" onclick="filterAdminTrips('easy',this)">輕鬆</button>
-        <button class="admin-filter-btn" onclick="filterAdminTrips('medium',this)">中級</button>
-        <button class="admin-filter-btn" onclick="filterAdminTrips('hard',this)">進階</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('登山',this)">登山</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('露營',this)">露營</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('路跑',this)">路跑</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('滑雪',this)">滑雪</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('三鐵',this)">三鐵</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('越野跑',this)">越野跑</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('自行車',this)">自行車</button>
+        <button class="admin-filter-btn" onclick="filterAdminTrips('水上活動',this)">水上活動</button>
         <button class="admin-filter-btn" onclick="filterAdminTrips('expired',this)">已結束</button>
       </div>
     </div>
@@ -151,7 +155,29 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
         <input type="hidden" id="edit-id">
         <div class="form-row">
           <div class="form-group"><label>行程名稱 <span class="req">*</span></label><input class="form-ctrl" id="f-name" type="text" placeholder="例：玉山主峰三天兩夜"></div>
+          <div class="form-group"><label>活動類型 <span class="req">*</span></label>
+            <select class="form-ctrl" id="f-activity-type">
+              <option value="">請選擇</option>
+              <option value="登山">登山</option>
+              <option value="露營">露營</option>
+              <option value="路跑">路跑</option>
+              <option value="滑雪">滑雪</option>
+              <option value="三鐵">三鐵</option>
+              <option value="越野跑">越野跑</option>
+              <option value="自行車">自行車</option>
+              <option value="水上活動">水上活動</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
           <div class="form-group"><label>地區</label><input class="form-ctrl" id="f-area" type="text" placeholder="例：南投、花蓮"></div>
+          <div class="form-group"><label>難度</label>
+            <select class="form-ctrl" id="f-diff">
+              <option value="easy">輕鬆</option>
+              <option value="medium" selected>中級</option>
+              <option value="hard">進階</option>
+            </select>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>出發日期 <span class="req">*</span></label><input class="form-ctrl" id="f-date" type="date"></div>
@@ -163,19 +189,12 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
         </div>
         <div class="form-row">
           <div class="form-group"><label>名額上限</label><input class="form-ctrl" id="f-slots" type="number" min="1" placeholder="人數"></div>
-          <div class="form-group"><label>難度</label>
-            <select class="form-ctrl" id="f-diff">
-              <option value="easy">輕鬆</option>
-              <option value="medium" selected>中級</option>
-              <option value="hard">進階</option>
-            </select>
-          </div>
+          <div class="form-group"><label>集合地點</label><input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>集合地點</label><input class="form-ctrl" id="f-meet" type="text" placeholder="例：台北車站北三門"></div>
           <div class="form-group"><label>封面圖片網址（選填）</label><input class="form-ctrl" id="f-img" type="url" placeholder="https://..."></div>
+          <div class="form-group"><label>詳細行程（選填）</label><input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址"></div>
         </div>
-        <div class="form-group"><label>詳細行程（選填）</label><input class="form-ctrl" id="f-excel" type="url" placeholder="貼上詳細行程網址"></div>
         <div class="form-group"><label>行程介紹</label><textarea class="form-ctrl" id="f-desc" placeholder="詳細介紹、注意事項、費用包含等…"></textarea></div>
         <div class="form-actions">
           <button class="btn-cancel-form" onclick="hideForm()">取消</button>
@@ -188,9 +207,9 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     <div class="card" style="padding:0;overflow:hidden;overflow-x:auto">
       <table>
         <thead><tr>
-          <th>行程名稱</th><th>地區</th><th>出發日期</th><th>結束日期</th><th>難度</th><th>費用</th><th>名額</th><th>報名人數</th><th>操作</th>
+          <th>行程名稱</th><th>活動類型</th><th>地區</th><th>出發日期</th><th>結束日期</th><th>難度</th><th>費用</th><th>名額</th><th>報名人數</th><th>操作</th>
         </tr></thead>
-        <tbody id="trips-tbody"><tr><td class="loading-td" colspan="9">// 載入中...</td></tr></tbody>
+        <tbody id="trips-tbody"><tr><td class="loading-td" colspan="10">// 載入中...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -304,7 +323,6 @@ tbody tr:hover td{background:rgba(255,255,255,0.02)}
     </table>
   </div>
 </div>
-```
 
   </div>
 </div>
@@ -399,11 +417,11 @@ let cachedMembers = [];
 
 async function loadTripsTable() {
   const tbody = document.getElementById('trips-tbody');
-  tbody.innerHTML='<tr><td class="loading-td" colspan="9">// 載入中...</td></tr>';
+  tbody.innerHTML='<tr><td class="loading-td" colspan="10">// 載入中...</td></tr>';
   const {data:trips} = await sb.from('trips').select('*').order('date',{ascending:true});
   const {data:regCounts} = await sb.from('registrations').select('trip_id');
   if (!trips||!trips.length) {
-    tbody.innerHTML='<tr><td class="empty-td" colspan="9">尚無行程，點上方「新增行程」開始吧。</td></tr>';
+    tbody.innerHTML='<tr><td class="empty-td" colspan="10">尚無行程，點上方「新增行程」開始吧。</td></tr>';
     return;
   }
   const today = new Date().toISOString().split('T')[0];
@@ -426,13 +444,15 @@ function renderAdminTrips(filter) {
   const diffMap={easy:'badge-easy',medium:'badge-medium',hard:'badge-hard'};
   const diffLabel={easy:'輕鬆',medium:'中級',hard:'進階'};
   let trips = cachedAdminTrips.all || [];
+  
   if (filter === 'expired') {
     trips = trips.filter(t => t.date && t.date < today);
   } else if (filter !== 'all') {
-    trips = trips.filter(t => t.difficulty === filter);
+    trips = trips.filter(t => t.activity_type === filter);
   }
+  
   if (!trips.length) {
-    tbody.innerHTML='<tr><td class="empty-td" colspan="9">此條件下沒有行程。</td></tr>';
+    tbody.innerHTML='<tr><td class="empty-td" colspan="10">此條件下沒有行程。</td></tr>';
     return;
   }
   tbody.innerHTML = trips.map(t=>{
@@ -441,6 +461,7 @@ function renderAdminTrips(filter) {
     const isExpired = t.date && t.date < today;
     return `<tr style="${isExpired?'opacity:0.6':''}">
       <td><strong>${t.name}</strong>${isExpired?' <span style="font-size:0.68rem;color:var(--muted);letter-spacing:0.1em">已結束</span>':''}</td>
+      <td>${t.activity_type||'—'}</td>
       <td>${t.area||'—'}</td>
       <td>${t.date||'—'}</td>
       <td>${t.date_end||'—'}</td>
@@ -560,6 +581,7 @@ function hideForm(){document.getElementById('form-card').style.display='none';cl
 
 function clearForm(){
   ['f-name','f-area','f-date','f-date-end','f-days','f-price','f-slots','f-meet','f-img','f-excel','f-desc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-activity-type').value='';
   document.getElementById('f-diff').value='medium';
   document.getElementById('edit-id').value='';
   document.getElementById('save-msg').textContent='';
@@ -571,6 +593,7 @@ async function editTrip(id){
   document.getElementById('form-title').textContent='編輯行程';
   document.getElementById('edit-id').value=id;
   document.getElementById('f-name').value=t.name||'';
+  document.getElementById('f-activity-type').value=t.activity_type||'';
   document.getElementById('f-area').value=t.area||'';
   document.getElementById('f-date').value=t.date||'';
   document.getElementById('f-date-end').value=t.date_end||'';
@@ -588,12 +611,17 @@ async function editTrip(id){
 
 async function saveTrip(){
   const name=document.getElementById('f-name').value.trim();
+  const activityType=document.getElementById('f-activity-type').value;
   const date=document.getElementById('f-date').value;
   const msg=document.getElementById('save-msg');
   if(!name){msg.className='save-msg err';msg.textContent='請填寫行程名稱。';return;}
+  if(!activityType){msg.className='save-msg err';msg.textContent='請選擇活動類型。';return;}
   if(!date){msg.className='save-msg err';msg.textContent='請選擇出發日期。';return;}
   const trip={
-    name, area:document.getElementById('f-area').value.trim(), date,
+    name, 
+    activity_type: activityType,
+    area:document.getElementById('f-area').value.trim(), 
+    date,
     date_end:document.getElementById('f-date-end').value||null,
     days:document.getElementById('f-days').value?Number(document.getElementById('f-days').value):null,
     price:document.getElementById('f-price').value.trim()||null,
@@ -677,8 +705,6 @@ async function loadMembers() {
     tbody.innerHTML='<tr><td class="empty-td" colspan="15">尚無會員資料。</td></tr>';
     return;
   }
-  console.log('👥 會員資料:', members);
-  console.log('🔍 第一個會員的 line_id:', members[0]?.line_id);
   cachedMembers = members;
   tbody.innerHTML = members.map((p,i)=>`<tr>
     <td>${i+1}</td>
